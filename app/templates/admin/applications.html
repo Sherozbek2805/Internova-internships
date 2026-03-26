@@ -1,0 +1,103 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<section id="applications" class="page fade-up">
+
+  <!-- HEADER -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl font-semibold">Applications</h1>
+      <p class="text-gray-400 text-sm mt-2">
+        So‘nggi yuborilgan arizalar va ularning holati.
+      </p>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+
+    <table class="w-full text-sm">
+
+      <!-- HEADER -->
+      <thead class="border-b border-white/10 text-gray-400">
+        <tr>
+          <th class="text-left py-4 px-4">ID</th>
+          <th class="text-left py-4 px-4">Talaba</th>
+          <th class="text-left py-4 px-4">Internship</th>
+          <th class="text-left py-4 px-4">Status</th>
+          <th class="text-left py-4 px-4">Ball</th>
+          <th class="text-left py-4 px-4">Sana</th>
+        </tr>
+      </thead>
+
+      <!-- BODY -->
+      <tbody>
+
+        {% for app in recent_applications %}
+        <tr class="border-b border-white/5 hover:bg-white/5 transition duration-200">
+
+          <!-- ID -->
+          <td class="py-4 px-4 text-gray-300">
+            #{{ app.id }}
+          </td>
+
+          <!-- STUDENT -->
+          <td class="py-4 px-4 font-semibold text-white">
+            {{ app.student_name or '—' }}
+          </td>
+
+          <!-- INTERNSHIP -->
+          <td class="py-4 px-4 text-gray-300">
+            {{ app.internship_title or '—' }}
+          </td>
+
+          <!-- STATUS -->
+          <td class="py-4 px-4">
+            {% if app.status == "accepted" %}
+              <span class="px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
+                Qabul qilingan
+              </span>
+            {% elif app.status == "rejected" %}
+              <span class="px-3 py-1 rounded-full text-xs bg-red-500/20 text-red-400">
+                Rad etilgan
+              </span>
+            {% else %}
+              <span class="px-3 py-1 rounded-full text-xs bg-yellow-500/20 text-yellow-400">
+                Kutilmoqda
+              </span>
+            {% endif %}
+          </td>
+
+          <!-- SCORE -->
+          <td class="py-4 px-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300">
+              {{ app.score if app.score is not none else '—' }}
+            </span>
+          </td>
+
+          <!-- DATE -->
+          <td class="py-4 px-4 text-gray-400">
+            {{ app.created_at }}
+          </td>
+
+        </tr>
+
+        {% else %}
+        <!-- EMPTY STATE -->
+        <tr>
+          <td colspan="6" class="py-10 text-center text-gray-400">
+            Arizalar topilmadi.
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,514 @@
+{% extends "public/base.html" %}
+
+{% block title %}Signup{% endblock %}
+
+<style>
+input:focus, select:focus {
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+.input-success {
+  border-color: #22c55e !important;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+}
+</style>
+{% block content %}
+
+  <div class="w-full max-w-md">
+    <div class="flex justify-center items-center gap-2 mb-8">
+      <img src="/static/logo.png" 
+     alt="Internova Logo" 
+     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
+
+      <span class="text-lg font-semibold">Internova</span>
+    </div>
+
+    <div class="rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl p-8 shadow-xl">
+      <h1 class="text-2xl font-semibold mb-1">Akkaunt yaratish</h1>
+      <p class="text-gray-400 text-sm mb-6">Talaba yoki kompaniya sifatida qo‘shiling</p>
+
+      <div id="message" class="mb-4"></div>
+
+      <div class="flex bg-white/10 rounded-xl p-1 mb-6">
+        <button type="button" id="studentBtn"
+          class="flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium">
+          Talaba
+        </button>
+
+        <button type="button" id="companyBtn"
+          class="flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium">
+          Kompaniya
+        </button>
+      </div>
+
+      <form id="signupForm" class="space-y-4" novalidate>
+        <input type="hidden" id="role" value="student">
+
+        <div>
+          <label for="email" class="text-sm">Email</label>
+          <input id="email"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="you@example.com"
+            class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
+          <p id="emailStatus" class="text-sm mt-1"></p>
+        </div>
+
+        <div class="relative">
+          <label for="password" class="text-sm">Parol</label>
+          <input id="password"
+            type="password"
+            required
+            autocomplete="new-password"
+            placeholder="••••••••"
+            class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 pr-12 outline-none focus:border-blue-400">
+          <button type="button" id="togglePassword"
+            class="absolute right-3 top-9 text-gray-400 hover:text-white"
+            aria-label="Parolni ko‘rsatish/yashirish">
+            👁
+          </button>
+        </div>
+
+        <div>
+          <div class="w-full bg-gray-700 rounded h-2 overflow-hidden">
+            <div id="strengthBar" class="h-2 rounded bg-red-500 w-0 transition-all"></div>
+          </div>
+          <p id="strengthText" class="text-sm mt-1"></p>
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="text-sm">Parolni takrorlang</label>
+          <input id="confirmPassword"
+            type="password"
+            required
+            autocomplete="new-password"
+            placeholder="••••••••"
+            class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
+        </div>
+
+        <div id="studentFields" class="space-y-4">
+          <div>
+            <label for="name" class="text-sm">Ism-familya</label>
+            <input id="name"
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
+          </div>
+
+          <div>
+            <label for="school" class="text-sm">Maktab</label>
+            <input id="school"
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
+          </div>
+
+          <div>
+            <label for="skills" class="text-sm">Mahoratlar</label>
+            <input id="skills"
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
+          </div>
+        </div>
+
+        <div id="companyFields" class="space-y-4 hidden">
+          <div>
+            <label for="companyName" class="text-sm">Kompaniya nomi</label>
+            <input id="companyName"
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
+          </div>
+          <!-- 🔥 NEW: COMPANY EXTRA INFO -->
+          <div>
+            <label class="text-sm">Telefon 1</label>
+            <input id="phone1"
+              placeholder="+998 90 123 45 67"
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all">
+          </div>
+
+          <div>
+            <label class="text-sm">Telefon 2 (ixtiyoriy)</label>
+            <input id="phone2"
+              placeholder="+998 91 765 43 21"
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all">
+          </div>
+
+          <div>
+            <label class="text-sm">Manzil</label>
+            <input id="address"
+              placeholder="Toshkent, Yunusobod..."
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all">
+          </div>
+
+          <div>
+            <label class="text-sm">Sohasi</label>
+            <select id="industry"
+              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all text-gray-300">
+              <option value="">Tanlang</option>
+              <option>IT and engineering</option>
+              <option>Media and Marketing</option>
+              <option>Finance and Business</option>
+              <option>Health and Pharmacy</option>
+              <option>Others</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium hover:opacity-95 transition">
+          Ro‘yxatdan o‘tish
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-gray-400 mt-6">
+        Akkauntingiz bormi?
+        <a href="{{ url_for('auth.login') }}" class="text-blue-400 hover:underline">Kirish</a>
+      </p>
+    </div>
+  </div>
+  <br>
+  <br>
+
+<script>
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+// =========================
+// 🔥 SAFE FALLBACK FUNCTIONS (FIX)
+// =========================
+function setBtnState(btn, state) {
+  if (!btn) return;
+
+  if (state === "loading") {
+    btn.disabled = true;
+    btn.innerText = "Loading...";
+  } else if (state === "success") {
+    btn.innerText = "Success ✅";
+  } else if (state === "error") {
+    btn.innerText = "Error ❌";
+    btn.disabled = false;
+  } else {
+    btn.disabled = false;
+    btn.innerText = "Ro‘yxatdan o‘tish";
+  }
+}
+
+function toast(message, type="info") {
+  console.log(type.toUpperCase() + ":", message);
+  alert(message);
+}
+
+// =========================
+// ELEMENTS
+// =========================
+const studentBtn = document.getElementById("studentBtn");
+const companyBtn = document.getElementById("companyBtn");
+const studentFields = document.getElementById("studentFields");
+const companyFields = document.getElementById("companyFields");
+const roleInput = document.getElementById("role");
+
+const email = document.getElementById("email");
+const emailStatus = document.getElementById("emailStatus");
+const password = document.getElementById("password");
+const confirmPassword = document.getElementById("confirmPassword");
+const strengthBar = document.getElementById("strengthBar");
+const strengthText = document.getElementById("strengthText");
+const companyName = document.getElementById("companyName");
+const signupForm = document.getElementById("signupForm");
+const togglePassword = document.getElementById("togglePassword");
+
+const phone1 = document.getElementById("phone1");
+const phone2 = document.getElementById("phone2");
+const address = document.getElementById("address");
+const industry = document.getElementById("industry");
+
+let emailAvailable = false;
+
+// =========================
+// ROLE SWITCH
+// =========================
+function setRole(role) {
+  roleInput.value = role;
+
+  if (role === "student") {
+    studentFields.classList.remove("hidden");
+    companyFields.classList.add("hidden");
+    companyName.required = false;
+
+    studentBtn.className = "flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium";
+    companyBtn.className = "flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium";
+  } else {
+    companyFields.classList.remove("hidden");
+    studentFields.classList.add("hidden");
+    companyName.required = true;
+
+    companyBtn.className = "flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium";
+    studentBtn.className = "flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium";
+  }
+}
+
+// =========================
+// VALIDATION
+// =========================
+function isValidEmail(emailValue) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+}
+
+function isStrongEnoughPassword(value) {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
+}
+
+// =========================
+// 🔥 CONFIRM PASSWORD LIVE CHECK (NEW)
+// =========================
+function checkPasswordMatch() {
+  const pass = password.value.trim();
+  const confirm = confirmPassword.value.trim();
+
+  if (!confirm) {
+    confirmPassword.classList.remove("input-error", "input-success");
+    return;
+  }
+
+  if (pass === confirm) {
+    confirmPassword.classList.add("input-success");
+    confirmPassword.classList.remove("input-error");
+  } else {
+    confirmPassword.classList.add("input-error");
+    confirmPassword.classList.remove("input-success");
+  }
+}
+
+// =========================
+// PASSWORD STRENGTH
+// =========================
+function updatePasswordStrength() {
+  const val = password.value;
+  let score = 0;
+
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[a-z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[@$!%*?&]/.test(val)) score++;
+
+  const percent = Math.min(score * 20, 100);
+  strengthBar.style.width = percent + "%";
+
+  if (score <= 2) {
+    strengthBar.className = "h-2 rounded bg-red-500 transition-all";
+    strengthText.innerText = "Zaif parol";
+  } else if (score <= 4) {
+    strengthBar.className = "h-2 rounded bg-yellow-500 transition-all";
+    strengthText.innerText = "O‘rtacha parol";
+  } else {
+    strengthBar.className = "h-2 rounded bg-green-500 transition-all";
+    strengthText.innerText = "Kuchli parol";
+  }
+
+  checkPasswordMatch(); // 🔥 update on typing
+}
+
+// =========================
+// EMAIL CHECK (FIXED)
+// =========================
+async function checkEmailAvailability() {
+  const emailValue = email.value.trim().toLowerCase();
+  emailAvailable = false;
+
+  if (!emailValue) return false;
+
+  if (!isValidEmail(emailValue)) {
+    emailStatus.innerText = "Email noto‘g‘ri";
+    emailStatus.className = "text-sm mt-1 text-red-400";
+    return false;
+  }
+
+  try {
+    const res = await fetch("/check-email", {  // 🔥 FIXED
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken
+      },
+      body: JSON.stringify({ email: emailValue })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) return false;
+
+    if (data.available) {
+      emailStatus.innerText = "Email bo‘sh";
+      emailStatus.className = "text-green-400 text-sm";
+      emailAvailable = true;
+      return true;
+    } else {
+      emailStatus.innerText = "Email band";
+      emailStatus.className = "text-red-400 text-sm";
+      return false;
+    }
+
+  } catch (err) {
+    console.error("Email check error:", err);
+    return false;
+  }
+}
+
+// =========================
+// PHONE VALIDATION
+// =========================
+function validatePhone(input, required=false) {
+  if (!input) return true;
+
+  const val = input.value.trim().replace(/\s/g, "");
+
+  if (!val && !required) return true;
+
+  if (!/^\+?\d{9,15}$/.test(val)) {
+    return false;
+  }
+
+  return true;
+}
+
+// =========================
+// EVENTS
+// =========================
+studentBtn.onclick = () => setRole("student");
+companyBtn.onclick = () => setRole("company");
+
+password.addEventListener("input", updatePasswordStrength);
+confirmPassword.addEventListener("input", checkPasswordMatch); // 🔥 NEW
+
+togglePassword.onclick = () => {
+  password.type = password.type === "password" ? "text" : "password";
+};
+
+email.addEventListener("blur", checkEmailAvailability);
+
+// =========================
+// MAIN SUBMIT (FINAL FIX)
+// =========================
+signupForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  console.log("🚀 SUBMIT TRIGGERED"); // 🔥 DEBUG
+
+  if (signupForm.dataset.processing === "true") return;
+  signupForm.dataset.processing = "true";
+
+  const btn = signupForm.querySelector("button[type='submit']");
+  setBtnState(btn, "loading");
+
+  const emailValue = email.value.trim().toLowerCase();
+  const pass = password.value.trim();
+  const confirm = confirmPassword.value.trim();
+
+  if (!isValidEmail(emailValue)) {
+    toast("Email noto‘g‘ri", "error");
+    setBtnState(btn, "idle");
+    signupForm.dataset.processing = "false";
+    return;
+  }
+
+  if (!isStrongEnoughPassword(pass)) {
+    toast("Parol kuchsiz", "error");
+    setBtnState(btn, "idle");
+    signupForm.dataset.processing = "false";
+    return;
+  }
+
+  if (pass !== confirm) {
+    toast("Parollar mos emas", "error");
+    setBtnState(btn, "idle");
+    signupForm.dataset.processing = "false";
+    return;
+  }
+
+  if (roleInput.value === "company") {
+    if (!companyName.value.trim()) {
+      toast("Kompaniya nomi kerak", "error");
+      setBtnState(btn, "idle");
+      signupForm.dataset.processing = "false";
+      return;
+    }
+
+    if (!validatePhone(phone1, true)) {
+      toast("Telefon noto‘g‘ri", "error");
+      setBtnState(btn, "idle");
+      signupForm.dataset.processing = "false";
+      return;
+    }
+  }
+
+  const emailCheck = await checkEmailAvailability();
+
+  if (!emailCheck) {
+    toast("Emailni tekshiring", "error");
+    setBtnState(btn, "idle");
+    signupForm.dataset.processing = "false";
+    return;
+  }
+
+  const payload = {
+    email: emailValue,
+    password: pass,
+    role: roleInput.value,
+    name: roleInput.value === "student"
+      ? document.getElementById("name").value.trim()
+      : companyName.value.trim(),
+    school: document.getElementById("school")?.value || "",
+    skills: document.getElementById("skills")?.value || "",
+    phone1: phone1?.value || "",
+    phone2: phone2?.value || "",
+    address: address?.value || "",
+    industry: industry?.value || ""
+  };
+
+  try {
+    const res = await fetch("/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      setBtnState(btn, "success");
+
+      // REMOVE auto redirect
+
+      document.getElementById("message").innerHTML = `
+        <div class="rounded-xl bg-green-500/10 border border-green-500/30 p-4 text-green-300">
+          Emailingizga tasdiqlash yuborildi 📩<br>
+          <span class="text-sm text-gray-400">
+            Iltimos, emailingizni tekshirib, linkni bosing.
+          </span>
+
+          <div class="mt-4 flex gap-2">
+            <a href="/login" class="bg-white text-black px-3 py-2 rounded">
+              Login sahifaga o‘tish
+            </a>
+          </div>
+        </div>
+      `;
+
+    } else {
+      toast(result.message || "Xatolik", "error");
+      setBtnState(btn, "error");
+    }
+
+  } catch (err) {
+    console.error("Signup error:", err);
+    toast("Server xatosi", "error");
+    setBtnState(btn, "error");
+  }
+
+  signupForm.dataset.processing = "false";
+});
+
+// =========================
+setRole("student");
+</script>
+{% endblock %}

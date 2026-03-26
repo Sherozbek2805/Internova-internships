@@ -1,0 +1,123 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<section id="internships" class="page fade-up">
+
+  <!-- HEADER -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl font-semibold">Internships</h1>
+      <p class="text-gray-400 text-sm mt-2">
+        Barcha internshiplar va ularni boshqarish.
+      </p>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+
+    <table class="w-full text-sm">
+
+      <!-- HEADER -->
+      <thead class="border-b border-white/10 text-gray-400">
+        <tr>
+          <th class="text-left py-4 px-4">ID</th>
+          <th class="text-left py-4 px-4">Nomi</th>
+          <th class="text-left py-4 px-4">Kompaniya</th>
+          <th class="text-left py-4 px-4">Joylashuv</th>
+          <th class="text-left py-4 px-4">Arizalar</th>
+          <th class="text-left py-4 px-4">Holat</th>
+          <th class="text-left py-4 px-4">Amal</th>
+        </tr>
+      </thead>
+
+      <!-- BODY -->
+      <tbody>
+
+        {% for i in internships %}
+        <tr class="border-b border-white/5 hover:bg-white/5 transition duration-200">
+
+          <!-- ID -->
+          <td class="py-4 px-4 text-gray-300">
+            #{{ i.id }}
+          </td>
+
+          <!-- TITLE -->
+          <td class="py-4 px-4 font-semibold text-white">
+            {{ i.title }}
+          </td>
+
+          <!-- COMPANY -->
+          <td class="py-4 px-4 text-gray-300">
+            {{ i.company_name or '—' }}
+          </td>
+
+          <!-- LOCATION -->
+          <td class="py-4 px-4 text-gray-300">
+            {{ i.location or '—' }}
+          </td>
+
+          <!-- APPLICATION COUNT -->
+          <td class="py-4 px-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300">
+              {{ i.applications_count }}
+            </span>
+          </td>
+
+          <!-- STATUS -->
+          <td class="py-4 px-4">
+            {% if i.approved %}
+              <span class="px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
+                Tasdiqlangan
+              </span>
+            {% else %}
+              <span class="px-3 py-1 rounded-full text-xs bg-yellow-500/20 text-yellow-400">
+                Kutilmoqda
+              </span>
+            {% endif %}
+          </td>
+
+          <!-- ACTION -->
+          <td class="py-4 px-4">
+
+            {% if i.approved %}
+              <form method="POST" data-ajax action="{{ url_for('admin.unapprove_internship', internship_id=i.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"
+                  class="px-4 py-2 rounded-lg bg-yellow-500/20 text-yellow-300 hover:bg-yellow-500/30 transition">
+                  Bekor qilish
+                </button>
+              </form>
+            {% else %}
+              <form method="POST" data-ajax action="{{ url_for('admin.approve_internship', internship_id=i.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"
+                  class="px-4 py-2 rounded-lg bg-green-500/20 text-green-300 hover:bg-green-500/30 transition">
+                  Tasdiqlash
+                </button>
+              </form>
+            {% endif %}
+
+          </td>
+
+        </tr>
+
+        {% else %}
+        <!-- EMPTY STATE -->
+        <tr>
+          <td colspan="7" class="py-10 text-center text-gray-400">
+            Internshiplar topilmadi.
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+{% endblock %}

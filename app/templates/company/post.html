@@ -1,0 +1,151 @@
+{% extends "company/base.html" %}
+{% block title %}Post Internship{% endblock %}
+
+{% block content %}
+
+<section id="post" class="page-section space-y-10">
+
+  <!-- HEADER -->
+  <div>
+    <p class="text-blue-400 text-sm tracking-widest uppercase mb-3">
+      Post internship
+    </p>
+    <h1 class="text-4xl font-bold text-white">
+      Create a new internship
+    </h1>
+    <p class="text-gray-400 mt-3">
+      Publish a new internship or job opportunity for students.
+    </p>
+  </div>
+
+  <!-- MESSAGE -->
+  <div id="form-message" class="hidden p-4 rounded-xl text-sm"></div>
+
+  <!-- CONTENT -->
+  <div class="grid lg:grid-cols-3 gap-8">
+
+    <!-- FORM -->
+    <div class="lg:col-span-2 p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl">
+
+      <form id="internshipForm" class="space-y-6">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- TITLE + TYPE -->
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm text-gray-300 mb-2">Title</label>
+            <input type="text" name="title" required
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-blue-400 outline-none">
+          </div>
+
+          <div>
+            <label class="block text-sm text-gray-300 mb-2">Internship Type</label>
+            <select name="internship_type"
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+              <option value="Internship">Internship</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Remote">Remote</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- LOCATION + SALARY -->
+        <div class="grid md:grid-cols-2 gap-6">
+          <input type="text" name="location" placeholder="Location"
+            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+
+          <input type="text" name="stipend" placeholder="Salary"
+            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+        </div>
+
+        <!-- DURATION + DEADLINE -->
+        <div class="grid md:grid-cols-2 gap-6">
+          <input type="text" name="duration" placeholder="Duration"
+            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+
+          <input type="date" name="deadline"
+            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+        </div>
+
+        <!-- SKILLS -->
+        <input type="text" name="skills" placeholder="Skills"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+
+        <!-- DESCRIPTION -->
+        <textarea name="description" rows="5" required
+          class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10"
+          placeholder="Description..."></textarea>
+
+        <!-- BUTTON -->
+        <button id="submitBtn" type="submit"
+          class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white w-full">
+          🚀 Publish Internship
+        </button>
+
+      </form>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl h-fit shadow-xl">
+      <h3 class="text-xl font-semibold text-white mb-4">💡 Tips</h3>
+      <ul class="text-gray-300 space-y-2 text-sm">
+        <li>✔ Clear title</li>
+        <li>✔ Add skills</li>
+        <li>✔ Short description</li>
+        <li>✔ Add salary</li>
+      </ul>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ✅ AJAX SCRIPT -->
+<script>
+const form = document.getElementById("internshipForm");
+const messageBox = document.getElementById("form-message");
+const btn = document.getElementById("submitBtn");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  btn.innerText = "⏳ Posting...";
+  btn.disabled = true;
+
+  const formData = new FormData(form);
+
+  try {
+    const res = await fetch("/company/internships/create", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-CSRFToken": formData.get("csrf_token")
+      }
+    });
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+      messageBox.className = "p-4 rounded-xl bg-green-500/20 text-green-300";
+      form.reset();
+    } else {
+      messageBox.className = "p-4 rounded-xl bg-red-500/20 text-red-300";
+    }
+
+    messageBox.innerText = data.message;
+    messageBox.classList.remove("hidden");
+
+  } catch (err) {
+    messageBox.className = "p-4 rounded-xl bg-red-500/20 text-red-300";
+    messageBox.innerText = "Server error";
+    messageBox.classList.remove("hidden");
+  }
+
+  btn.innerText = "🚀 Publish Internship";
+  btn.disabled = false;
+});
+</script>
+
+{% endblock %}

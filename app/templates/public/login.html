@@ -1,0 +1,184 @@
+{% extends "public/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md">
+
+  <div class="flex justify-center items-center gap-2 mb-8">
+<img src="/static/logo.png" 
+     alt="Internova Logo" 
+     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
+
+    <span class="text-lg font-semibold">Internova</span>
+  </div>
+
+  <div class="rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl p-8 shadow-xl">
+
+    <h1 class="text-2xl font-semibold mb-1">Akkauntga kirish</h1>
+    <p class="text-sm text-gray-400 mb-6">
+      Shaxsiy kabinetga kirish uchun ma’lumotlaringizni kiriting.
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-3 mb-4">
+          {% for category, message in messages %}
+            <div class="rounded-xl px-4 py-3 text-sm
+              {% if category == 'warning' %}bg-yellow-500/10 text-yellow-300 border border-yellow-500/30
+              {% elif category == 'error' %}bg-red-500/10 text-red-300 border border-red-500/30
+              {% elif category == 'success' %}bg-green-500/10 text-green-300 border border-green-500/30
+              {% else %}bg-blue-500/10 text-blue-300 border border-blue-500/30{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if request.args.get('verified') == '1' %}
+      <div class="rounded-xl px-4 py-3 text-sm bg-green-500/10 text-green-300 border border-green-500/30 mb-4">
+        Email muvaffaqiyatli tasdiqlandi. Endi login qilishingiz mumkin.
+      </div>
+    {% endif %}
+
+    <div class="flex bg-white/10 rounded-xl p-1 mb-6">
+      <button type="button" id="studentBtn"
+        class="flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium">
+        Talaba
+      </button>
+      <button type="button" id="companyBtn"
+        class="flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium">
+        Kompaniya
+      </button>
+      <button type="button" id="adminBtn"
+        class="flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium">
+        Admin
+      </button>
+    </div>
+
+    <!-- 🔥 KEEP FORM (NO DELETION) -->
+    <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}" class="space-y-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="role" id="role" value="student">
+
+      <div>
+        <label for="email" class="text-sm text-gray-300">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none"
+        >
+      </div>
+
+      <div>
+        <label for="password" class="text-sm text-gray-300">Parol</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none"
+        >
+      </div>
+
+      <button type="submit"
+        class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+        Kirish
+      </button>
+
+      <a href="{{ url_for('auth.google_login') }}"
+        class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-gray-800 font-medium hover:bg-gray-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"></svg>
+        Google orqali kirish
+      </a>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const studentBtn = document.getElementById("studentBtn");
+  const companyBtn = document.getElementById("companyBtn");
+  const adminBtn = document.getElementById("adminBtn");
+  const roleInput = document.getElementById("role");
+
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+
+  // ---------------- ROLE SWITCH ----------------
+  function resetRoleButtons() {
+    [studentBtn, companyBtn, adminBtn].forEach(btn => {
+      if (!btn) return;
+      btn.classList.remove("bg-gradient-to-r", "from-blue-500", "to-purple-500", "text-white");
+      btn.classList.add("text-gray-400");
+    });
+  }
+
+  function setRole(role) {
+    resetRoleButtons();
+    roleInput.value = role;
+
+    const map = { student: studentBtn, company: companyBtn, admin: adminBtn };
+    if (map[role]) {
+      map[role].classList.add("bg-gradient-to-r", "from-blue-500", "to-purple-500", "text-white");
+      map[role].classList.remove("text-gray-400");
+    }
+  }
+
+  studentBtn?.addEventListener("click", () => setRole("student"));
+  companyBtn?.addEventListener("click", () => setRole("company"));
+  adminBtn?.addEventListener("click", () => setRole("admin"));
+
+  setRole("student");
+
+  // ---------------- LOGIN ----------------
+  const loginForm = document.getElementById("loginForm");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const btn = loginForm.querySelector("button[type='submit']");
+      setBtnState(btn, "loading");
+
+      try {
+        const data = await api("{{ url_for('auth.login') }}", {
+          method: "POST",
+          body: JSON.stringify({
+            email: emailInput.value.trim(),
+            password: passwordInput.value.trim(),
+            role: roleInput.value
+          })
+        });
+
+        // ✅ SUCCESS
+        setBtnState(btn, "success");
+        toast("Login successful!", "success");
+
+        // small delay for UX
+        setTimeout(() => {
+          window.location.href = data.redirect;
+        }, 500);
+
+      } catch (err) {
+        // ❌ ERROR (real message already shown by api())
+        setBtnState(btn, "error");
+
+        console.error("Login error:", err);
+
+        // Optional: show fallback if no message
+        if (!err.message) {
+          toast("Something went wrong", "error");
+        }
+      }
+
+      setTimeout(() => setBtnState(btn, "idle"), 1500);
+    });
+  }
+</script>
+{% endblock %}

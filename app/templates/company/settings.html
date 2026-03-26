@@ -1,0 +1,194 @@
+{% extends "company/base.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+
+<div id="toast" class="hidden z-50"></div>
+
+<section class="space-y-10">
+
+<div>
+  <h1 class="text-4xl font-bold text-white">Company settings</h1>
+  <p class="text-gray-400 mt-2">Manage your profile and security</p>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-8">
+
+<div class="lg:col-span-2 space-y-8">
+
+<form id="settings-form" method="POST" class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl space-y-6">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<h2 class="text-2xl font-semibold">Company Info</h2>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div>
+<label>Name</label>
+<input name="name" value="{{ company.name or '' }}" class="input">
+<span class="error" data-error="name"></span>
+</div>
+
+<div>
+<label>Email</label>
+<input name="email" type="email" value="{{ company.email or '' }}" class="input">
+<span class="error" data-error="email"></span>
+</div>
+
+<div>
+<label>Phone1</label>
+<input name="phone1" value="{{ company.phone1 or '' }}" class="input">
+</div>
+
+<div>
+<label>Phone2</label>
+<input name="phone2" value="{{ company.phone2 or '' }}" class="input">
+</div>
+
+<div>
+<label>Website</label>
+<input name="website" value="{{ company.website or '' }}" class="input">
+</div>
+
+<div class="md:col-span-2">
+<label>Logo URL</label>
+<input name="logo_url" value="{{ company.logo_url or '' }}" class="input">
+</div>
+
+</div>
+
+<textarea name="description" rows="4" class="input w-full">{{ company.description or '' }}</textarea>
+
+<button type="submit" class="btn" id="save-btn">
+  <span class="btn-icon"></span>
+  <span class="btn-text">Save changes</span>
+  <span class="spinner hidden"></span>
+</button>
+
+<p id="autosave-status" class="text-xs text-gray-400 hidden">Saving...</p>
+
+</form>
+
+
+<form id="password-form" method="POST" class="p-8 rounded-2xl bg-white/5 border border-white/10 space-y-6">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<h2 class="text-2xl font-semibold">Change Password</h2>
+
+<input type="password" name="current_password" placeholder="Current password" class="input">
+<input type="password" name="new_password" placeholder="New password" class="input">
+<input type="password" name="confirm_password" placeholder="Confirm password" class="input">
+
+<button type="submit" class="btn" id="pass-btn">
+  <span class="btn-text">Update password</span>
+  <span class="spinner hidden"></span>
+</button>
+
+</form>
+
+</div>
+
+<div>
+<div class="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+<h3>Status</h3>
+<p>Email: <span id="live-email" class="text-blue-400">{{ company.email or "O'rnatilmagan"}}</span></p>
+<p>Name: <span id="live-name" class="text-blue-400">{{ company.name}}</span></p>
+<p>Phone 1: <span id="live-phone1">{{ company.phone1 or 'None' }}</span></p>
+<p>Phone 2: <span id="live-phone2">{{ company.phone2 or 'None' or "O'rnatilmagan"}}</span></p>
+</div>
+</div>
+
+</div>
+</section>
+
+<style>
+.input { width:100%; padding:12px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);}
+.input:focus { border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,0.3);}
+.error { color:#f87171; font-size:12px;}
+.btn { background:linear-gradient(to right,#3b82f6,#9333ea); padding:12px 20px; border-radius:12px; color:white; display:flex; gap:10px; transition:0.3s;}
+.btn.success { background:#22c55e;}
+.btn.error { background:#ef4444;}
+.spinner { width:16px;height:16px;border:2px solid white;border-top:2px solid transparent;border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin { to {transform:rotate(360deg);} }
+</style>
+
+<script>
+async function api(url, formData) {
+  const csrfToken = formData.get("csrf_token");
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      "X-CSRFToken": csrfToken
+    },
+    body: formData
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw data;
+  return data;
+}
+
+function toast(msg, type="success") {
+  const el = document.getElementById("toast");
+  el.innerText = msg;
+  el.className = `fixed top-5 right-5 px-6 py-3 rounded-xl text-white ${type==="success"?"bg-green-500":"bg-red-500"}`;
+  el.classList.remove("hidden");
+  setTimeout(()=>el.classList.add("hidden"),3000);
+}
+
+function setBtnState(btn, state) {
+  const text = btn.querySelector(".btn-text");
+  const spinner = btn.querySelector(".spinner");
+
+  btn.disabled = (state==="loading");
+  spinner.classList.toggle("hidden", state!=="loading");
+
+  if(state==="loading") text.innerText="Saving...";
+  if(state==="success") text.innerText="Saved";
+  if(state==="error") text.innerText="Error";
+  if(state==="default") text.innerText=btn.dataset.text||"Save changes";
+}
+
+document.getElementById("settings-form").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const btn=document.getElementById("save-btn");
+  setBtnState(btn,"loading");
+
+  try{
+    const data=await api("/company/settings/update",new FormData(e.target));
+    toast(data.message);
+    document.getElementById("live-email").innerText = data.company.email;
+    document.getElementById("live-name").innerText = data.company.name;
+    document.getElementById("live-phone1").innerText = data.company.phone1 || "None";
+    document.getElementById("live-phone2").innerText = data.company.phone2 || "None";
+    setBtnState(btn,"success");
+  }catch(err){
+    toast(err.message,"error");
+    setBtnState(btn,"error");
+  }
+
+  setTimeout(()=>setBtnState(btn,"default"),3000);
+});
+
+document.getElementById("password-form").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const btn=document.getElementById("pass-btn");
+  setBtnState(btn,"loading");
+
+  try{
+    const data=await api("/company/change-password",new FormData(e.target));
+    toast(data.message);
+    e.target.reset();
+    setBtnState(btn,"success");
+  }catch(err){
+    toast(err.message,"error");
+    setBtnState(btn,"error");
+  }
+
+  setTimeout(()=>setBtnState(btn,"default"),3000);
+});
+</script>
+
+{% endblock %}

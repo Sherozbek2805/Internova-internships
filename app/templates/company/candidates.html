@@ -1,0 +1,385 @@
+{% extends "company/base.html" %}
+{% block content %}
+
+<!-- ✅ CSRF TOKEN -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<section class="space-y-10">
+
+<div>
+  <h1 class="text-4xl font-bold text-white">Candidates</h1>
+</div>
+
+<!-- 📊 STATS -->
+<div class="grid md:grid-cols-4 gap-4">
+  <div class="stat-card"><p>Total</p><h2 id="stat-total">0</h2></div>
+  <div class="stat-card"><p>Reviewing</p><h2 id="stat-reviewing">0</h2></div>
+  <div class="stat-card"><p>Shortlisted</p><h2 id="stat-shortlisted">0</h2></div>
+  <div class="stat-card"><p>Selected</p><h2 id="stat-selected">0</h2></div>
+</div>
+
+<!-- 🔍 FILTERS -->
+<div class="grid md:grid-cols-5 gap-4">
+
+  <input id="searchInput" placeholder="Search..." class="filter-input">
+
+  <select id="internshipFilter" class="filter-input">
+    <option value="all">All Internships</option>
+  </select>
+
+  <select id="statusFilter" class="filter-input">
+    <option value="all">All Status</option>
+    <option>Yangi</option>
+    <option>Ko'rib chiqilmoqda</option>
+    <option>Qisqa ro'yxat</option>
+    <option>Saralangan</option>
+  </select>
+
+  <input type="number" id="scoreFilter" placeholder="Min Score" class="filter-input">
+
+  <select id="sortFilter" class="filter-input">
+    <option value="default">Sort</option>
+    <option value="score-desc">Score ↓</option>
+    <option value="score-asc">Score ↑</option>
+  </select>
+
+</div>
+
+<!-- 👥 CARDS -->
+<div id="candidatesContainer" class="grid lg:grid-cols-2 gap-6"></div>
+
+</section>
+
+<style>
+.stat-card {
+  background: rgba(255,255,255,0.06);
+  padding: 20px;
+  border-radius: 16px;
+}
+.filter-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+}
+.candidate-card {
+  background: rgba(255,255,255,0.04);
+  padding: 20px;
+  border-radius: 16px;
+}
+</style>
+
+<script>
+
+const el = id => document.getElementById(id);
+
+const state = {
+  search: "",
+  internship: "all",
+  status: "all",
+  min_score: -1,
+  sort: "default"
+};
+
+let isLoading = false;
+let searchTimeout;
+
+// 🔐 CSRF
+function getCSRF() {
+  return document.querySelector('meta[name="csrf-token"]').content;
+}
+
+// 🔥 SAFE PARAM BUILDER (added)
+function buildParams() {
+  const params = new URLSearchParams();
+
+  if (state.search) params.append("search", state.search);
+  if (state.internship !== "all") params.append("internship", state.internship);
+  if (state.status !== "all") params.append("status", state.status);
+
+  // 🔥 FORCE
+  params.append("min_score", state.min_score);
+
+  if (state.sort !== "default") params.append("sort", state.sort);
+
+  return params;
+}
+
+// 🔥 STATS
+async function loadStats() {
+  const res = await fetch("/company/candidates/stats");
+  const data = await res.json();
+
+  el("stat-total").innerText = data.total;
+  el("stat-reviewing").innerText = data.reviewing;
+  el("stat-shortlisted").innerText = data.shortlisted;
+  el("stat-selected").innerText = data.selected;
+}
+
+// 🔥 LOAD DATA (improved but same structure)
+async function loadCandidates() {
+  if (isLoading) return;
+  isLoading = true;
+
+  try {
+    const params = buildParams();
+
+    console.log("REQUEST:", Object.fromEntries(params));
+
+    const res = await fetch(`/company/candidates?${params}`, {
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    });
+
+    if (!res.ok) {
+      console.error("Request failed:", res.status);
+      return;
+    }
+
+    const data = await res.json();
+
+    renderCandidates(data.applications);
+    renderInternships(data.internships);
+
+    console.log("STATE:", state);
+
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    isLoading = false;
+  }
+}
+
+// 🔥 INTERNSHIP FILTER
+function renderInternships(list) {
+  const select = el("internshipFilter");
+  if (select.options.length > 1) return;
+
+  list.forEach(i => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = i;
+    select.appendChild(opt);
+  });
+}
+
+// 🔥 CARDS (UNCHANGED)
+function renderCandidates(apps) {
+
+  const container = document.getElementById("candidatesContainer");
+
+  if (!apps.length) {
+    container.innerHTML = `<p class="text-gray-400">No candidates</p>`;
+    return;
+  }
+
+container.innerHTML = apps.map(a => `
+
+<div class="candidate-card relative group" data-id="${a.id}">
+  <div class="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 opacity-0 blur-xl transition duration-500 group-hover:opacity-80"></div>
+
+  <div class="relative bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-5 transition duration-300 
+              group-hover:scale-[1.02] group-hover:border-indigo-400/40 
+              ${a.score > 85 ? "ring-2 ring-indigo-400/40 shadow-[0_0_35px_rgba(99,102,241,0.5)]" : ""}">
+
+    <div class="flex gap-4">
+
+      <div class="w-12 h-12 flex items-center justify-center rounded-full 
+                  bg-gradient-to-br from-indigo-500 to-purple-500 
+                  text-white font-semibold text-lg shadow-lg shadow-indigo-500/30">
+        ${a.student_name.charAt(0)}
+      </div>
+
+      <div class="flex-1">
+
+        <div class="flex items-center justify-between">
+          <h2 class="text-white font-semibold text-base tracking-wide group-hover:text-indigo-300 transition">
+            ${a.student_name}
+          </h2>
+
+          <span class="${getStatusClass(a.status)} text-xs px-3 py-1 rounded-full font-medium shadow-sm">
+            ${a.status}
+          </span>
+        </div>
+
+        <p class="text-gray-400 text-sm mt-0.5">${a.student_email}</p>
+        <p class="text-indigo-400 text-xs mt-1">${a.internship_title}</p>
+
+        <div class="grid grid-cols-3 gap-3 mt-4">
+          <input type="number" value="${a.score || 0}"
+            class="score-input bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+
+          <select class="status-select bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+            ${["Yangi","Ko'rib chiqilmoqda","Qisqa ro'yxat","Saralangan"]
+              .map(s => `<option ${a.status===s?"selected":""}>${s}</option>`).join("")}
+          </select>
+
+          <div></div>
+        </div>
+
+        <textarea class="evaluation-note w-full mt-3 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
+          ${a.evaluation_note || ""}
+        </textarea>
+
+        <div class="flex gap-3 mt-4">
+  <button class="save-btn flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg py-2">
+    Save
+  </button>
+
+  <button class="view-btn flex-1 bg-white/10 border border-white/20 text-white rounded-lg py-2">
+    Details
+  </button>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+`).join("");
+}
+
+function getStatusClass(status) {
+  return {
+    "Yangi": "bg-blue-500/10 text-blue-400",
+    "Ko'rib chiqilmoqda": "bg-yellow-500/10 text-yellow-400",
+    "Qisqa ro'yxat": "bg-purple-500/10 text-purple-400",
+    "Saralangan": "bg-green-500/10 text-green-400"
+  }[status] || "bg-gray-500/10 text-gray-400";
+}
+
+// 🔥 FILTERS (same but fixed)
+searchInput.addEventListener("input", e => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    state.search = e.target.value;
+    loadCandidates();
+  }, 400);
+});
+
+statusFilter.addEventListener("change", e => {
+  state.status = e.target.value;
+  loadCandidates();
+});
+
+internshipFilter.addEventListener("change", e => {
+  state.internship = e.target.value;
+  loadCandidates();
+});
+
+scoreFilter.addEventListener("input", e => {
+  const val = e.target.value;
+  state.min_score = val === "" ? -1 : parseInt(val); // 🔥 fallback to -1
+  loadCandidates();
+});
+
+sortFilter.addEventListener("change", e => {
+  state.sort = e.target.value;
+  loadCandidates();
+});
+
+// 🔥 SAVE + VIEW (UNCHANGED)
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("save-btn")) return;
+
+  const card = e.target.closest(".candidate-card");
+
+  const data = new FormData();
+  data.append("id", card.dataset.id);
+  data.append("score", card.querySelector(".score-input").value);
+  data.append("status", card.querySelector(".status-select").value);
+  data.append("note", card.querySelector(".evaluation-note").value);
+
+  e.target.innerText = "Saving...";
+
+  const res = await fetch("/company/applications/update", {
+    method: "POST",
+    headers: { "X-CSRFToken": getCSRF() },
+    body: data
+  });
+
+  const result = await res.json();
+
+  if (result.status === "success") {
+    e.target.innerText = "Saved ✓";
+    loadStats();
+  } else {
+    e.target.innerText = "Error";
+  }
+
+  setTimeout(() => e.target.innerText = "Save", 2000);
+});
+
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("view-btn")) return;
+
+  const card = e.target.closest(".candidate-card");
+  const id = card.dataset.id;
+
+  try {
+    console.log("Clicked ID:", id);
+
+    const res = await fetch(`/company/applications/${id}`);
+
+    if (!res.ok) {
+      console.error("Fetch failed:", res.status);
+      alert("Cannot load candidate data");
+      return;
+    }
+
+    const data = await res.json();
+
+    console.log("DATA:", data);
+
+    document.getElementById("modalContent").innerHTML = `
+      <p><strong>Name:</strong> ${data.name}</p>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>School:</strong> ${data.school || "N/A"}</p>
+      <p><strong>Skills:</strong> ${data.skills || "N/A"}</p>
+    `;
+
+    document.getElementById("viewCV").href = data.cv_url || "#";
+
+    const modal = document.getElementById("candidateModal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+  } catch (err) {
+    console.error("ERROR:", err);
+    alert("JS crashed");
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const modal = document.getElementById("candidateModal");
+
+  if (e.target.id === "closeModal" || e.target.id === "candidateModal") {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+});;
+
+// INIT
+loadStats();
+loadCandidates();
+
+</script>
+
+<div id="candidateModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+
+  <div class="bg-[#0f172a] border border-white/10 rounded-2xl p-6 w-full max-w-lg relative">
+
+    <button id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-white">✕</button>
+
+    <h2 class="text-xl font-semibold text-white mb-4">Candidate Details</h2>
+
+    <div id="modalContent" class="space-y-2 text-sm text-gray-300"></div>
+
+    <a id="viewCV" href="#" target="_blank"
+       class="block mt-4 text-center bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-lg">
+       View CV
+    </a>
+
+  </div>
+</div>
+{% endblock %}

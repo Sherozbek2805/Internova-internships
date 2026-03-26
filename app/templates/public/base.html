@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Internova{% endblock %}</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- CSRF -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+
+<body class="min-h-screen flex flex-col bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] text-gray-200">
+
+  <!-- 🔥 GLOBAL TOAST -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-3"></div>
+
+  <!-- 🔥 CONTENT -->
+  <main class="flex-1 flex items-center justify-center px-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ⚡ GLOBAL JS -->
+  <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+    function toast(message, type = "info") {
+      const container = document.getElementById("toast-container");
+
+      const styles = {
+        success: "bg-green-500/10 border-green-400 text-green-300",
+        error: "bg-red-500/10 border-red-400 text-red-300",
+        info: "bg-blue-500/10 border-blue-400 text-blue-300"
+      };
+
+      const el = document.createElement("div");
+      el.className = `px-4 py-3 rounded-xl border ${styles[type]} backdrop-blur-md shadow-lg transition-all duration-300`;
+      el.innerText = message;
+
+      container.appendChild(el);
+
+      setTimeout(() => {
+        el.classList.add("opacity-0", "translate-x-10");
+        setTimeout(() => el.remove(), 300);
+      }, 4000);
+    }
+
+    function setBtnState(btn, state = "idle") {
+      if (!btn) return;
+
+      if (state === "loading") {
+        btn.disabled = true;
+        btn.dataset.original = btn.innerHTML;
+        btn.innerHTML = "⏳ Loading...";
+      }
+
+      if (state === "success") {
+        btn.innerHTML = "✅ Success";
+      }
+
+      if (state === "error") {
+        btn.innerHTML = "❌ Error";
+      }
+
+      if (state === "idle") {
+        btn.disabled = false;
+        btn.innerHTML = btn.dataset.original || "Submit";
+      }
+    }
+
+    async function api(url, options = {}) {
+      try {
+        const res = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+          },
+          ...options
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toast(data.message || "Error", "error");
+          throw new Error(data.message);
+        }
+
+        return data;
+
+      } catch (err) {
+        toast("Network error", "error");
+        throw err;
+      }
+    }
+  </script>
+
+  <!-- 🔥 PAGE-SPECIFIC SCRIPTS -->
+  {% block scripts %}{% endblock %}
+
+</body>
+</html>

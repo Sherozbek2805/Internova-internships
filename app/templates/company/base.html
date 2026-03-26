@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}Internova{% endblock %}</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .fade-up { animation: fadeUp 0.8s ease forwards; }
+
+    .glow:hover { box-shadow: 0 0 25px rgba(99,102,241,0.6); }
+    .card-hover:hover { transform: translateY(-8px) scale(1.02); }
+
+    .nav-link.active {
+      background: linear-gradient(to right, rgba(59,130,246,0.25), rgba(168,85,247,0.25));
+      color: white;
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .status-badge.reviewing { background: rgba(234,179,8,0.2); color: rgb(253,224,71); }
+    .status-badge.shortlisted { background: rgba(34,197,94,0.2); color: rgb(134,239,172); }
+    .status-badge.selected { background: rgba(59,130,246,0.2); color: rgb(147,197,253); }
+    .status-badge.rejected { background: rgba(239,68,68,0.2); color: rgb(252,165,165); }
+    .status-badge.new { background: rgba(107,114,128,0.2); color: rgb(209,213,219); }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] text-gray-200 min-h-screen">
+
+<header class="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
+
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 fade-up">
+
+<img src="/static/logo.png" 
+     alt="Internova Logo" 
+     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
+</div>
+      <div>
+        <p class="font-semibold text-white text-lg">Internova</p>
+        <p class="text-xs text-gray-400">Company dashboard</p>
+      </div>
+    </div>
+
+    <nav class="hidden lg:flex gap-3 text-sm">
+      <a href="/company/dashboard" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="/company/post" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='post' %}active{% endif %}">Post</a>
+      <a href="/company/candidates" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='candidates' %}active{% endif %}">Candidates</a>
+      <a href="/company/settings" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='settings' %}active{% endif %}">Settings</a>
+    </nav>
+
+    <form action="/logout" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="px-4 py-2 rounded-lg border border-white/10 bg-white/5">Logout</button>
+    </form>
+
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-10">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="border-t border-white/10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between text-sm text-gray-400">
+    <span>Internova</span>
+    <div class="flex gap-4">
+      <a href="#">Terms</a>
+      <a href="#">Security</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

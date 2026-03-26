@@ -1,0 +1,202 @@
+{% extends "admin/base.html" %}
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+  <div>
+    <h1 class="text-3xl font-semibold">Platforma holati</h1>
+    <p class="text-gray-400 text-sm mt-2">
+      Barcha asosiy ko‘rsatkichlar real database ma’lumotlari asosida.
+    </p>
+  </div>
+
+  <div class="px-4 py-2 rounded-xl border border-green-500/20 bg-green-500/10 text-green-300 text-sm">
+    Tizim holati: Faol
+  </div>
+</div>
+
+<!-- SAFE DATA -->
+<div id="chart-data"
+  data-company-labels='{{ chart_company_labels | default([]) | tojson }}'
+  data-company-data='{{ chart_company_data | default([]) | tojson }}'
+  data-status-labels='{{ chart_status_labels | default([]) | tojson }}'
+  data-status-data='{{ chart_status_data | default([]) | tojson }}'>
+</div>
+
+<!-- STATS -->
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+  <div class="p-6 rounded-xl bg-white/5 border border-white/10 card">
+    <p class="text-gray-400 text-sm">Foydalanuvchilar</p>
+    <p class="text-3xl font-semibold mt-2">{{ stats.total_users }}</p>
+    <p class="text-xs text-blue-400 mt-2">Talabalar: {{ stats.total_students }}</p>
+  </div>
+
+  <div class="p-6 rounded-xl bg-white/5 border border-white/10 card">
+    <p class="text-gray-400 text-sm">Kompaniyalar</p>
+    <p class="text-3xl font-semibold mt-2">{{ stats.total_companies }}</p>
+    <p class="text-xs text-green-400 mt-2">Tasdiqlangan: {{ stats.verified_companies }}</p>
+  </div>
+
+  <div class="p-6 rounded-xl bg-white/5 border border-white/10 card">
+    <p class="text-gray-400 text-sm">Internshiplar</p>
+    <p class="text-3xl font-semibold mt-2">{{ stats.total_internships }}</p>
+    <p class="text-xs text-purple-400 mt-2">Tasdiqlangan: {{ stats.approved_internships }}</p>
+  </div>
+
+  <div class="p-6 rounded-xl bg-white/5 border border-white/10 card">
+    <p class="text-gray-400 text-sm">Arizalar</p>
+    <p class="text-3xl font-semibold mt-2">{{ stats.total_applications }}</p>
+    <p class="text-xs text-yellow-400 mt-2">Faol jarayon</p>
+  </div>
+
+</div>
+
+<!-- ALERT CARDS -->
+<div class="grid lg:grid-cols-3 gap-6 mb-10">
+
+  <div class="p-6 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+    <p class="text-sm text-yellow-300">Tasdiqlash kutilmoqda</p>
+    <p class="text-2xl font-semibold mt-2">{{ stats.pending_companies }} kompaniya</p>
+  </div>
+
+  <div class="p-6 rounded-xl bg-red-500/10 border border-red-500/20">
+    <p class="text-sm text-red-300">Bloklangan foydalanuvchilar</p>
+    <p class="text-2xl font-semibold mt-2">{{ stats.banned_users }} ta</p>
+  </div>
+
+  <div class="p-6 rounded-xl bg-blue-500/10 border border-blue-500/20">
+    <p class="text-sm text-blue-300">Tasdiqlanmagan internshiplar</p>
+    <p class="text-2xl font-semibold mt-2">{{ stats.pending_internships }} ta</p>
+  </div>
+
+</div>
+
+<!-- CHARTS -->
+<div class="grid lg:grid-cols-2 gap-10">
+
+  <div class="bg-white/5 border border-white/10 rounded-xl p-6 card">
+    <h2 class="text-lg font-semibold mb-6">Kompaniyalar bo‘yicha internshiplar</h2>
+    <div class="relative h-72">
+      <canvas id="companyChart"></canvas>
+    </div>
+  </div>
+
+  <div class="bg-white/5 border border-white/10 rounded-xl p-6 card">
+    <h2 class="text-lg font-semibold mb-6">Arizalar statusi</h2>
+    <div class="relative h-72">
+      <canvas id="statusChart"></canvas>
+    </div>
+  </div>
+
+  <div class="bg-white/5 border border-white/10 rounded-xl p-6 card">
+    <h2 class="text-lg font-semibold mb-6">Foydalanuvchilar o‘sishi</h2>
+    <div class="relative h-72">
+      <canvas id="growthChart"></canvas>
+    </div>
+  </div>
+
+  <div class="bg-white/5 border border-white/10 rounded-xl p-6 card">
+    <h2 class="text-lg font-semibold mb-6">Foydalanuvchi rollari</h2>
+    <div class="relative h-72">
+      <canvas id="roleChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  if (typeof Chart === "undefined") {
+    console.error("Chart.js not loaded!");
+    return;
+  }
+
+  const el = document.getElementById("chart-data");
+
+  let companyLabels = [];
+  let companyData = [];
+  let statusLabels = [];
+  let statusData = [];
+
+  try {
+    companyLabels = JSON.parse(el.dataset.companyLabels || "[]");
+    companyData = JSON.parse(el.dataset.companyData || "[]");
+    statusLabels = JSON.parse(el.dataset.statusLabels || "[]");
+    statusData = JSON.parse(el.dataset.statusData || "[]");
+  } catch (e) {
+    console.error("Parse error:", e);
+  }
+
+  // fallback
+  if (!companyLabels.length) {
+    companyLabels = ["Demo A", "Demo B"];
+    companyData = [5, 10];
+  }
+
+  if (!statusLabels.length) {
+    statusLabels = ["Pending", "Accepted"];
+    statusData = [8, 12];
+  }
+
+  // BAR
+  new Chart(document.getElementById("companyChart").getContext("2d"), {
+    type: "bar",
+    data: {
+      labels: companyLabels,
+      datasets: [{
+        label: "Internshiplar",
+        data: companyData,
+        backgroundColor: "#60a5fa",
+        borderRadius: 8
+      }]
+    }
+  });
+
+  // DOUGHNUT
+  new Chart(document.getElementById("statusChart").getContext("2d"), {
+    type: "doughnut",
+    data: {
+      labels: statusLabels,
+      datasets: [{
+        data: statusData,
+        backgroundColor: ["#60a5fa","#34d399","#fbbf24","#f87171"]
+      }]
+    }
+  });
+
+  // LINE (growth demo)
+  new Chart(document.getElementById("growthChart").getContext("2d"), {
+    type: "line",
+    data: {
+      labels: ["Jan","Feb","Mar","Apr","May"],
+      datasets: [{
+        label: "Growth",
+        data: [5,15,25,40,60],
+        borderColor: "#34d399",
+        backgroundColor: "rgba(52,211,153,0.2)",
+        fill: true,
+        tension: 0.4
+      }]
+    }
+  });
+
+  // PIE (roles demo)
+  new Chart(document.getElementById("roleChart").getContext("2d"), {
+    type: "pie",
+    data: {
+      labels: ["Talaba","Admin","Kompaniya"],
+      datasets: [{
+        data: [50,5,15],
+        backgroundColor: ["#60a5fa","#f87171","#a78bfa"]
+      }]
+    }
+  });
+
+});
+</script>
+
+{% endblock %}

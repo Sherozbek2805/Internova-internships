@@ -1,0 +1,56 @@
+{% extends "public/base.html" %}
+
+{% block title %}
+  {% if code == 403 %}Forbidden
+  {% elif code == 404 %}Not Found
+  {% elif code == 400 %}Bad Request
+  {% elif code == 429 %}Too Many Requests
+  {% else %}Error{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="text-center max-w-lg mx-auto">
+
+  <!-- 🔢 ERROR CODE -->
+  <h1 class="text-6xl font-bold mb-4
+    {% if code == 403 %}text-red-400
+    {% elif code == 404 %}text-yellow-400
+    {% elif code == 429 %}text-purple-400
+    {% else %}text-blue-400{% endif %}">
+    {{ code }}
+  </h1>
+
+  <!-- 🧠 MESSAGE -->
+  <p class="text-gray-300 mb-6 text-lg">
+    {% if code == 403 %}
+      You don’t have permission to access this page.
+    {% elif code == 404 %}
+      The page you are looking for doesn’t exist.
+    {% elif code == 400 %}
+      Bad request. Something went wrong.
+    {% elif code == 413 %}
+      The file you uploaded is too large.
+    {% elif code == 429 %}
+      Too many requests. Please slow down.
+    {% elif code == "csrf" %}
+      Security check failed. Please refresh and try again.
+    {% else %}
+      Something unexpected happened.
+    {% endif %}
+  </p>
+
+  <!-- 🔁 ACTION -->
+  <div class="flex justify-center gap-3">
+    <a href="/"
+       class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+      Home
+    </a>
+
+    <button onclick="history.back()"
+       class="px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-gray-200">
+      Go Back
+    </button>
+  </div>
+
+</div>
+{% endblock %}

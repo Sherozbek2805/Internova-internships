@@ -1,0 +1,44 @@
+{% for app in applications %}
+<div class="candidate-card p-6 rounded-2xl bg-white/5 border border-white/10"
+     data-id="{{ app.id }}">
+
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+      {{ app.student_name[0] }}
+    </div>
+
+    <div>
+      <h3 class="text-white">{{ app.student_name }}</h3>
+      <p class="text-gray-400 text-sm">{{ app.student_email }}</p>
+    </div>
+  </div>
+
+  <p class="text-gray-300 mb-3">📌 {{ app.internship_title }}</p>
+
+  <input type="number" class="score-input w-full mb-2" value="{{ app.score or 0 }}">
+
+  <select class="status-select w-full mb-2">
+    <option {% if app.status=="Yangi" %}selected{% endif %}>Yangi</option>
+    <option {% if app.status=="Ko'rib chiqilmoqda" %}selected{% endif %}>Ko'rib chiqilmoqda</option>
+    <option {% if app.status=="Qisqa ro'yxat" %}selected{% endif %}>Qisqa ro'yxat</option>
+    <option {% if app.status=="Saralangan" %}selected{% endif %}>Saralangan</option>
+    <option {% if app.status=="Rad etilgan" %}selected{% endif %}>Rad etilgan</option>
+  </select>
+
+  <textarea class="evaluation-note w-full mb-2">{{ app.evaluation_note or "" }}</textarea>
+
+  <button class="save-btn w-full bg-blue-500 text-white py-2 rounded">
+    Save
+  </button>
+
+</div>
+{% endfor %}
+
+<!-- PAGINATION -->
+<div class="col-span-2 flex justify-center gap-3 mt-6">
+  {% for p in range(1, (total // per_page) + 2) %}
+  <button class="page-btn px-4 py-2 bg-white/5 rounded" data-page="{{ p }}">
+    {{ p }}
+  </button>
+  {% endfor %}
+</div>

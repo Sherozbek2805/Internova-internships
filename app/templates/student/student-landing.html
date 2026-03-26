@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internova | Student Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .card {
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .nav-active {
+      color: white !important;
+      background: rgba(59, 130, 246, 0.18) !important;
+      border-color: rgba(96, 165, 250, 0.45) !important;
+      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.2);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] text-gray-200 selection:bg-blue-500/40">
+
+  <header class="sticky top-0 z-30 border-b border-white/10 bg-white/5 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="/static/logo.png" 
+     alt="Internova Logo" 
+     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
+        <div>
+          <p class="font-semibold text-white">Internova</p>
+          <p class="text-xs text-gray-400">Student panel</p>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-3 text-sm">
+        <button data-section="overview" onclick="showSection('overview')" class="nav-btn nav-active px-4 py-2 rounded-lg border border-white/10 transition">
+          Overview
+        </button>
+        <button data-section="explore" onclick="showSection('explore')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Explore
+        </button>
+        <button data-section="applications" onclick="showSection('applications')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Applications
+        </button>
+        <button data-section="saved" onclick="showSection('saved')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Saved
+        </button>
+        <button data-section="profile" onclick="showSection('profile')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Profile
+        </button>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-3 px-3 py-2 rounded-xl border border-white/10 bg-white/5">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center font-semibold text-white">
+            {{ user.name[0]|upper if user and user.name else 'S' }}
+          </div>
+          <div class="leading-tight">
+            <p class="text-sm font-medium text-white">{{ user.name or 'Student' }}</p>
+            <p class="text-xs text-gray-400">Student</p>
+          </div>
+        </div>
+
+        <form action="/logout" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button type="submit" class="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm hover:bg-white/10 transition">
+    Logout
+  </button>
+</form>
+      </div>
+    </div>
+
+    <div class="lg:hidden max-w-7xl mx-auto px-6 pb-4">
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
+        <button data-section="overview" onclick="showSection('overview')" class="nav-btn nav-active px-3 py-2 rounded-lg border border-white/10 bg-white/10">
+          Overview
+        </button>
+        <button data-section="explore" onclick="showSection('explore')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Explore
+        </button>
+        <button data-section="applications" onclick="showSection('applications')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Applications
+        </button>
+        <button data-section="saved" onclick="showSection('saved')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Saved
+        </button>
+        <button data-section="profile" onclick="showSection('profile')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Profile
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-10">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-6 space-y-3">
+          {% for category, message in messages %}
+            <div class="p-4 rounded-xl border {% if category == 'success' %}border-green-500/30 bg-green-500/10 text-green-300{% else %}border-red-500/30 bg-red-500/10 text-red-300{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section id="overview" class="spa-section fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">Welcome, {{ user.name or 'Student' }}</h1>
+        <p class="text-gray-400 mt-2">Manage your applications, saved internships, and profile from one place.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Total applications</p>
+          <p class="text-3xl font-semibold mt-2">{{ total_applications or 0 }}</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Under review</p>
+          <p class="text-3xl font-semibold mt-2 text-yellow-400">{{ reviewing_count or 0 }}</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Saved internships</p>
+          <p class="text-3xl font-semibold mt-2">{{ saved_count or 0 }}</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Profile strength</p>
+          <p class="text-3xl font-semibold mt-2 text-green-400">{{ profile_strength or 0 }}%</p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+          <h2 class="text-xl font-semibold mb-5">Recent activity</h2>
+
+          {% if recent_activity %}
+            <div class="space-y-4">
+              {% for app in recent_activity %}
+                <div class="p-4 rounded-xl border border-white/10 bg-white/5">
+                  <p class="font-medium text-white">{{ app.title }}</p>
+                  <p class="text-sm text-gray-400 mt-1">
+                    {{ app.company_name or 'Unknown company' }} • {{ app.status }}
+                  </p>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="p-4 rounded-xl border border-white/10 bg-white/5 text-gray-400">
+              No recent activity yet.
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+          <h2 class="text-xl font-semibold mb-5">Quick actions</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <button onclick="showSection('explore')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">Explore internships</p>
+              <p class="text-sm text-gray-400 mt-1">Find new opportunities</p>
+            </button>
+
+            <button onclick="showSection('applications')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">My applications</p>
+              <p class="text-sm text-gray-400 mt-1">Track progress</p>
+            </button>
+
+            <button onclick="showSection('profile')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">Update profile</p>
+              <p class="text-sm text-gray-400 mt-1">Improve your profile score</p>
+            </button>
+
+            <button onclick="showSection('saved')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">Saved jobs</p>
+              <p class="text-sm text-gray-400 mt-1">Review later</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="explore" class="spa-section hidden fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">Explore Internships</h1>
+        <p class="text-gray-400 mt-2">Browse available internships and take action instantly.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% if explore_internships %}
+          {% for job in explore_internships %}
+            <div class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl card">
+
+  <!-- JOB TITLE -->
+  <h3 class="text-lg font-semibold text-white">{{ job.title }}</h3>
+
+  <!-- COMPANY BLOCK -->
+  <div class="flex items-center gap-3 mt-4">
+    <div 
+  class="w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold text-sm border border-white/10"
+  data-avatar="{{ job.company_name }}">
+  {{ job.company_name[0]|upper if job.company_name else 'C' }}
+</div>
+
+<script>
+function getColorFromName(name) {
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-purple-500",
+    "bg-pink-500",
+    "bg-yellow-500",
+    "bg-indigo-500",
+    "bg-teal-500"
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return colors[Math.abs(hash) % colors.length];
+}
+
+// APPLY COLORS TO ALL AVATARS
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("[data-avatar]").forEach(el => {
+    const name = el.dataset.avatar || "Company";
+    el.classList.add(getColorFromName(name));
+  });
+});
+</script>
+
+    <div class="flex-1">
+      <p class="text-sm font-medium text-white">
+        {{ job.company_name }}
+      </p>
+      <p class="text-xs text-gray-400">
+        {{ job.industry or 'Company' }}
+      </p>
+    </div>
+
+    <!-- VIEW BUTTON -->
+    <button 
+      onclick="openCompanyModal(this)"
+      data-name="{{ job.company_name }}"
+      data-initial="{{ job.company_name[0]|upper if job.company_name else 'C' }}"
+      data-industry="{{ job.industry or 'Company' }}"
+      data-description="{{ job.company_description or 'No description available' }}"
+      data-address="{{ job.address or 'Not specified' }}"
+      data-phone="{{ job.phone1 or 'Not provided' }}"
+      data-website="{{ job.website or 'N/A' }}"
+      class="mt-2 text-xs text-blue-400 hover:underline">
+      View company →
+    </button>
+  </div>
+
+  <!-- META -->
+  <div class="flex gap-3 text-xs mt-4 text-gray-400 flex-wrap">
+    <span>📍 {{ job.location or 'Not specified' }}</span>
+    {% if job.internship_type %}
+      <span class="px-2 py-1 rounded bg-white/10">{{ job.internship_type }}</span>
+    {% endif %}
+    {% if job.stipend %}
+      <span class="px-2 py-1 rounded bg-white/10">{{ job.stipend }}</span>
+    {% endif %}
+    {% if job.deadline %}
+      <span class="px-2 py-1 rounded bg-white/10">Deadline: {{ job.deadline }}</span>
+    {% endif %}
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="mt-5 flex flex-wrap gap-3">
+    {% if job.is_applied %}
+      <span class="px-4 py-2 rounded-lg bg-green-500/20 text-green-300 text-sm border border-green-500/30">
+        Applied
+      </span>
+    {% else %}
+      <form action="/apply/{{ job.id }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm">
+          Apply
+        </button>
+      </form>
+    {% endif %}
+
+    {% if job.is_saved %}
+      <form action="/unsave/{{ job.id }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm">
+          Unsave
+        </button>
+      </form>
+    {% else %}
+      <form action="/save/{{ job.id }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm">
+          Save
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+</div>
+          {% endfor %}
+        {% else %}
+          <div class="col-span-full p-6 rounded-2xl border border-white/10 bg-white/5 text-gray-400">
+            No internships available right now.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section id="applications" class="spa-section hidden fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">My Applications</h1>
+        <p class="text-gray-400 mt-2">All applications you have submitted.</p>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
+        <table class="w-full text-sm">
+          <thead class="border-b border-white/10 text-gray-400">
+            <tr>
+              <th class="text-left px-5 py-4">Internship</th>
+              <th>Company</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if applications %}
+              {% for app in applications %}
+                <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                  <td class="px-5 py-4 font-semibold">{{ app.title }}</td>
+                  <td class="text-center">{{ app.company_name or 'Unknown' }}</td>
+                  <td class="text-center">{{ app.created_at }}</td>
+                  <td class="text-center {% if app.status == 'Qabul qilindi' %}text-green-400{% elif app.status == 'Rad etildi' %}text-red-400{% else %}text-yellow-400{% endif %}">
+                    {{ app.status }}
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="4" class="px-5 py-6 text-center text-gray-400">
+                  You have not applied to any internships yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="saved" class="spa-section hidden fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">Saved Internships</h1>
+        <p class="text-gray-400 mt-2">Internships you saved for later.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% if saved_jobs %}
+          {% for job in saved_jobs %}
+            <div class="p-6 rounded-2xl border border-white/10 bg-white/5 card">
+              <h3 class="text-lg font-semibold">{{ job.title }}</h3>
+              <p class="text-sm text-gray-400 mt-1">{{ job.company_name or 'Unknown company' }}</p>
+
+              <div class="flex gap-3 text-xs mt-3 text-gray-400 flex-wrap">
+                <span>📍 {{ job.location or 'Not specified' }}</span>
+                {% if job.internship_type %}
+                  <span class="px-2 py-1 rounded bg-white/10">{{ job.internship_type }}</span>
+                {% endif %}
+                {% if job.stipend %}
+                  <span class="px-2 py-1 rounded bg-white/10">{{ job.stipend }}</span>
+                {% endif %}
+              </div>
+
+              <div class="mt-5 flex gap-3">
+                {% if job.is_applied %}
+                  <button
+                    type="button"
+                    disabled
+                    class="px-4 py-2 rounded-lg bg-green-500/20 text-green-300 text-sm border border-green-500/30 cursor-not-allowed opacity-80"
+                  >
+                    Already Applied
+                  </button>
+                {% else %}
+                  <form action="/apply/{{ job.internship_id }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm">
+                      Apply
+                    </button>
+                  </form>
+                {% endif %}
+
+                <form action="/unsave/{{ job.internship_id }}" method="POST">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm">
+                    Remove
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-span-full p-6 rounded-2xl border border-white/10 bg-white/5 text-gray-400">
+            No saved internships yet.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section id="profile" class="spa-section hidden fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">Profile</h1>
+        <p class="text-gray-400 mt-2">Update your personal information and password.</p>
+      </div>
+
+      {% set strength = profile_strength or 0 %}
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-8">
+          <div class="p-6 rounded-2xl border border-white/10 bg-white/5">
+            <h2 class="text-xl font-semibold mb-5">Personal information</h2>
+            <form action="/profile/update" method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-gray-300 mb-2">Name</label>
+                  <input required type="text" name="name" value="{{ user.name or '' }}" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-blue-400">
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-300 mb-2">Email</label>
+                  <input required type="email" name="email" value="{{ user.email or '' }}" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-blue-400">
+                </div>
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label class="block text-sm text-gray-300 mb-2">School</label>
+                  <input required type="text" name="school" value="{{ user.school or '' }}" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-blue-400">
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-300 mb-2">Skills</label>
+                  <input required type="text" name="skills" value="{{ user.skills or '' }}" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-blue-400">
+                </div>
+              </div>
+
+              <div class="mt-6 flex gap-3">
+                <button type="submit" class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm">
+                  Save changes
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="p-6 rounded-2xl border border-white/10 bg-white/5">
+  <h2 class="text-xl font-semibold mb-5">CV / Resume</h2>
+
+  <form action="/profile/upload-cv" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <!-- FILE INPUT -->
+    <div class="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:border-blue-400 transition">
+      <input type="file" name="cv" accept=".pdf,.doc,.docx" class="hidden" id="cvUpload" required>
+
+      <label for="cvUpload" class="cursor-pointer">
+        <p class="text-gray-300 text-sm">Click to upload your CV</p>
+        <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX (max 5MB)</p>
+      </label>
+    </div>
+
+    <!-- FILE NAME PREVIEW -->
+    <p id="cvFileName" class="text-xs text-gray-400 mt-3"></p>
+
+    <!-- ACTION -->
+    <div class="mt-5 flex gap-3">
+      <button type="submit" 
+        class="px-5 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm">
+        Upload CV
+      </button>
+
+      {% if user.cv_path %}
+      <a href="{{ user.cv_path }}" target="_blank"
+        class="px-5 py-3 rounded-xl border border-white/10 bg-white/5 text-sm">
+        View CV
+      </a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<script>
+document.getElementById("cvUpload")?.addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    document.getElementById("cvFileName").innerText = "Selected: " + file.name;
+  }
+});
+</script>
+
+          <div class="p-6 rounded-2xl border border-white/10 bg-white/5">
+            <h2 class="text-xl font-semibold mb-5">Change password</h2>
+            <form action="/profile/change-password" method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <div class="grid gap-4">
+                <div>
+                  <label class="block text-sm text-gray-300 mb-2">Current password</label>
+                  <input type="password" name="current_password" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-blue-400" required>
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-300 mb-2">New password</label>
+                  <input type="password" name="new_password" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-blue-400" required>
+                </div>
+
+                <div>
+                  <label class="block text-sm text-gray-300 mb-2">Confirm new password</label>
+                  <input type="password" name="confirm_password" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-blue-400" required>
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <button type="submit" class="px-5 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm">
+                  Update password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="p-6 rounded-2xl border border-white/10 bg-white/5">
+            <h2 class="text-lg font-semibold mb-4">Profile completion</h2>
+
+            <progress value="{{ strength }}" max="100" class="w-full h-3 rounded-full overflow-hidden"></progress>
+
+            <p class="text-sm text-gray-400 mt-3">
+              Your profile is {{ strength }}% complete.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl border border-white/10 bg-white/5">
+            <h2 class="text-lg font-semibold mb-4">Tips</h2>
+            <ul class="space-y-3 text-sm text-gray-300">
+              <li>✔ Add more skills</li>
+              <li>✔ Keep your school updated</li>
+              <li>✔ Use a professional email</li>
+              <li>✔ Apply to more internships</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <br>
+  <br>
+  <!-- FOOTER -->
+
+<footer class="border-t border-white/10 mt-20 bg-[#0b0f1a]">
+  <div class="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-8">
+
+    <!-- Brand -->
+    <div>
+      <h2 class="text-2xl font-bold mb-3">Internova</h2>
+      <p class="text-gray-400 text-sm">
+        Connecting students with real opportunities.
+      </p>
+    </div>
+
+    <!-- Links -->
+    <div>
+      <h3 class="font-semibold mb-3">Platform</h3>
+      <ul class="space-y-2 text-gray-400 text-sm">
+        <li><a href="/discover" class="hover:text-white">Find Internships</a></li>
+        <li><a href="/post" class="hover:text-white">Post Internship</a></li>
+        <li><a href="/dashboard" class="hover:text-white">Dashboard</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-semibold mb-3">Company</h3>
+      <ul class="space-y-2 text-gray-400 text-sm">
+        <li><a href="/about" class="hover:text-white">About</a></li>
+        <li><a href="/faq" class="hover:text-white">FAQ</a></li>
+        <li><a href="/contact" class="hover:text-white">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-semibold mb-3">Legal</h3>
+      <ul class="space-y-2 text-gray-400 text-sm">
+        <li><a href="/privacy" class="hover:text-white">Privacy Policy</a></li>
+        <li><a href="/terms" class="hover:text-white">Terms of Service</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="text-center text-gray-500 text-sm pb-6">
+    © 2026 Internova. All rights reserved.
+  </div>
+</footer>
+
+
+  <script>
+    function setActiveNav(sectionId) {
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isActive = btn.dataset.section === sectionId;
+
+        btn.classList.remove('nav-active', 'bg-white/10', 'border-white/10', 'text-white');
+        btn.classList.add('text-gray-300');
+
+        if (isActive) {
+          btn.classList.add('nav-active', 'bg-white/10', 'border-white/10', 'text-white');
+          btn.classList.remove('text-gray-300');
+        }
+      });
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.spa-section').forEach(section => {
+        section.classList.add('hidden');
+      });
+
+      const activeSection = document.getElementById(sectionId);
+      if (activeSection) {
+        activeSection.classList.remove('hidden');
+      }
+
+      setActiveNav(sectionId);
+      localStorage.setItem('studentActiveSection', sectionId);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const savedSection = localStorage.getItem('studentActiveSection') || 'overview';
+      showSection(savedSection);
+    });
+  </script>
+<div id="companyModal" class="fixed inset-0 hidden items-center justify-center bg-black/70 backdrop-blur-sm z-50">
+
+  <div class="w-full max-w-xl bg-[#0b1020] border border-white/10 rounded-3xl p-8 relative animate-fadeUp">
+
+    <button onclick="closeCompanyModal()" 
+      class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">✕</button>
+
+    <div class="flex items-center gap-4">
+  
+  <!-- LETTER AVATAR -->
+  <div id="modalAvatar" 
+       class="w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+    A
+  </div>
+
+  <div>
+    <h2 id="modalName" class="text-lg font-semibold text-white"></h2>
+    <p id="modalIndustry" class="text-sm text-gray-400"></p>
+  </div>
+</div>
+
+    <p id="modalDescription" class="mt-5 text-gray-300 leading-relaxed"></p>
+
+    <div class="mt-6 space-y-2 text-sm text-gray-400">
+      <p>📍 <span id="modalAddress"></span></p>
+      <p>📞 <span id="modalPhone"></span></p>
+      <p>🌐 <span id="modalWebsite"></span></p>
+    </div>
+
+  </div>
+</div>
+<script>
+function getColorFromName(name) {
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-purple-500",
+    "bg-pink-500",
+    "bg-yellow-500",
+    "bg-indigo-500",
+    "bg-teal-500"
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return colors[Math.abs(hash) % colors.length];
+}
+
+function openCompanyModal(btn) {
+  const modal = document.getElementById("companyModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  const name = btn.dataset.name || "Company";
+  const initial = btn.dataset.initial || "C";
+
+  // TEXT
+  document.getElementById("modalName").innerText = name;
+  document.getElementById("modalIndustry").innerText = btn.dataset.industry;
+  document.getElementById("modalDescription").innerText = btn.dataset.description;
+  document.getElementById("modalAddress").innerText = btn.dataset.address;
+  document.getElementById("modalPhone").innerText = btn.dataset.phone;
+  document.getElementById("modalWebsite").innerText = btn.dataset.website;
+
+  // AVATAR
+  const avatar = document.getElementById("modalAvatar");
+  avatar.innerText = initial;
+
+  // REMOVE OLD COLORS
+  avatar.className = "w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold text-lg";
+
+  // ADD NEW COLOR
+  avatar.classList.add(getColorFromName(name));
+}
+
+function closeCompanyModal() {
+  const modal = document.getElementById("companyModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+</script>
+</body>
+</html>
