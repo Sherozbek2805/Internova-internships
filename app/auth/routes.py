@@ -8,7 +8,7 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 from app.db import get_db
 from app.db import get_cursor
-from app.extensions import oauth, limiter, csrf, mail
+from app.extensions import oauth, limiter, csrf
 from app.public.routes import get_dashboard_url
 
 auth_bp = Blueprint("auth", __name__)
@@ -36,8 +36,8 @@ def get_serializer():
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
 
 
-def generate_email_verification_token(email):
-    return get_serializer().dumps(email, salt="email-verification")
+def generate_email_verification_token(data):
+    return get_serializer().dumps(data, salt="email-verification")
 
 
 def verify_email_token(token, max_age):
@@ -185,95 +185,48 @@ def signup():
 
     # 🔐 VALIDATION
     if not name or not email or not password or not role:
-        return jsonify({
-            "success": False,
-            "message": "Missing required fields."
-        }), 400
+        return jsonify({"success": False, "message": "Missing required fields."}), 400
 
     if role not in {"student", "company"}:
-        return jsonify({
-            "success": False,
-            "message": "Invalid role."
-        }), 400
+        return jsonify({"success": False, "message": "Invalid role."}), 400
 
     if not is_valid_email(email):
-        return jsonify({
-            "success": False,
-            "message": "Invalid email format."
-        }), 400
+        return jsonify({"success": False, "message": "Invalid email format."}), 400
 
     if not is_valid_password(password):
-        return jsonify({
-            "success": False,
-            "message": "Weak password."
-        }), 400
+        return jsonify({"success": False, "message": "Weak password."}), 400
 
-    conn = get_db()
+    # 🔐 HASH PASSWORD
+    hashed_password = generate_password_hash(password)
 
+    # 📦 STORE DATA IN TOKEN
+    token_data = {
+        "name": name,
+        "email": email,
+        "password": hashed_password,
+        "role": role,
+        "school": school,
+        "skills": skills,
+        "phone1": phone1,
+        "phone2": phone2,
+        "address": address,
+        "industry": industry
+    }
+
+    token = generate_email_verification_token(token_data)
+
+    # 📧 SEND EMAIL
     try:
-        cur = get_cursor(conn)
-
-        # 🔍 CHECK EXISTING EMAIL
-        cur.execute(
-            "SELECT id FROM users WHERE LOWER(email)=LOWER(%s)",
-            (email,)
-        )
-        existing = cur.fetchone()
-
-        if existing:
-            return jsonify({
-                "success": False,
-                "message": "Email already registered."
-            }), 409
-
-        # 🔐 HASH PASSWORD
-        hashed_password = generate_password_hash(password)
-
-        # 👤 INSERT USER
-        cur.execute("""
-            INSERT INTO users (name, email, password, role, school, skills, verified)
-            VALUES (%s, %s, %s, %s, %s, %s, FALSE)
-            RETURNING id
-        """, (name, email, hashed_password, role, school, skills))
-
-        user_id = cur.fetchone()["id"]
-
-        # 🏢 COMPANY PROFILE (IF NEEDED)
-        if role == "company":
-            cur.execute("""
-                INSERT INTO companies (name, user_id, phone1, phone2, address, industry)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (name, user_id, phone1, phone2, address, industry))
-
-        # ✅ COMMIT BEFORE EMAIL
-        conn.commit()
-
-    except Exception:
-        conn.rollback()
-        current_app.logger.exception("Signup failed")
-        return jsonify({
-            "success": False,
-            "message": "Internal error."
-        }), 500
-
-    finally:
-        conn.close()
-
-    # 📧 SEND EMAIL (outside transaction → safer)
-    try:
-        token = generate_email_verification_token(email)
-
         from app.services.email_service import send_verification
-        # send_verification(email, token)
-
+        send_verification(email, token)
     except Exception as e:
-        # Do NOT fail signup if email fails
-        current_app.logger.warning(f"Email sending failed: {e}")
+        current_app.logger.error(f"Email failed: {e}")
+        return jsonify({"success": False, "message": "Email sending failed"}), 500
 
     return jsonify({
         "success": True,
-        "message": "Account created. Check your email."
-    }), 201
+        "message": "Check your email to complete registration."
+    }), 200
 
 # -------------------- CHECK EMAIL --------------------
 @auth_bp.route("/check-email", methods=["POST"])
@@ -325,15 +278,15 @@ def check_email():
     return jsonify({
         "available": True
     }), 200
+
+
 # -------------------- VERIFY EMAIL --------------------
 @auth_bp.route("/verify/<token>")
 def verify_email(token):
     try:
-        email = normalize_email(
-            verify_email_token(
-                token,
-                current_app.config.get("EMAIL_TOKEN_EXPIRES_SECONDS", 3600)
-            )
+        data = verify_email_token(
+            token,
+            current_app.config.get("EMAIL_TOKEN_EXPIRES_SECONDS", 3600)
         )
     except SignatureExpired:
         return "<h2 style='text-align:center;'>Link expired</h2>", 400
@@ -344,43 +297,59 @@ def verify_email(token):
     try:
         cur = get_cursor(conn)
 
-        # 🔍 FIND USER
+        email = normalize_email(data["email"])
+
+        # 🔍 CHECK IF USER EXISTS
         cur.execute(
-            "SELECT id, verified FROM users WHERE LOWER(email)=LOWER(%s)",
+            "SELECT id FROM users WHERE LOWER(email)=LOWER(%s)",
             (email,)
         )
-        user = cur.fetchone()
+        existing = cur.fetchone()
 
-        if not user:
-            return "<h2>User not found</h2>", 404
+        if existing:
+            return "<h2 style='text-align:center;'>Account already exists</h2>", 200
 
-        # ✅ UPDATE ONLY IF NOT VERIFIED
-        if not user["verified"]:
-            cur.execute(
-                "UPDATE users SET verified=TRUE WHERE id=%s",
-                (user["id"],)
-            )
-            conn.commit()
+        # 👤 INSERT USER
+        cur.execute("""
+            INSERT INTO users (name, email, password, role, school, skills, verified)
+            VALUES (%s, %s, %s, %s, %s, %s, TRUE)
+            RETURNING id
+        """, (
+            data["name"],
+            email,
+            data["password"],
+            data["role"],
+            data["school"],
+            data["skills"]
+        ))
+
+        user_id = cur.fetchone()["id"]
+
+        # 🏢 COMPANY PROFILE
+        if data["role"] == "company":
+            cur.execute("""
+                INSERT INTO companies (name, user_id, phone1, phone2, address, industry)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (
+                data["name"],
+                user_id,
+                data["phone1"],
+                data["phone2"],
+                data["address"],
+                data["industry"]
+            ))
+
+        conn.commit()
 
     except Exception:
         conn.rollback()
-        current_app.logger.exception("Email verification failed")
-        return "<h2>Internal server error</h2>", 500
+        current_app.logger.exception("Verification failed")
+        return "<h2 style='text-align:center;'>Internal server error</h2>", 500
 
     finally:
         conn.close()
 
-    # 🔁 REDIRECT TO LOGIN
     return redirect(url_for("auth.login", verified="1"))
-
-
-# -------------------- LOGOUT --------------------
-@auth_bp.route("/logout", methods=["POST"])
-def logout():
-    session.clear()
-    flash("Logged out successfully.", "info")
-    return redirect("/")
-
 
 # -------------------- GOOGLE LOGIN --------------------
 @auth_bp.route("/login/google")
