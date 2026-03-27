@@ -264,7 +264,7 @@ def signup():
         token = generate_email_verification_token(email)
 
         from app.services.email_service import send_verification
-        send_verification(email, token)
+        # send_verification(email, token)
 
     except Exception as e:
         # Do NOT fail signup if email fails
