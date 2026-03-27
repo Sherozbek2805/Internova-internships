@@ -8,7 +8,7 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 from app.db import get_db
 from app.db import get_cursor
-from app.extensions import oauth, limiter, csrf
+from app.extensions import oauth, limiter, csrf, mail
 from app.public.routes import get_dashboard_url
 
 auth_bp = Blueprint("auth", __name__)
