@@ -325,6 +325,11 @@ def check_email():
         "available": True
     }), 200
 
+@auth_bp.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("public.index"))  # 👈 change here
+
 # -------------------- GOOGLE LOGIN --------------------
 @auth_bp.route("/login/google")
 @limiter.limit("10 per minute")
