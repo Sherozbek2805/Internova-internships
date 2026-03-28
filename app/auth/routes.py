@@ -325,10 +325,10 @@ def check_email():
         "available": True
     }), 200
 
-@auth_bp.route("/logout")
+@auth_bp.route("/logout", methods=["GET", "POST"])
 def logout():
     session.clear()
-    return redirect(url_for("public.index"))  # 👈 change here
+    return redirect(url_for("public.index"))
 
 # -------------------- GOOGLE LOGIN --------------------
 @auth_bp.route("/login/google")
