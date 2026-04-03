@@ -1,0 +1,167 @@
+ <section id="explore" class="spa-section hidden fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">Explore Internships</h1>
+        <p class="text-gray-400 mt-2">Browse available internships and take action instantly.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% if explore_internships %}
+          {% for job in explore_internships %}
+            <div class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl card">
+
+  <!-- JOB TITLE -->
+  <h3 class="text-lg font-semibold text-white">{{ job.title }}</h3>
+
+  <!-- COMPANY BLOCK -->
+  <div class="flex items-center gap-3 mt-4">
+    <div 
+  class="w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold text-sm border border-white/10"
+  data-avatar="{{ job.company_name }}">
+  {{ job.company_name[0]|upper if job.company_name else 'C' }}
+</div>
+
+    <div class="flex-1">
+      <p class="text-sm font-medium text-white">
+        {{ job.company_name }}
+      </p>
+      <p class="text-xs text-gray-400">
+        {{ job.industry or 'Company' }}
+      </p>
+    </div>
+
+    <!-- VIEW BUTTON -->
+    <button 
+      onclick="openCompanyModal(this)"
+      data-name="{{ job.company_name }}"
+      data-initial="{{ job.company_name[0]|upper if job.company_name else 'C' }}"
+      data-industry="{{ job.industry or 'Company' }}"
+      data-description="{{ job.company_description or 'No description available' }}"
+      data-address="{{ job.address or 'Not specified' }}"
+      data-phone="{{ job.phone1 or 'Not provided' }}"
+      data-website="{{ job.website or 'N/A' }}"
+      class="mt-2 text-xs text-blue-400 hover:underline">
+      View company →
+    </button>
+  </div>
+
+  <!-- META -->
+  <div class="flex gap-3 text-xs mt-4 text-gray-400 flex-wrap">
+    <span>📍 {{ job.location or 'Not specified' }}</span>
+    {% if job.internship_type %}
+      <span class="px-2 py-1 rounded bg-white/10">{{ job.internship_type }}</span>
+    {% endif %}
+    {% if job.stipend %}
+      <span class="px-2 py-1 rounded bg-white/10">{{ job.stipend }}</span>
+    {% endif %}
+    {% if job.deadline %}
+      <span class="px-2 py-1 rounded bg-white/10">Deadline: {{ job.deadline }}</span>
+    {% endif %}
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="mt-5 flex flex-wrap gap-3">
+    {% if job.is_applied %}
+      <span class="px-4 py-2 rounded-lg bg-green-500/20 text-green-300 text-sm border border-green-500/30">
+        Applied
+      </span>
+    {% else %}
+<button 
+  class="apply-btn px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm"
+  data-id="{{ job.id }}">
+  Apply
+</button>
+    {% endif %}
+
+    {% if job.is_saved %}
+      <form action="/unsave/{{ job.id }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm">
+          Unsave
+        </button>
+      </form>
+    {% else %}
+      <form action="/save/{{ job.id }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm">
+          Save
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+</div>
+          {% endfor %}
+        {% else %}
+          <div class="col-span-full p-6 rounded-2xl border border-white/10 bg-white/5 text-gray-400">
+            No internships available right now.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+<!-- APPLY MODAL -->
+<div id="applyModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+  <div class="bg-[#111] p-6 rounded-2xl w-full max-w-lg border border-white/10">
+
+    <h2 class="text-xl font-semibold text-white mb-4">
+      Why this internship?
+    </h2>
+
+    <form id="applyForm" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      
+      <textarea 
+        name="motivation"
+        required
+        placeholder="Write up to 250 words..."
+        class="w-full h-40 p-3 rounded-lg bg-white/5 border border-white/10 text-white resize-none">
+      </textarea>
+
+      <p class="text-xs text-gray-400 mt-2">Max 250 words</p>
+
+      <div class="flex justify-end gap-3 mt-5">
+        <button type="button" onclick="closeApplyModal()" 
+          class="px-4 py-2 rounded-lg bg-white/10 text-white">
+          Cancel
+        </button>
+
+        <button type="submit" 
+          class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+          Submit
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+<div id="companyModal" class="fixed inset-0 hidden items-center justify-center bg-black/70 backdrop-blur-sm z-50">
+
+  <div class="w-full max-w-xl bg-[#0b1020] border border-white/10 rounded-3xl p-8 relative animate-fadeUp">
+
+    <button onclick="closeCompanyModal()" 
+      class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">✕</button>
+
+    <div class="flex items-center gap-4">
+  
+  <!-- LETTER AVATAR -->
+  <div id="modalAvatar" 
+       class="w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+    A
+  </div>
+
+  <div>
+    <h2 id="modalName" class="text-lg font-semibold text-white"></h2>
+    <p id="modalIndustry" class="text-sm text-gray-400"></p>
+  </div>
+</div>
+
+    <p id="modalDescription" class="mt-5 text-gray-300 leading-relaxed"></p>
+
+    <div class="mt-6 space-y-2 text-sm text-gray-400">
+      <p>📍 <span id="modalAddress"></span></p>
+      <p>📞 <span id="modalPhone"></span></p>
+      <p>🌐 <span id="modalWebsite"></span></p>
+    </div>
+
+  </div>
+</div>

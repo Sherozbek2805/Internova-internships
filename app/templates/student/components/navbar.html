@@ -1,0 +1,70 @@
+  <header class="sticky top-0 z-30 border-b border-white/10 bg-white/5 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="/static/logo.png" 
+     alt="Internova Logo" 
+     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
+        <div>
+          <p class="font-semibold text-white">Internova</p>
+          <p class="text-xs text-gray-400">Student panel</p>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-3 text-sm">
+        <button data-section="overview" onclick="showSection('overview')" class="nav-btn nav-active px-4 py-2 rounded-lg border border-white/10 transition">
+          Overview
+        </button>
+        <button data-section="explore" onclick="showSection('explore')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Explore
+        </button>
+        <button data-section="applications" onclick="showSection('applications')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Applications
+        </button>
+        <button data-section="saved" onclick="showSection('saved')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Saved
+        </button>
+        <button data-section="profile" onclick="showSection('profile')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
+          Profile
+        </button>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-3 px-3 py-2 rounded-xl border border-white/10 bg-white/5">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center font-semibold text-white">
+            {{ user.name[0]|upper if user and user.name else 'S' }}
+          </div>
+          <div class="leading-tight">
+            <p class="text-sm font-medium text-white">{{ user.name or 'Student' }}</p>
+            <p class="text-xs text-gray-400">Student</p>
+          </div>
+        </div>
+
+        <form action="/logout" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button type="submit" class="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm hover:bg-white/10 transition">
+    Logout
+  </button>
+</form>
+      </div>
+    </div>
+
+    <div class="lg:hidden max-w-7xl mx-auto px-6 pb-4">
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
+        <button data-section="overview" onclick="showSection('overview')" class="nav-btn nav-active px-3 py-2 rounded-lg border border-white/10 bg-white/10">
+          Overview
+        </button>
+        <button data-section="explore" onclick="showSection('explore')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Explore
+        </button>
+        <button data-section="applications" onclick="showSection('applications')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Applications
+        </button>
+        <button data-section="saved" onclick="showSection('saved')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Saved
+        </button>
+        <button data-section="profile" onclick="showSection('profile')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
+          Profile
+        </button>
+      </div>
+    </div>
+  </header>

@@ -1,0 +1,73 @@
+<section id="applications" class="spa-section hidden fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">My Applications</h1>
+        <p class="text-gray-400 mt-2">All applications you have submitted.</p>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
+        <table class="w-full text-sm">
+          <thead class="border-b border-white/10 text-gray-400">
+            <tr>
+              <th class="text-left px-5 py-4">Internship</th>
+              <th>Company</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if applications %}
+              {% for app in applications %}
+                <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                  <td class="px-5 py-4 font-semibold">{{ app.title }}</td>
+                  <td class="text-center">{{ app.company_name or 'Unknown' }}</td>
+                  <td class="text-center">{{ app.created_at }}</td>
+
+                  <td class="text-center 
+                    {% if app.status == 'accepted' %}text-green-400
+                    {% elif app.status == 'rejected' %}text-red-400
+                    {% else %}text-yellow-400{% endif %}">
+                    {{ app.status }}
+                  </td>
+
+                  <!-- ⭐ SCORE -->
+                  <td class="text-center">
+                    {{ app.score if app.score is not none else "-" }}
+                  </td>
+
+                  <!-- 🔥 BUTTON -->
+                  <td class="text-center">
+                    <button 
+                      class="view-feedback-btn px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded"
+                      data-note="{{ app.evaluation_note }}"
+                      data-score="{{ app.score }}"
+                      data-status="{{ app.status }}"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="6" class="px-5 py-6 text-center text-gray-400">
+                  You have not applied to any internships yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div id="feedbackModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+
+  <div class="bg-[#0f172a] border border-white/10 rounded-2xl p-6 w-full max-w-lg relative">
+
+    <button id="closeFeedbackModal" class="absolute top-3 right-3 text-gray-400 hover:text-white">✕</button>
+
+    <h2 class="text-xl font-semibold text-white mb-4">Application Feedback</h2>
+
+    <div id="feedbackContent" class="space-y-3 text-sm text-gray-300"></div>
+
+  </div>
+</div>

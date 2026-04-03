@@ -1,0 +1,57 @@
+   <section id="saved" class="spa-section hidden fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">Saved Internships</h1>
+        <p class="text-gray-400 mt-2">Internships you saved for later.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% if saved_jobs %}
+          {% for job in saved_jobs %}
+            <div class="p-6 rounded-2xl border border-white/10 bg-white/5 card">
+              <h3 class="text-lg font-semibold">{{ job.title }}</h3>
+              <p class="text-sm text-gray-400 mt-1">{{ job.company_name or 'Unknown company' }}</p>
+
+              <div class="flex gap-3 text-xs mt-3 text-gray-400 flex-wrap">
+                <span>📍 {{ job.location or 'Not specified' }}</span>
+                {% if job.internship_type %}
+                  <span class="px-2 py-1 rounded bg-white/10">{{ job.internship_type }}</span>
+                {% endif %}
+                {% if job.stipend %}
+                  <span class="px-2 py-1 rounded bg-white/10">{{ job.stipend }}</span>
+                {% endif %}
+              </div>
+
+              <div class="mt-5 flex gap-3">
+                {% if job.is_applied %}
+                  <button
+                    type="button"
+                    disabled
+                    class="px-4 py-2 rounded-lg bg-green-500/20 text-green-300 text-sm border border-green-500/30 cursor-not-allowed opacity-80"
+                  >
+                    Already Applied
+                  </button>
+                {% else %}
+                  <form action="/apply/{{ job.internship_id }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm">
+                      Apply
+                    </button>
+                  </form>
+                {% endif %}
+
+                <form action="/unsave/{{ job.internship_id }}" method="POST">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm">
+                    Remove
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-span-full p-6 rounded-2xl border border-white/10 bg-white/5 text-gray-400">
+            No saved internships yet.
+          </div>
+        {% endif %}
+      </div>
+    </section>

@@ -35,6 +35,9 @@ def init_oauth(app):
 def get_serializer():
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
 
+def normalize_phone(phone):
+    return re.sub(r'\s+', '', phone or "")
+
 
 def generate_email_verification_token(data):
     return get_serializer().dumps(data, salt="email-verification")
@@ -103,16 +106,13 @@ def login():
             "success": False,
             "message": "Email, password, and role are required."
         }), 400
-
-    conn = get_db()
     try:
-        cur = get_cursor(conn)
-
-        cur.execute(
-            "SELECT * FROM users WHERE LOWER(email)=LOWER(%s)",
-            (email,)
-        )
-        user = cur.fetchone()
+         with get_cursor() as cur:
+            cur.execute(
+                "SELECT * FROM users WHERE LOWER(email)=LOWER(%s)",
+                (email,)
+            )
+            user = cur.fetchone()
 
     except Exception:
         current_app.logger.exception("Login query failed")
@@ -120,9 +120,6 @@ def login():
             "success": False,
             "message": "Internal server error."
         }), 500
-
-    finally:
-        conn.close()
 
     # -------------------- VALIDATION --------------------
     if not user or user["role"] != role:
@@ -176,11 +173,12 @@ def signup():
     password = (data.get("password") or "").strip()
     role = (data.get("role") or "").strip().lower()
     school = (data.get("school") or "").strip()
-    skills = (data.get("skills") or "").strip()
     phone1 = (data.get("phone1") or "").strip()
     phone2 = (data.get("phone2") or "").strip()
     address = (data.get("address") or "").strip()
     industry = (data.get("industry") or "").strip()
+    student_phone = normalize_phone(data.get("phone"))
+    telegram = (data.get("telegram") or "").strip()
 
     # -------------------- VALIDATION --------------------
     if not name or not email or not password or not role:
@@ -206,68 +204,96 @@ def signup():
             "success": False,
             "message": "Weak password."
         }), 400
+    
+    # -------------------- STUDENT VALIDATION --------------------
+    if role == "student":
+        if not student_phone:
+            return jsonify({
+                "success": False,
+                "message": "Telefon raqam required."
+            }), 400
+
+        if not re.match(r'^\+?\d{9,15}$', student_phone):
+            return jsonify({
+                "success": False,
+                "message": "Invalid phone number."
+            }), 400
+
+        if telegram and not re.match(r'^@?[a-zA-Z0-9_]{5,}$', telegram):
+            return jsonify({
+                "success": False,
+                "message": "Invalid Telegram username."
+            }), 400
 
     # 🔐 HASH PASSWORD
     hashed_password = generate_password_hash(password)
 
     # -------------------- DATABASE --------------------
-    conn = get_db()
+
     try:
-        cur = get_cursor(conn)
+        with get_cursor() as cur:
 
-        # 🔍 CHECK IF EMAIL EXISTS
-        cur.execute(
-            "SELECT id FROM users WHERE LOWER(email)=LOWER(%s)",
-            (email,)
-        )
-        if cur.fetchone():
-            return jsonify({
-                "success": False,
-                "message": "Email already registered."
-            }), 400
+            # 🔍 CHECK IF EMAIL EXISTS
+            cur.execute(
+                "SELECT id FROM users WHERE LOWER(email)=LOWER(%s)",
+                (email,)
+            )
+            if cur.fetchone():
+                return jsonify({
+                    "success": False,
+                    "message": "Email already registered."
+                }), 400
 
-        # 👤 INSERT USER
-        cur.execute("""
-            INSERT INTO users (name, email, password, role, school, skills, verified)
-            VALUES (%s, %s, %s, %s, %s, %s, TRUE)
-            RETURNING id
-        """, (
-            name,
-            email,
-            hashed_password,
-            role,
-            school,
-            skills
-        ))
-
-        user_id = cur.fetchone()["id"]
-
-        # 🏢 IF COMPANY → CREATE COMPANY PROFILE
-        if role == "company":
+            # 👤 INSERT USER (ONLY AUTH DATA)
             cur.execute("""
-                INSERT INTO companies (name, user_id, phone1, phone2, address, industry)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO users (name, email, password, role, verified)
+                VALUES (%s, %s, %s, %s, TRUE)
+                RETURNING id
             """, (
                 name,
-                user_id,
-                phone1,
-                phone2,
-                address,
-                industry
+                email,
+                hashed_password,
+                role
             ))
 
-        conn.commit()
+            user_id = cur.fetchone()["id"]
+
+            # 🎓 CREATE STUDENT PROFILE
+            if role == "student":
+                cur.execute("""
+                    INSERT INTO students (
+                        user_id, phone, telegram, school
+                    )
+                    VALUES (%s, %s, %s, %s)
+                """, (
+                    user_id,
+                    student_phone,
+                    telegram,
+                    school
+                ))
+
+            # 🏢 CREATE COMPANY PROFILE
+            if role == "company":
+                cur.execute("""
+                    INSERT INTO companies (
+                        user_id, name, phone1, phone2, address, industry
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (
+                    user_id,
+                    name,
+                    phone1,
+                    phone2,
+                    address,
+                    industry
+                ))
 
     except Exception:
-        conn.rollback()
         current_app.logger.exception("Signup failed")
         return jsonify({
             "success": False,
             "message": "Internal server error."
         }), 500
-
-    finally:
-        conn.close()
 
     return jsonify({
         "success": True,
@@ -295,15 +321,13 @@ def check_email():
             "message": "Invalid email format"
         }), 400
 
-    conn = get_db()
     try:
-        cur = get_cursor(conn)
-
-        cur.execute(
-            "SELECT id FROM users WHERE LOWER(email)=LOWER(%s)",
-            (email,)
-        )
-        existing = cur.fetchone()
+        with get_cursor() as cur:
+            cur.execute(
+                "SELECT id FROM users WHERE LOWER(email)=LOWER(%s)",
+                (email,)
+            )
+            existing = cur.fetchone()
 
     except Exception:
         current_app.logger.exception("Check email failed")
@@ -311,9 +335,6 @@ def check_email():
             "available": False,
             "message": "Internal server error"
         }), 500
-
-    finally:
-        conn.close()
 
     if existing:
         return jsonify({
@@ -347,6 +368,7 @@ def google_callback():
         return jsonify({"success": False, "message": "OAuth not configured"}), 500
 
     try:
+        # 🔐 GET GOOGLE USER DATA
         google.authorize_access_token()
         resp = google.get("https://www.googleapis.com/oauth2/v2/userinfo")
         user_data = resp.json()
@@ -360,54 +382,46 @@ def google_callback():
                 "message": "Google account has no email."
             }), 400
 
-        conn = get_db()
-        try:
-            cur = get_cursor(conn)
+        # 🧠 DATABASE LOGIC
+        with get_cursor() as cur:
 
-            # 🔍 CHECK USER
+            # 🔍 CHECK IF USER EXISTS
             cur.execute(
                 "SELECT * FROM users WHERE LOWER(email)=LOWER(%s)",
                 (email,)
             )
             user = cur.fetchone()
 
-            # 👤 CREATE USER IF NOT EXISTS
+            # 👤 CREATE USER IF NOT EXISTS (NO ROLE YET)
             if not user:
                 cur.execute("""
                     INSERT INTO users (name, email, password, role, verified)
                     VALUES (%s, %s, %s, %s, TRUE)
                     RETURNING id
-                """, (name, email, "", "student"))
+                """, (name, email, "", None))  # 🔥 role = NULL
 
                 user_id = cur.fetchone()["id"]
-                conn.commit()
 
-                # fetch created user
+                # 🔁 FETCH USER
                 cur.execute(
                     "SELECT * FROM users WHERE id=%s",
                     (user_id,)
                 )
                 user = cur.fetchone()
 
-        except Exception:
-            conn.rollback()
-            current_app.logger.exception("Google DB operation failed")
-            return jsonify({
-                "success": False,
-                "message": "Database error."
-            }), 500
-
-        finally:
-            conn.close()
-
         # 🚫 BLOCKED USER
-        if user["banned"]:
+        if user.get("banned"):
             return jsonify({
                 "success": False,
                 "message": "Account blocked."
             }), 403
 
-        # ✅ LOGIN
+        # 🎯 ROLE NOT CHOSEN → REDIRECT TO ROLE PAGE
+        if not user.get("role"):
+            session["temp_user_id"] = user["id"]
+            return redirect("/choose-role")
+
+        # ✅ NORMAL LOGIN
         login_user(user)
         return redirect_by_role(user["role"])
 
@@ -418,6 +432,75 @@ def google_callback():
             "message": "Google login failed."
         }), 500
 
+@auth_bp.route("/choose-role")
+def choose_role():
+    if not session.get("temp_user_id"):
+        return redirect("/")
+    return render_template("public/choose-role.html")
 
-# CSRF exemption for OAuth callback
+
+@auth_bp.route("/set-role", methods=["POST"])
+def set_role():
+    user_id = session.get("temp_user_id")
+
+    # 🔥 PREVENT DOUBLE REQUEST / EXPIRED SESSION
+    if not user_id:
+        return redirect(url_for("auth.login"))
+
+    role = request.form.get("role")
+
+    if role not in ["student", "company"]:
+        return "Invalid role", 400
+
+    with get_cursor() as cur:
+
+        # 🔍 GET USER
+        cur.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+        user = cur.fetchone()
+
+        if not user:
+            session.clear()
+            return redirect(url_for("auth.login"))
+
+        # 🔁 IF ROLE ALREADY SET → PREVENT DUPLICATE
+        if user.get("role"):
+            login_user(user)
+            session.pop("temp_user_id", None)
+            return redirect_by_role(user["role"])
+
+        # 🧠 UPDATE ROLE
+        cur.execute("""
+            UPDATE users SET role=%s WHERE id=%s
+        """, (role, user_id))
+
+        # 🎯 CREATE PROFILE SAFELY
+        if role == "student":
+            cur.execute("SELECT id FROM students WHERE user_id=%s", (user_id,))
+            if not cur.fetchone():
+                cur.execute("""
+                    INSERT INTO students (user_id)
+                    VALUES (%s)
+                """, (user_id,))
+
+        else:  # company
+            cur.execute("SELECT id FROM companies WHERE user_id=%s", (user_id,))
+            if not cur.fetchone():
+                cur.execute("""
+                    INSERT INTO companies (user_id, name)
+                    VALUES (%s, %s)
+                """, (user_id, user["name"]))
+
+        # 🔁 FETCH UPDATED USER
+        cur.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+        user = cur.fetchone()
+
+    # 🔐 LOGIN (YOUR CUSTOM SYSTEM)
+    login_user(user)
+
+    # 🧹 CLEAN TEMP SESSION (VERY IMPORTANT)
+    session.pop("temp_user_id", None)
+
+    return redirect_by_role(role)
+
+# 🔓 CSRF exemption for OAuth callback
 csrf.exempt(google_callback)

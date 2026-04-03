@@ -1,0 +1,76 @@
+<section id="overview" class="spa-section fade-up">
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold">Welcome, {{ user.name or 'Student' }}</h1>
+        <p class="text-gray-400 mt-2">Manage your applications, saved internships, and profile from one place.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Total applications</p>
+          <p class="text-3xl font-semibold mt-2">{{ total_applications or 0 }}</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Under review</p>
+          <p class="text-3xl font-semibold mt-2 text-yellow-400">{{ reviewing_count or 0 }}</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Saved internships</p>
+          <p class="text-3xl font-semibold mt-2">{{ saved_count or 0 }}</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
+          <p class="text-gray-400 text-sm">Profile strength</p>
+          <p class="text-3xl font-semibold mt-2 text-green-400">{{ profile_strength or 0 }}%</p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+          <h2 class="text-xl font-semibold mb-5">Recent activity</h2>
+
+          {% if recent_activity %}
+            <div class="space-y-4">
+              {% for app in recent_activity %}
+                <div class="p-4 rounded-xl border border-white/10 bg-white/5">
+                  <p class="font-medium text-white">{{ app.title }}</p>
+                  <p class="text-sm text-gray-400 mt-1">
+                    {{ app.company_name or 'Unknown company' }} • {{ app.status }}
+                  </p>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="p-4 rounded-xl border border-white/10 bg-white/5 text-gray-400">
+              No recent activity yet.
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+          <h2 class="text-xl font-semibold mb-5">Quick actions</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <button onclick="showSection('explore')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">Explore internships</p>
+              <p class="text-sm text-gray-400 mt-1">Find new opportunities</p>
+            </button>
+
+            <button onclick="showSection('applications')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">My applications</p>
+              <p class="text-sm text-gray-400 mt-1">Track progress</p>
+            </button>
+
+            <button onclick="showSection('profile')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">Update profile</p>
+              <p class="text-sm text-gray-400 mt-1">Improve your profile score</p>
+            </button>
+
+            <button onclick="showSection('saved')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+              <p class="font-medium text-white">Saved jobs</p>
+              <p class="text-sm text-gray-400 mt-1">Review later</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>

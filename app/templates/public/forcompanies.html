@@ -88,33 +88,48 @@ Internova
 </div>
 
 
-<nav class="hidden md:flex gap-8 text-sm text-gray-300">
+    <nav class="hidden md:flex items-center gap-8 text-sm text-gray-300 ml-12">
 
-<a href="/discover" class="hover:text-white hover:-translate-y-0.5 transition">
-Kashf etish
-</a>
+      <a href="/companies"
+         class="relative hover:text-white transition duration-200 group">
 
-<a href="/companies" class="hover:text-white hover:-translate-y-0.5 transition">
-Kompaniyalar uchun
-</a>
+        Kompaniya uchun
 
-<a href="/login" class="hover:text-white hover:-translate-y-0.5 transition">
-Kirish
-</a>
+        <!-- underline animation -->
+        <span class="absolute left-0 -bottom-1 w-0 h-[2px]
+                     bg-gradient-to-r from-blue-500 to-purple-500
+                     transition-all duration-300 group-hover:w-full">
+        </span>
+      </a>
 
-<a href="/dashboard" class="hover:text-white hover:-translate-y-0.5 transition">
-Shaxsiy Kabinet
-</a>
+      <a href="/login"
+         class="relative hover:text-white transition duration-200 group">
 
-</nav>
+        Kirish
 
+        <span class="absolute left-0 -bottom-1 w-0 h-[2px]
+                     bg-gradient-to-r from-blue-500 to-purple-500
+                     transition-all duration-300 group-hover:w-full">
+        </span>
+      </a>
 
-<div class="flex gap-3">
+    </nav>
 
-<a href="/signup"
-class="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm shadow-lg hover:scale-105 transition glow">
-Ro'yxatdan o'tish
-</a>
+    <a href="/signup"
+       class="relative px-5 py-2.5 rounded-xl text-sm font-medium text-white
+              bg-gradient-to-r from-blue-500 to-purple-500
+              shadow-lg shadow-purple-500/20
+              hover:scale-105 hover:shadow-purple-500/40
+              active:scale-95
+              transition-all duration-200 overflow-hidden">
+
+      <!-- glow effect -->
+      <span class="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition"></span>
+
+      <span class="relative z-10">
+        Ro'yxatdan o'tish
+      </span>
+    </a>
 
 </div>
 
@@ -141,7 +156,7 @@ Kompaniyalar uchun
 O'zingizning kompaniyangiz uchun eng yaxshi talantlarni toping va ularni erta bosqichda rivojlantiring. Internova bilan kelajakdagi ishchilarni bugundan kashf eting.
 </p>
 
-<a href="/signup"
+<a href="/signup?role=company"
 class="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl hover:scale-105 transition glow">
 Kompaniya akkountini yaratish
 </a>
@@ -200,7 +215,7 @@ Yoshlar brendi mavjudligini kuchaytirish
 
 <br><br>
 
-<a href="/signup"
+<a href="/signup?role=company"
 class="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl hover:scale-105 transition glow">
 
 Kompaniya akkountini yaratish

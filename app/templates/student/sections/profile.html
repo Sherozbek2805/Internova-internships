@@ -1,0 +1,574 @@
+<section id="profile" class="spa-section hidden fade-up">
+  <!-- HEADER -->
+  <div class="mb-10">
+    <h1
+      class="text-3xl font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+    >
+      Profile
+    </h1>
+    <p class="text-gray-400 mt-2">Build your professional student profile.</p>
+  </div>
+
+  {% set strength = profile_strength or 0 %}
+
+  <!-- PROFILE STRENGTH -->
+  <div
+    class="mb-8 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-md"
+  >
+    <div class="flex justify-between text-sm text-gray-300 mb-2">
+      <span>Profile Strength</span>
+      <span id="profileStrength" class="text-blue-400 font-semibold">
+        {{ strength }}%
+      </span>
+    </div>
+
+    <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+      <div
+        id="strengthBar"
+        class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500"
+      ></div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="grid lg:grid-cols-3 gap-8">
+    <!-- LEFT SIDE -->
+    <div class="lg:col-span-2 space-y-8">
+      <!-- PERSONAL -->
+      <!-- (UNCHANGED) -->
+      <div
+        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
+      >
+        <h2 class="text-xl font-semibold mb-5">Personal Information</h2>
+
+        <form
+          action="/profile/update"
+          id="profileForm"
+          method="POST"
+          class="space-y-5"
+        >
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <input
+              name="name"
+              value="{{ user.name or '' }}"
+              placeholder="Full Name"
+              required
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+
+            <input
+              name="email"
+              value="{{ user.email or '' }}"
+              placeholder="Email"
+              required
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+
+            <input
+              name="school"
+              value="{{ user.school or '' }}"
+              placeholder="School"
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+
+            <input
+              name="location"
+              value="{{ user.location or '' }}"
+              placeholder="City, Country"
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+
+            <input
+              name="grade"
+              value="{{ user.grade or '' }}"
+              placeholder="Grade"
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+
+            <input
+              name="phone"
+              value="{{ user.phone or '' }}"
+              placeholder="Phone"
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+
+            <!-- LinkedIn -->
+            <input
+              name="linkedin"
+              value="{{ user.linkedin or '' }}"
+              placeholder="LinkedIn Profile URL"
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 md:col-span-2"
+            />
+
+            <!-- Telegram -->
+            <input
+              name="telegram"
+              value="{{ user.telegram or '' }}"
+              placeholder="Telegram Username or Link (e.g. @username or t.me/username)"
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 md:col-span-2"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow hover:scale-105 transition"
+          >
+            Save Changes
+          </button>
+          <!-- feedback -->
+          <p id="formMessage" class="text-sm mt-2"></p>
+        </form>
+      </div>
+
+      <!-- ACADEMIC -->
+      <form
+        id="academicForm"
+        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
+      >
+        <h2 class="text-xl font-semibold mb-5">Academic Information</h2>
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <input
+            name="program"
+            placeholder="Program"
+            value="{{ user.program or '' }}"
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
+          />
+
+          <input
+            name="gpa"
+            type="number"
+            step="0.01"
+            min="0"
+            max="5.0"
+            placeholder="GPA"
+            value="{{ user.gpa or '' }}"
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
+          />
+
+          <input
+            name="subjects"
+            placeholder="Subjects of Interest"
+            value="{{ user.subjects or '' }}"
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white md:col-span-2"
+          />
+        </div>
+
+        <!-- SAVE BUTTON -->
+        <div class="mt-6">
+          <button
+            type="submit"
+            class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition text-white font-medium shadow-lg"
+          >
+            Save Changes
+          </button>
+          <p id="academicMsg" class="text-green-400 text-sm opacity-0 transition duration-300"></p>
+        </div>
+      </form>
+
+      <!-- SKILLS -->
+      <form
+        id="skillsForm"
+        method="POST"
+        action="/profile/update-skills"
+        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
+      >
+        <!-- ✅ CSRF TOKEN -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        <div class="flex justify-between items-center mb-5">
+          <h2 class="text-xl font-semibold">Skills</h2>
+
+          <button
+            type="button"
+            onclick="addSkillInput()"
+            class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm"
+          >
+            + Add
+          </button>
+        </div>
+
+        <div id="skillsContainer" class="space-y-3">
+          {% for s in skills %}
+          <div class="flex gap-3 items-center">
+            <input type="hidden" name="skill_ids[]" value="{{ s.id }}" />
+
+            <input
+              name="skills[]"
+              value="{{ s.name }}"
+              class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white"
+            />
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+            <button
+              type="button"
+              onclick="removeSkill(this, '{{ s.id }}')"
+              class="text-red-400 hover:text-red-500 text-lg"
+            >
+              ✕
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="mt-6">
+          <button
+            type="submit"
+            class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+          >
+            Save Changes
+          </button>
+          <p id="skillsMsg" class="text-green-400 text-sm opacity-0 transition duration-300"></p>
+        </div>
+      </form>
+      <input type="hidden" id="csrfToken" value="{{ csrf_token() }}" />
+      <!-- EXPERIENCE (FULL WIDTH) -->
+      <div
+        class="md:col-span-2 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
+      >
+        <!-- EVERYTHING INSIDE EXPERIENCE UNCHANGED -->
+        <h2 class="text-xl font-semibold">Activities & Experience</h2>
+        <p class="text-sm text-gray-400 mb-4">
+          Extracurriculars, leadership, projects
+        </p>
+
+        <div id="experienceContainer" class="space-y-4">
+          {% for exp in experiences %}
+          <div data-id="{{ exp.id }}" class="space-y-4">
+            <div
+              class="view-mode p-6 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl shadow-lg space-y-4 relative group hover:shadow-xl transition duration-300"
+            >
+              {% set g = exp.grade_levels or {} %}
+
+              <!-- HEADER -->
+              <div class="flex justify-between items-start">
+                <div class="space-y-1">
+                  <h3 class="text-lg font-semibold text-white tracking-tight">
+                    {{ exp.title }}
+                  </h3>
+
+                  <p class="text-sm text-gray-400 flex items-center gap-2">
+                    <span>{{exp.role}} | {{ exp.organization }}</span>
+
+                    {% if exp.role %}
+                    <span
+                      class="px-2 py-0.5 text-xs rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                    >
+                      {{ exp.role }}
+                    </span>
+                    {% endif %}
+                  </p>
+                </div>
+
+                <!-- ACTIONS -->
+                <div
+                  class="flex gap-3 opacity-0 group-hover:opacity-100 transition"
+                >
+                  <button
+                    onclick="toggleEdit(this)"
+                    class="text-blue-400 hover:text-blue-300 text-sm transition"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onclick="deleteExperience(this, '{{ exp.id }}')"
+                    class="text-red-400 hover:text-red-300 text-sm transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+              <!-- DESCRIPTION -->
+              <p class="text-sm text-gray-300 leading-relaxed">
+                {{ exp.description }}
+              </p>
+
+              <!-- META TAGS -->
+              <div class="flex flex-wrap gap-2 pt-1">
+                {% if g.grades %}
+                <span
+                  class="px-3 py-1 text-xs rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                >
+                  🎓 {{ g.grades | join(", ") }}
+                </span>
+                {% endif %} {% if g.university_years %}
+                <span
+                  class="px-3 py-1 text-xs rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                >
+                  🎓 Year {{ g.university_years | join(", ") }}
+                </span>
+                {% endif %} {% if g.hours_per_week %}
+                <span
+                  class="px-3 py-1 text-xs rounded-full bg-green-500/10 text-green-400 border border-green-500/20"
+                >
+                  ⏱ {{ g.hours_per_week }} hrs/week
+                </span>
+                {% endif %} {% if g.weeks_per_year %}
+                <span
+                  class="px-3 py-1 text-xs rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                >
+                  📅 {{ g.weeks_per_year }} weeks/year
+                </span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- EDIT MODE -->
+            <div class="edit-mode hidden space-y-5">
+              <!-- TITLE -->
+              <input
+                value="{{ exp.title }}"
+                class="edit_title w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50"
+                placeholder="Activity Name"
+              />
+
+              <!-- ORG + ROLE -->
+              <div class="grid md:grid-cols-2 gap-4">
+                <input
+                  value="{{ exp.organization }}"
+                  class="edit_org px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50"
+                  placeholder="Organization"
+                />
+
+                <input
+                  value="{{ exp.role }}"
+                  class="edit_role px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50"
+                  placeholder="Position"
+                />
+              </div>
+
+              <!-- DESCRIPTION -->
+              <textarea
+                class="edit_desc w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 h-24 focus:ring-2 focus:ring-blue-500/50"
+                placeholder="What did you do?"
+              >
+{{ exp.description }}</textarea
+              >
+
+              <!-- CURRENT -->
+              <label class="flex items-center gap-2 text-sm text-gray-300">
+                <input
+                  type="checkbox"
+                  class="edit_current accent-blue-500"
+                  {%
+                  if
+                  exp.is_current
+                  %}checked{%
+                  endif
+                  %}
+                />
+                Ongoing
+              </label>
+
+              <!-- GRADES -->
+              <div>
+                <p class="text-sm text-gray-400 mb-2">School Grades</p>
+                {% set grade_data = exp.grade_levels or {} %}
+                {% set saved_grades = grade_data.grades or [] %}
+                {% set saved_uni = grade_data.university_years or [] %}
+                <div class="flex gap-2">
+                  {% for g in [9,10,11,12] %}
+                  <label class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
+                    
+                    <input
+                      type="checkbox"
+                      value="{{ g }}"
+                      class="edit_grades"
+                      {% if g in saved_grades %}checked{% endif %}
+                    />
+                    {{ g }}
+
+                  </label>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- UNIVERSITY -->
+              <div>
+                <p class="text-sm text-gray-400 mb-2">University Years</p>
+                <div class="flex gap-2">
+                  {% for y in [1,2,3,4] %}
+                  <label class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
+
+                    <input
+                      type="checkbox"
+                      value="{{ y }}"
+                      class="edit_uni"
+                      {% if y in saved_uni %}checked{% endif %}
+                    />
+                    Year {{ y }}
+
+                  </label>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- TIME -->
+              {% set g = exp.grade_levels or {} %}
+
+              <div class="grid md:grid-cols-2 gap-4">
+                <input
+                  value="{{ g.hours_per_week or '' }}"
+                  placeholder="Hours/week"
+                  class="edit_hours px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
+                />
+
+                <input
+                  value="{{ g.weeks_per_year or '' }}"
+                  placeholder="Weeks/year"
+                  class="edit_weeks px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
+                />
+              </div>
+
+              <!-- ACTIONS -->
+              <div class="flex justify-between items-center pt-2">
+                <button
+                  onclick="saveEdit(this)"
+                  class="px-5 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white text-sm shadow transition"
+                >
+                  Save
+                </button>
+
+                <button
+                  onclick="toggleEdit(this)"
+                  class="text-gray-400 hover:text-white text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>  
+          {% endfor %}
+        </div>
+
+        <button
+          type="button"
+          onclick="addExperience()"
+          class="w-full mt-4 py-5 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-lg shadow-lg hover:scale-[1.02] hover:shadow-xl transition duration-300 flex items-center justify-center gap-2"
+        >
+          <span class="text-2xl">＋</span>
+          Add Activity / Experience
+        </button>
+      </div>
+
+      <div class="mb-4 p-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 text-sm">
+        ⚠️ <strong>Test Mode:</strong> Uploaded CVs may be deleted, not saved permanently, or not visible to companies.
+      </div>
+
+      <!-- CV -->
+      <div
+        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
+      >
+        <h2 class="text-xl font-red mb-5">This is in test mode</h2>
+        <h2 class="text-xl font-semibold mb-5">CV / Resume</h2>
+
+        <form
+          action="/profile/upload-cv"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+          <div
+            class="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:border-blue-400 transition"
+          >
+            <input type="file" name="cv" id="cvUpload" hidden required />
+            <label for="cvUpload" class="cursor-pointer">
+              Click to upload your CV
+            </label>
+          </div>
+
+          <p id="cvFileName" class="text-xs text-gray-400 mt-3"></p>
+
+          <button class="mt-4 px-5 py-3 rounded-xl bg-green-500 text-white">
+            Upload
+          </button>
+        </form>
+      </div>
+
+      <!-- PASSWORD -->
+      <div
+        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
+      >
+        <h2 class="text-xl font-semibold mb-5 text-white/90">
+          Change Password
+        </h2>
+
+        <form action="/profile/change-password" method="POST" class="space-y-4">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+          <!-- CURRENT -->
+          <div class="relative">
+            <input
+              type="password"
+              name="current_password"
+              placeholder="Current Password"
+              class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white"
+            />
+          </div>
+
+          <!-- NEW -->
+          <div class="relative">
+            <input
+              type="password"
+              name="new_password"
+              id="newPassword"
+              placeholder="New Password"
+              class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white"
+            />
+          </div>
+
+          <!-- STRENGTH -->
+          <div class="text-sm text-gray-400" id="passwordStrengthText">
+            Password strength: —
+          </div>
+
+          <!-- CONFIRM -->
+          <div class="relative">
+            <input
+              type="password"
+              name="confirm_password"
+              id="confirmPassword"
+              placeholder="Confirm New Password"
+              class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white"
+            />
+          </div>
+
+          <!-- MATCH -->
+          <div id="passwordMatchText" class="text-sm"></div>
+
+          <!-- SUBMIT -->
+          <button
+            type="submit"
+            class="w-full px-5 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold"
+          >
+            Update Password
+          </button>
+        </form>
+      </div>
+      <!-- END INNER GRID -->
+    </div>
+    <!-- END LEFT -->
+
+    <!-- RIGHT SIDE -->
+    <div class="space-y-6 lg:sticky lg:top-6 h-fit self-start">
+      <div
+        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
+      >
+        <h2 class="text-lg font-semibold mb-4">Tips</h2>
+        <ul class="text-sm text-gray-300 space-y-2">
+          <li>✔ Add achievements</li>
+          <li>✔ Show impact</li>
+          <li>✔ Keep updated</li>
+          <li>✔ Add leadership</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

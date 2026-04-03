@@ -50,46 +50,43 @@ def post():
 
 @public_bp.route("/discover")
 def discover():
-    conn = get_db()
-
     try:
-        cur = get_cursor(conn)  # 🔥 FIX
-
-        cur.execute("""
-            SELECT internships.*, companies.name AS company
-            FROM internships
-            LEFT JOIN companies ON companies.id = internships.company_id
-            WHERE internships.approved = TRUE
-        """)
-        rows = cur.fetchall()
+        with get_cursor() as cur:
+            cur.execute("""
+                SELECT internships.*, companies.name AS company
+                FROM internships
+                LEFT JOIN companies ON companies.id = internships.company_id
+                WHERE internships.approved = TRUE
+            """)
+            rows = cur.fetchall()
 
         return render_template(
             "public/internships.html",
             internships=rows
         )
 
-    finally:
-        conn.close()
+    except Exception as e:
+        print("DISCOVER ERROR:", e)
+        return "Internal Server Error", 500
 
 @public_bp.route("/companies")
 def companies():
-    conn = get_db()
-
     try:
-        cur = get_cursor(conn)  # 🔥 FIX
-
-        cur.execute("""
-            SELECT * FROM companies
-        """)
-        rows = cur.fetchall()
+        with get_cursor() as cur:
+            cur.execute("""
+                SELECT * FROM companies
+            """)
+            rows = cur.fetchall()
 
         return render_template(
             "public/forcompanies.html",
             companies=rows
         )
 
-    finally:
-        conn.close()
+    except Exception as e:
+        print("COMPANIES ERROR:", e)
+        return "Internal Server Error", 500
+
 
 @public_bp.route("/contact")
 def contact():
@@ -107,34 +104,30 @@ def terms():
 
 @public_bp.route("/api/internship/<int:id>/view")
 def track_view(id):
-    conn = get_db()
-
     try:
-        cur = get_cursor(conn)  # 🔥 FIX
-
-        # 🔍 CHECK EXISTENCE
-        cur.execute("""
-            SELECT id FROM analytics WHERE internship_id = %s
-        """, (id,))
-        row = cur.fetchone()
-
-        if row:
-            # 🔄 UPDATE
+        with get_cursor() as cur:
+            # 🔍 CHECK EXISTENCE
             cur.execute("""
-                UPDATE analytics
-                SET views = views + 1
-                WHERE internship_id = %s
+                SELECT id FROM analytics WHERE internship_id = %s
             """, (id,))
-        else:
-            # ➕ INSERT
-            cur.execute("""
-                INSERT INTO analytics (internship_id, views, applications)
-                VALUES (%s, 1, 0)
-            """, (id,))
+            row = cur.fetchone()
 
-        conn.commit()
+            if row:
+                # 🔄 UPDATE
+                cur.execute("""
+                    UPDATE analytics
+                    SET views = views + 1
+                    WHERE internship_id = %s
+                """, (id,))
+            else:
+                # ➕ INSERT
+                cur.execute("""
+                    INSERT INTO analytics (internship_id, views, applications)
+                    VALUES (%s, 1, 0)
+                """, (id,))
 
         return jsonify({"success": True})
 
-    finally:
-        conn.close()
+    except Exception as e:
+        print("TRACK VIEW ERROR:", e)
+        return jsonify({"success": False}), 500

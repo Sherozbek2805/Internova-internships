@@ -29,11 +29,11 @@
           </h2>
 
           <p class="text-sm text-gray-400 mt-2">
-            Email: {{ c.email or '—' }}
+            Email: {{ c.owner_email or '—' }}
           </p>
 
           <p class="text-sm text-gray-400">
-            Telefon: {{ c.phone or '—' }}
+            Telefon: {{ c.phone1 or '—' }}
           </p>
 
           <p class="text-sm text-gray-400">
@@ -50,7 +50,6 @@
           <p class="text-sm text-gray-400">
             Egasi:
             {{ c.owner_name or '—' }}
-            ({{ c.owner_email or '—' }})
           </p>
 
           {% if c.description %}

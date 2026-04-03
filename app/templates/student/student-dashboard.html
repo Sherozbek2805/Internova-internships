@@ -1,0 +1,837 @@
+{% extends "student/base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .card {
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .nav-active {
+      color: white !important;
+      background: rgba(59, 130, 246, 0.18) !important;
+      border-color: rgba(96, 165, 250, 0.45) !important;
+      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.2);
+    }
+    .eye-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9CA3AF;
+      transition: 0.2s;
+    }
+
+    .eye-btn:hover {
+      color: #60A5FA;
+    }
+  </style>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-6 space-y-3">
+          {% for category, message in messages %}
+            <div class="p-4 rounded-xl border {% if category == 'success' %}border-green-500/30 bg-green-500/10 text-green-300{% else %}border-red-500/30 bg-red-500/10 text-red-300{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  {% include "student/sections/overview.html" %}
+  {% include "student/sections/explore.html" %}
+  {% include "student/sections/applications.html" %}
+  {% include "student/sections/saved.html" %}
+  {% include "student/sections/profile.html" %}
+
+<!-- ALL YOUR SCRIPTS -->
+<script>
+let currentJobId = null;
+
+function openApplyModal(jobId) {
+  currentJobId = jobId;
+
+  const modal = document.getElementById("applyModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  document.getElementById("applyForm").action = `/apply/${jobId}`;
+}
+
+function closeApplyModal() {
+  const modal = document.getElementById("applyModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".apply-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const jobId = this.dataset.id;
+      openApplyModal(jobId);
+    });
+  });
+});
+</script>
+<script>
+function getColorFromName(name) {
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-purple-500",
+    "bg-pink-500",
+    "bg-yellow-500",
+    "bg-indigo-500",
+    "bg-teal-500"
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return colors[Math.abs(hash) % colors.length];
+}
+
+// APPLY COLORS TO ALL AVATARS
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("[data-avatar]").forEach(el => {
+    const name = el.dataset.avatar || "Company";
+    el.classList.add(getColorFromName(name));
+  });
+});
+</script>
+<script>
+// TOGGLE PASSWORD
+function togglePassword(btn) {
+  const input = btn.parentElement.querySelector("input");
+
+  if (input.type === "password") {
+    input.type = "text";
+    btn.style.color = "#60A5FA";
+  } else {
+    input.type = "password";
+    btn.style.color = "#9CA3AF";
+  }
+}
+
+// PASSWORD STRENGTH
+document.getElementById("newPassword")?.addEventListener("input", function () {
+  const val = this.value;
+  const text = document.getElementById("passwordStrengthText");
+
+  let strength = "Weak";
+
+  if (val.length > 8 && /[A-Z]/.test(val) && /[0-9]/.test(val)) {
+    strength = "Strong";
+  } else if (val.length > 6) {
+    strength = "Medium";
+  }
+
+  text.innerText = "Password strength: " + strength;
+
+  text.style.color =
+    strength === "Strong" ? "green" :
+    strength === "Medium" ? "orange" :
+    "red";
+});
+
+// PASSWORD MATCH CHECK
+document.getElementById("confirmPassword")?.addEventListener("input", function () {
+  const newPass = document.getElementById("newPassword").value;
+  const confirm = this.value;
+  const text = document.getElementById("passwordMatchText");
+
+  if (!confirm) {
+    text.innerText = "";
+    return;
+  }
+
+  if (newPass === confirm) {
+    text.innerText = "Passwords match";
+    text.style.color = "green";
+    this.style.borderColor = "green";
+  } else {
+    text.innerText = "Passwords do not match";
+    text.style.color = "red";
+    this.style.borderColor = "red";
+  }
+});
+</script>
+
+<!-- SCRIPT -->
+<script>
+/* ---------- HELPERS ---------- */
+function getFilledCount(selectors) {
+  return selectors
+    .map(sel => document.querySelector(sel))
+    .filter(el => el && el.value && el.value.trim() !== "").length;
+}
+
+/* ---------- MAIN CALCULATION ---------- */
+function calculateProfileStrength() {
+  let score = 0;
+
+  // PERSONAL INFO (25)
+  const personalSelectors = [
+    '[name="name"]',
+    '[name="email"]',
+    '[name="school"]',
+    '[name="location"]',
+    '[name="phone"]',
+    '[name="linkedin"]',
+    '[name="telegram"]'
+  ];
+
+  const personalFilled = getFilledCount(personalSelectors);
+  score += (personalFilled / personalSelectors.length) * 25;
+
+  // ACADEMIC (15)
+  const academicSelectors = [
+    '[name="program"]',
+    '[name="gpa"]',
+    '[name="subjects"]'
+  ];
+
+  const academicFilled = getFilledCount(academicSelectors);
+  score += (academicFilled / academicSelectors.length) * 15;
+
+  // SKILLS (15)
+  const skills = document.querySelectorAll('[name="skills[]"]');
+  const skillsFilled = Array.from(skills).filter(s => s.value.trim() !== "").length;
+
+  if (skillsFilled > 0) {
+    score += Math.min(15, skillsFilled * 3);
+  }
+
+  // EXPERIENCE (30)
+  const experiences = document.querySelectorAll('.exp_name');
+  const expCount = Array.from(experiences).filter(e => e.value.trim() !== "").length;
+
+  if (expCount > 0) {
+    score += Math.min(30, expCount * 6);
+  }
+
+  // CV (15)
+  const cvElement = document.getElementById("cvFileName");
+  if (cvElement && cvElement.innerText.trim() !== "") {
+    score += 15;
+  }
+
+  return Math.round(score);
+}
+
+/* ---------- UI UPDATE ---------- */
+function updateStrengthUI() {
+  const strength = calculateProfileStrength();
+
+  const text = document.getElementById("profileStrength");
+  const bar = document.getElementById("strengthBar");
+
+  if (text) text.innerText = strength + "%";
+  if (bar) bar.style.width = strength + "%";
+}
+
+/* ---------- EVENTS ---------- */
+
+// LIVE updates
+document.addEventListener("input", updateStrengthUI);
+
+// When DOM ready
+window.addEventListener("DOMContentLoaded", () => {
+  updateStrengthUI();
+});
+
+// When page fully loaded (fallback)
+window.addEventListener("load", () => {
+  setTimeout(updateStrengthUI, 200);
+});
+</script>
+<script>
+function getCSRF() {
+  return document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+}
+
+/* ---------- SKILLS SUBMIT ---------- */
+document.getElementById("skillsForm")?.addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const msg = document.getElementById("skillsMsg");
+
+  try {
+    const res = await fetch("/profile/update-skills", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCSRF()
+      },
+      body: new URLSearchParams(formData)
+    });
+
+    if (!res.ok) throw new Error();
+
+    showMessage(msg, "Skills saved successfully ✅");
+
+  } catch {
+    showMessage(msg, "Failed to save skills ❌", true);
+  }
+});
+
+function toggleEdit(btn) {
+  const card = btn.closest("[data-id]");
+  const view = card.querySelector(".view-mode");
+  const edit = card.querySelector(".edit-mode");
+
+  view.classList.toggle("hidden");
+  edit.classList.toggle("hidden");
+}
+
+async function saveEdit(btn) {
+  const card = btn.closest("[data-id]");
+  const id = card.dataset.id;
+
+  const data = new URLSearchParams();
+
+  data.append("title", card.querySelector(".edit_title").value);
+  data.append("organization", card.querySelector(".edit_org").value);
+  data.append("role", card.querySelector(".edit_role").value);
+  data.append("description", card.querySelector(".edit_desc").value);
+
+  data.append("current", card.querySelector(".edit_current").checked ? "true" : "false");
+
+  // grades
+  const grades = Array.from(card.querySelectorAll(".edit_grades:checked"))
+    .map(el => el.value);
+
+  grades.forEach(g => data.append("grades[]", g));
+
+  // university years
+  const uni = Array.from(card.querySelectorAll(".edit_uni:checked"))
+    .map(el => el.value);
+
+  uni.forEach(u => data.append("university_years[]", u));
+
+  data.append("hours_per_week", card.querySelector(".edit_hours").value);
+  data.append("weeks_per_year", card.querySelector(".edit_weeks").value);
+
+  try {
+    const res = await fetch(`/profile/update-experience/${id}`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCSRF()
+      },
+      body: data
+    });
+
+    if (!res.ok) throw new Error();
+
+    toggleEdit(btn);
+
+  } catch {
+    alert("Update failed");
+  }
+}
+
+/* ---------- ADD EXPERIENCE ---------- */
+function addExperience() {
+  const container = document.getElementById("experienceContainer");
+  const div = document.createElement("div");
+
+  div.className = "p-6 rounded-2xl border border-white/10 bg-white/5 space-y-4 relative";
+
+  div.innerHTML = `
+
+    <input placeholder="Activity Name"
+      class="exp_name w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white">
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <input placeholder="Position"
+        class="exp_role w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white">
+
+      <input placeholder="Organization"
+        class="exp_org w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white">
+    </div>
+
+    <!-- 🎓 SCHOOL GRADES -->
+    <div>
+      <label class="text-sm text-gray-400">School Grades</label>
+      <div class="flex gap-4 mt-2 text-sm grades">
+        ${[9,10,11,12].map(g => `
+          <label><input type="checkbox" value="${g}"> ${g}</label>
+        `).join("")}
+      </div>
+    </div>
+
+    <!-- 🎓 UNIVERSITY YEARS -->
+    <div>
+      <label class="text-sm text-gray-400">University Years</label>
+      <div class="flex gap-4 mt-2 text-sm uni_years">
+        ${[1,2,3,4].map(y => `
+          <label><input type="checkbox" value="${y}"> Year ${y}</label>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <input placeholder="Weeks per year"
+        class="exp_weeks w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white">
+
+      <input placeholder="Hours per week"
+        class="exp_hours w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white">
+    </div>
+
+    <label class="flex items-center gap-2 text-sm text-gray-300">
+      <input type="checkbox" class="exp_current">
+      Ongoing
+    </label>
+
+    <textarea maxlength="150"
+      placeholder="Description"
+      class="exp_desc w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white h-24"></textarea>
+
+    <div class="flex gap-3">
+      <button type="button" class="saveBtn text-green-400">Save</button>
+      <button type="button" class="deleteBtn text-red-400">Delete</button>
+    </div>
+  `;
+
+  container.appendChild(div);
+
+  const saveBtn = div.querySelector(".saveBtn");
+  const deleteBtn = div.querySelector(".deleteBtn");
+
+  saveBtn.onclick = async () => {
+    const data = new URLSearchParams();
+
+    // ✅ BASIC
+    data.append("title", div.querySelector(".exp_name").value);
+    data.append("role", div.querySelector(".exp_role").value);
+    data.append("organization", div.querySelector(".exp_org").value);
+    data.append("description", div.querySelector(".exp_desc").value);
+
+    // 🎓 SCHOOL GRADES
+    const grades = Array.from(div.querySelectorAll(".grades input:checked"))
+      .map(g => g.value);
+    grades.forEach(g => data.append("grades[]", g));
+
+    // 🎓 UNIVERSITY YEARS
+    const uniYears = Array.from(div.querySelectorAll(".uni_years input:checked"))
+      .map(u => u.value);
+    uniYears.forEach(u => data.append("university_years[]", u));
+
+    // ⏱ TIME
+    data.append("hours_per_week", div.querySelector(".exp_hours").value);
+    data.append("weeks_per_year", div.querySelector(".exp_weeks").value);
+
+    // 📌 CURRENT
+    data.append("current", div.querySelector(".exp_current").checked);
+
+    try {
+      const res = await fetch("/profile/add-experience", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCSRF()
+        },
+        body: data.toString()
+      });
+
+      if (!res.ok) throw new Error();
+
+      const result = await res.json();
+      div.dataset.id = result.id;
+
+      saveBtn.remove();
+
+    } catch {
+      alert("Error saving experience");
+    }
+  };
+
+  deleteBtn.onclick = async () => {
+  const id = div.dataset.id;
+
+  try {
+    if (id) {
+      const res = await fetch(`/profile/delete-experience/${id}`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCSRF()
+        }
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Delete failed");
+      }
+    }
+
+    // ✅ Only remove if success
+    div.remove();
+
+  } catch (err) {
+    alert(err.message || "Delete failed");
+  }
+};
+}
+
+/* ---------- DELETE EXISTING EXPERIENCE ---------- */
+async function deleteExperience(btn, id) {
+  try {
+    const res = await fetch(`/profile/delete-experience/${id}`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCSRF()
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Delete failed");
+    }
+
+    // ✅ Remove only if backend confirms
+    btn.closest("[data-id]").remove();
+
+  } catch (err) {
+    alert(err.message || "Failed to delete");
+  }
+}
+</script>
+<script>
+function showMessage(el, text, isError = false) {
+  el.textContent = text;
+
+  el.classList.remove("opacity-0");
+  el.classList.add("opacity-100");
+
+  el.classList.remove("text-green-400", "text-red-400");
+  el.classList.add(isError ? "text-red-400" : "text-green-400");
+
+  setTimeout(() => {
+    el.classList.remove("opacity-100");
+    el.classList.add("opacity-0");
+  }, 5000);
+}
+
+document.getElementById("academicForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const msg = document.getElementById("academicMsg");
+
+  try {
+    const res = await fetch("/profile/update-academic", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCSRF()
+      },
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      showMessage(msg, "Academic info updated 📘");
+
+      updateStrengthUI();
+
+    } else {
+      showMessage(msg, data.error || "Update failed ❌", true);
+    }
+
+  } catch {
+    showMessage(msg, "Server error ❌", true);
+  }
+});
+</script>
+<script>
+// 🚀 CV UPLOAD (AJAX - NO RELOAD)
+document.getElementById("cvUpload")?.addEventListener("change", async function(e) {
+  const file = e.target.files[0];
+  const fileNameText = document.getElementById("cvFileName");
+
+  if (!file) return;
+
+  fileNameText.innerText = "Uploading...";
+
+  const formData = new FormData();
+  formData.append("cv", file);
+
+  try {
+    const res = await fetch("/profile/upload-cv", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-CSRFToken": getCSRF()
+      }
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      fileNameText.innerText = "✅ " + data.filename;
+
+      // 🔥 Update or create CV link
+      let link = document.getElementById("cvLink");
+
+      if (!link) {
+        link = document.createElement("a");
+        link.id = "cvLink";
+        link.target = "_blank";
+        link.className = "text-blue-400 underline block mt-2";
+
+        fileNameText.parentElement.appendChild(link);
+      }
+
+      link.href = data.file_url;
+      link.innerText = "View CV";
+
+      // 🔥 update profile strength instantly
+      updateStrengthUI();
+
+    } else {
+      fileNameText.innerText = "❌ " + data.message;
+    }
+
+  } catch (err) {
+    fileNameText.innerText = "❌ Upload failed";
+  }
+});
+
+// SKILLS
+function addSkillInput() {
+  const container = document.getElementById("skillsContainer");
+
+  const div = document.createElement("div");
+  div.className = "flex gap-3 items-center";
+
+div.innerHTML = `
+  <input type="hidden" name="skill_ids[]" value="">
+
+  <input name="skills[]"
+    placeholder="New skill"
+    class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white">
+
+  <button type="button"
+    onclick="this.parentElement.remove()"
+    class="text-red-400 hover:text-red-500 text-lg">
+    ✕
+  </button>
+`;
+
+  container.appendChild(div);
+}
+
+async function removeSkill(btn, id) {
+  try {
+    if (id) {
+      const res = await fetch(`/profile/delete-skill/${id}`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCSRF()   // ✅ REQUIRED
+        }
+      });
+
+      if (!res.ok) throw new Error();
+    }
+
+    btn.parentElement.remove();
+
+  } catch {
+    alert("Failed to delete skill");
+  }
+}
+</script>
+<script>
+    function setActiveNav(sectionId) {
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isActive = btn.dataset.section === sectionId;
+
+        btn.classList.remove('nav-active', 'bg-white/10', 'border-white/10', 'text-white');
+        btn.classList.add('text-gray-300');
+
+        if (isActive) {
+          btn.classList.add('nav-active', 'bg-white/10', 'border-white/10', 'text-white');
+          btn.classList.remove('text-gray-300');
+        }
+      });
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.spa-section').forEach(section => {
+        section.classList.add('hidden');
+      });
+
+      const activeSection = document.getElementById(sectionId);
+      if (activeSection) {
+        activeSection.classList.remove('hidden');
+      }
+
+      setActiveNav(sectionId);
+      localStorage.setItem('studentActiveSection', sectionId);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const savedSection = localStorage.getItem('studentActiveSection') || 'overview';
+      showSection(savedSection);
+    });
+</script>
+<script>
+document.getElementById("profileForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+  const message = document.getElementById("formMessage");
+
+  try {
+    const res = await fetch("/profile/update", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-CSRFToken": getCSRF()
+      }
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      message.textContent = "✅ Profile updated successfully";
+      message.className = "text-green-400 mt-2";
+
+      // optional: update strength bar live
+      if (data.profile_strength !== undefined) {
+        document.getElementById("profileStrength").innerText = data.profile_strength + "%";
+        document.getElementById("strengthBar").style.width = data.profile_strength + "%";
+      }
+
+    } else {
+      message.textContent = data.error || "Something went wrong";
+      message.className = "text-red-400 mt-2";
+    }
+
+  } catch (err) {
+    message.textContent = "Server error";
+    message.className = "text-red-400 mt-2";
+  }
+});
+</script>
+<script>
+function getColorFromName(name) {
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-purple-500",
+    "bg-pink-500",
+    "bg-yellow-500",
+    "bg-indigo-500",
+    "bg-teal-500"
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return colors[Math.abs(hash) % colors.length];
+}
+
+function openCompanyModal(btn) {
+  const modal = document.getElementById("companyModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  const name = btn.dataset.name || "Company";
+  const initial = btn.dataset.initial || "C";
+
+  // TEXT
+  document.getElementById("modalName").innerText = name;
+  document.getElementById("modalIndustry").innerText = btn.dataset.industry;
+  document.getElementById("modalDescription").innerText = btn.dataset.description;
+  document.getElementById("modalAddress").innerText = btn.dataset.address;
+  document.getElementById("modalPhone").innerText = btn.dataset.phone;
+  document.getElementById("modalWebsite").innerText = btn.dataset.website;
+
+  // AVATAR
+  const avatar = document.getElementById("modalAvatar");
+  avatar.innerText = initial;
+
+  // REMOVE OLD COLORS
+  avatar.className = "w-14 h-14 rounded-full flex items-center justify-center text-white font-semibold text-lg";
+
+  // ADD NEW COLOR
+  avatar.classList.add(getColorFromName(name));
+}
+
+function closeCompanyModal() {
+  const modal = document.getElementById("companyModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+document.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("view-feedback-btn")) return;
+
+  const note = e.target.dataset.note;
+  const score = e.target.dataset.score;
+  const status = e.target.dataset.status;
+
+  document.getElementById("feedbackContent").innerHTML = `
+    
+    <p><strong>Status:</strong> ${status}</p>
+
+    <p><strong>Score:</strong> ${
+      score ? `<span class="text-indigo-400 font-semibold">${score}</span>` : "-"
+    }</p>
+
+    <hr class="border-white/10">
+
+    <p><strong>Evaluator Note:</strong></p>
+    <p class="text-gray-400">
+      ${note || "No feedback provided yet."}
+    </p>
+  `;
+
+  const modal = document.getElementById("feedbackModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+});
+
+// CLOSE
+document.addEventListener("click", (e) => {
+  if (e.target.id === "closeFeedbackModal" || e.target.id === "feedbackModal") {
+    const modal = document.getElementById("feedbackModal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+});
+</script>
+
+{% endblock %}

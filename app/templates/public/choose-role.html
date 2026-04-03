@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Choose Role</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#020617] text-white flex items-center justify-center min-h-screen">
+
+  <div class="w-full max-w-3xl p-8">
+
+    <!-- HEADER -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-semibold">Welcome 👋</h1>
+      <p class="text-gray-400 mt-2">Choose how you want to use the platform</p>
+    </div>
+
+    <!-- ROLE CARDS -->
+    <form method="POST" action="/set-role" class="grid md:grid-cols-2 gap-6">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <!-- 🎓 STUDENT -->
+      <button 
+        type="submit" 
+        name="role" 
+        value="student"
+        class="group p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition text-left">
+
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold">🎓 Student</h2>
+          <span class="text-xs text-gray-400 group-hover:text-indigo-300">Select →</span>
+        </div>
+
+        <p class="text-gray-400 text-sm mt-3">
+          Apply for internships, build your profile, and get hired.
+        </p>
+
+        <ul class="mt-4 text-xs text-gray-500 space-y-1">
+          <li>• Apply to internships</li>
+          <li>• Track applications</li>
+          <li>• Showcase skills & experience</li>
+        </ul>
+      </button>
+
+      <!-- 🏢 COMPANY -->
+      <button 
+        type="submit" 
+        name="role" 
+        value="company"
+        class="group p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition text-left">
+
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold">🏢 Company</h2>
+          <span class="text-xs text-gray-400 group-hover:text-indigo-300">Select →</span>
+        </div>
+
+        <p class="text-gray-400 text-sm mt-3">
+          Post internships, review candidates, and hire talent.
+        </p>
+
+        <ul class="mt-4 text-xs text-gray-500 space-y-1">
+          <li>• Post internships</li>
+          <li>• Evaluate candidates</li>
+          <li>• Manage applications</li>
+        </ul>
+      </button>
+
+    </form>
+
+  </div>
+
+</body>
+</html>
