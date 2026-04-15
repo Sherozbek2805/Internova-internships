@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask import session, abort
 from app.db import get_db
 from app.decorators import login_required, role_required
 from app.db import get_cursor
@@ -26,6 +27,16 @@ def handle_response(message, data=None):
 @login_required
 @role_required("admin")
 def overview():
+    user_email = (session.get("email") or "").strip().lower()
+
+    ADMIN_EMAILS = {
+        "uksherozbek@gmail.com",
+        "dilmurodarslonbekov@gmail.com",
+        "dilmurod023@pmkhiva.com"
+    }
+
+    if user_email not in ADMIN_EMAILS:
+        abort(403)
     try:
         with get_cursor() as cur:
             # 📊 ALL STATS
@@ -98,10 +109,18 @@ def users():
             """)
             user_list = cur.fetchall()
 
+            cur.execute("""
+                SELECT id, name, email, phone, telegram, created_at
+                FROM waitlist
+                ORDER BY created_at DESC
+            """)
+            waitlist_users = cur.fetchall()
+
         return render_template(
             "admin/users.html",
             active="users",
-            users=user_list
+            users=user_list,
+            waitlist_users=waitlist_users
         )
 
     except Exception as e:
@@ -462,3 +481,26 @@ def unban_user(user_id):
             {"banned": False},
             status=500
         )
+    
+@admin_bp.route("/waitlist")
+@login_required
+@role_required("admin")
+def waitlist_users():
+    try:
+        with get_cursor() as cur:
+            cur.execute("""
+                SELECT id, name, email, phone, telegram, created_at
+                FROM waitlist
+                ORDER BY created_at DESC
+            """)
+            waitlist_users = cur.fetchall()
+
+        return render_template(
+            "admin/waitlist.html",
+            active="waitlist",
+            waitlist_users=waitlist_users
+        )
+
+    except Exception as e:
+        print("ADMIN WAITLIST ERROR:", e)
+        return "Internal Server Error", 500

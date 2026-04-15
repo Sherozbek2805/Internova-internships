@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, redirect, session, jsonify
+from flask import Blueprint, abort, render_template, redirect, session, jsonify
 from app.db import get_db
-from app.decorators import login_required
+from app.decorators import login_required, role_required
 from flask import url_for
 from app.db import get_cursor
 
@@ -11,7 +11,8 @@ public_bp = Blueprint("public", __name__)
 def index():
     if session.get("user_id"):
         return redirect(url_for("public.dashboard"))  # 🔥 FIX
-    return render_template("public/index.html")
+    return render_template("public/waitlist.html")
+    #return render_template("public/index.html")
 
 def get_dashboard_url(role):
     routes = {

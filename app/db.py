@@ -347,6 +347,26 @@ def init_db():
         """)
 
         # =========================
+        # WAITLIST
+        # =========================
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS waitlist (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            phone TEXT,
+            telegram TEXT,
+            school TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """)
+
+        cur.execute("""
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_waitlist_email_lower
+        ON waitlist (LOWER(email));
+        """)
+
+        # =========================
         # ⚡ INDEXES (CRITICAL)
         # =========================
         cur.execute("CREATE INDEX IF NOT EXISTS idx_app_company ON applications(company_id)")

@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <title>Internova Waitlist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .fade-up {
+        animation: fadeUp 0.8s ease forwards;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(18px);
+      }
+
+      .glow:hover {
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.45);
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: rgba(96, 165, 250, 0.8);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] min-h-screen text-white overflow-x-hidden"
+  >
+    <!-- Background Blur Circles -->
+    <div
+      class="absolute top-0 left-0 w-72 h-72 bg-purple-500/20 blur-3xl rounded-full"
+    ></div>
+    <div
+      class="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"
+    ></div>
+
+    <!-- Navbar -->
+    <header
+      class="sticky top-0 z-30 backdrop-blur-xl bg-white/5 border-b border-white/10"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            src="/static/logo.png"
+            class="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]"
+            alt="Internova"
+          />
+          <span class="font-semibold text-lg tracking-wide">Internova</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section
+      class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-20 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center"
+    >
+      <div class="fade-up">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm mb-6"
+        >
+          🚀 Talabalar uchun qisqa ro'yxat
+        </div>
+
+        <h1
+          class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6"
+        >
+          Waitlist'ga qo‘shiling va
+          <span
+            class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+          >
+            birinchilardan bo‘lib
+          </span>
+          imkoniyatlarga ega bo‘ling.
+        </h1>
+
+        <p
+          class="text-gray-400 text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
+        >
+          Internova hali ishga tushmagan bo‘lsa ham, siz hozirdan ro‘yxatdan
+          o‘tishingiz mumkin. Waitlist'ga qo‘shilgan talabalar birinchi bo‘lib
+          internshiplar, ish o‘rinlari va maxsus imkoniyatlarga ega bo‘lishadi.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div class="glass-card rounded-2xl p-5 text-center">
+            <div class="text-3xl font-bold text-blue-400">500+</div>
+            <div class="text-sm text-gray-400 mt-1">Kutayotgan talabalar</div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-5 text-center">
+            <div class="text-3xl font-bold text-purple-400">100+</div>
+            <div class="text-sm text-gray-400 mt-1">
+              Kelajakdagi internshiplar
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-5 text-center">
+            <div class="text-3xl font-bold text-pink-400">2026</div>
+            <div class="text-sm text-gray-400 mt-1">Ishga tushirish</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-center animate-float w-full">
+        <div
+          class="glass-card rounded-[2rem] p-5 sm:p-8 w-full max-w-xl shadow-2xl shadow-purple-500/10"
+        >
+          <div class="mb-8">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-2">
+              Waitlist Form
+            </h2>
+            <p class="text-gray-400 text-sm">
+              Ma'lumotlaringizni kiriting va biz sizga platforma ochilganda
+              xabar beramiz.
+            </p>
+          </div>
+
+          <form id="waitlistForm" class="space-y-5" novalidate>
+            <div>
+              <label class="text-sm text-gray-300">Ism-familya</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                placeholder="Sherzodbek Rasulov"
+                class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
+              />
+            </div>
+
+            <div>
+              <label class="text-sm text-gray-300">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-sm text-gray-300">Telefon raqam</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="text"
+                  placeholder="+998 90 123 45 67"
+                  required
+                  class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
+                />
+              </div>
+
+              <div>
+                <label class="text-sm text-gray-300">Telegram</label>
+                <input
+                  id="telegram"
+                  name="telegram"
+                  type="text"
+                  placeholder="@username"
+                  required
+                  class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
+                />
+              </div>
+            </div>
+
+            <div id="message"></div>
+
+            <button
+              id="submitBtn"
+              type="submit"
+              class="w-full py-3 sm:py-4 text-sm sm:text-base rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold shadow-xl shadow-purple-500/20 hover:scale-[1.02] hover:shadow-purple-500/40 active:scale-[0.98] transition-all glow"
+            >
+              Waitlist'ga qo‘shilish
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 sm:pb-24">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">
+          Nega hozirdan qo‘shilish kerak?
+        </h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+          Waitlist'dagi foydalanuvchilar platforma ochilganda boshqalardan oldin
+          imkoniyatlarga ega bo‘lishadi.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          class="glass-card rounded-3xl p-8 hover:-translate-y-2 transition duration-300"
+        >
+          <div class="text-4xl mb-4">⚡</div>
+          <h3 class="text-xl font-semibold mb-3">Early Access</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            Platforma ochilishi bilan internship va ish o‘rinlarini birinchi
+            bo‘lib ko‘rasiz.
+          </p>
+        </div>
+
+        <div
+          class="glass-card rounded-3xl p-8 hover:-translate-y-2 transition duration-300"
+        >
+          <div class="text-4xl mb-4">🎯</div>
+          <h3 class="text-xl font-semibold mb-3">Mos Tavsiyalar</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            Sizning qiziqishlaringiz va sohangiz asosida tavsiyalar beriladi.
+          </p>
+        </div>
+
+        <div
+          class="glass-card rounded-3xl p-8 hover:-translate-y-2 transition duration-300"
+        >
+          <div class="text-4xl mb-4">🏆</div>
+          <h3 class="text-xl font-semibold mb-3">Maxsus Imkoniyatlar</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            Waitlist foydalanuvchilari uchun maxsus grantlar, eventlar va
+            internship imkoniyatlari bo‘ladi.
+          </p>
+        </div>
+      </div>
+    </section>
+    <footer class="border-t border-white/10 bg-black/10 backdrop-blur-xl mt-12">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <div class="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+          © 2026 Internova. Barcha huquqlar himoyalangan.
+        </div>
+
+        <div class="flex items-center gap-5 text-xs sm:text-sm">
+
+          <a
+            href="/faq"
+            class="text-gray-500 hover:text-white transition duration-200"
+          >
+            FAQ
+          </a>
+
+          <a
+            href="/privacy"
+            class="text-gray-500 hover:text-white transition duration-200"
+          >
+            Privacy
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script>
+    const csrfToken = document.querySelector(
+      'meta[name="csrf-token"]',
+    )?.content;
+    const form = document.getElementById("waitlistForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const message = document.getElementById("message");
+
+    function normalizePhone(phone) {
+      return phone.replace(/\s+/g, "");
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function isValidTelegram(username) {
+      return /^@?[a-zA-Z0-9_]{5,}$/.test(username);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Yuborilmoqda...";
+
+      const payload = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim().toLowerCase(),
+        phone: normalizePhone(document.getElementById("phone").value.trim()),
+        telegram: document.getElementById("telegram").value.trim(),
+      };
+
+      if (!payload.name || !payload.email) {
+        message.innerHTML = `
+      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
+        Ism va email kiritilmagan.
+      </div>
+    `;
+
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Waitlist'ga qo‘shilish";
+        return;
+      }
+
+      if (!isValidEmail(payload.email)) {
+        message.innerHTML = `
+      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
+        Email noto‘g‘ri.
+      </div>
+    `;
+
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Waitlist'ga qo‘shilish";
+        return;
+      }
+
+      if (payload.phone && !/^\+?\d{9,15}$/.test(payload.phone)) {
+        message.innerHTML = `
+      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
+        Telefon raqam noto‘g‘ri.
+      </div>
+    `;
+
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Waitlist'ga qo‘shilish";
+        return;
+      }
+
+      if (payload.telegram && !isValidTelegram(payload.telegram)) {
+        message.innerHTML = `
+      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
+        Telegram foydalanuvchi nomi noto‘g‘ri.
+      </div>
+    `;
+
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Waitlist'ga qo‘shilish";
+        return;
+      }
+
+      try {
+        const response = await fetch("/waitlist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          message.innerHTML = `
+        <div class="rounded-xl bg-green-500/10 border border-green-500/30 p-4 text-green-300">
+          Siz muvaffaqiyatli waitlist'ga qo‘shildingiz.
+        </div>
+      `;
+
+          form.reset();
+        } else {
+          message.innerHTML = `
+        <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
+          ${result.message}
+        </div>
+      `;
+        }
+      } catch (error) {
+        message.innerHTML = `
+      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
+        Server xatosi. Keyinroq urinib ko‘ring.
+      </div>
+    `;
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Waitlist'ga qo‘shilish";
+    });
+  </script>
+</html>

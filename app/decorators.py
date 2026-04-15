@@ -37,11 +37,13 @@ def role_required(required_role):
                 flash("Please log in first.", "warning")
                 return redirect(url_for("auth.login"))
 
-            user_role = session.get("role")
+            user_role = (session.get("role") or "").strip().lower()
+
             if user_role != required_role:
                 abort(403)
 
             return view(*args, **kwargs)
+
         return wrapped_view
     return decorator
 

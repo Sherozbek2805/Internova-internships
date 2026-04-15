@@ -68,6 +68,7 @@ def login_user(user):
     session.clear()
     session["user_id"] = user["id"]
     session["role"] = user["role"]
+    session["email"] = user["email"]
     session.permanent = True
     session.modified = True
 
@@ -86,7 +87,6 @@ def redirect_by_role(role):
         "message": "Invalid user role."
     }), 400
 
-# -------------------- LOGIN --------------------
 # -------------------- LOGIN --------------------
 @auth_bp.route("/login", methods=["GET", "POST"])
 @limiter.limit("5 per minute")
@@ -157,6 +157,8 @@ def login():
         "success": True,
         "redirect": get_dashboard_url(role)
     }), 200
+
+
 
 # -------------------- SIGNUP --------------------
 # -------------------- SIGNUP --------------------
@@ -350,6 +352,82 @@ def check_email():
 def logout():
     session.clear()
     return redirect(url_for("public.index"))
+
+
+
+@auth_bp.route("/waitlist", methods=["POST"])
+@limiter.limit("5 per minute")
+def waitlist():
+    data = request.get_json(silent=True) or request.form
+
+    name = (data.get("name") or "").strip()
+    email = normalize_email(data.get("email"))
+    phone = normalize_phone(data.get("phone"))
+    telegram = (data.get("telegram") or "").strip()
+
+    if not name or not email:
+        return jsonify({
+            "success": False,
+            "message": "Name and email are required."
+        }), 400
+
+    if not is_valid_email(email):
+        return jsonify({
+            "success": False,
+            "message": "Invalid email format."
+        }), 400
+
+    if phone and not re.match(r'^\+?\d{9,15}$', phone):
+        return jsonify({
+            "success": False,
+            "message": "Invalid phone number."
+        }), 400
+
+    if telegram and not re.match(r'^@?[a-zA-Z0-9_]{5,}$', telegram):
+        return jsonify({
+            "success": False,
+            "message": "Invalid Telegram username."
+        }), 400
+
+    try:
+        with get_cursor() as cur:
+            cur.execute(
+                "SELECT id FROM waitlist WHERE LOWER(email)=LOWER(%s)",
+                (email,)
+            )
+
+            if cur.fetchone():
+                return jsonify({
+                    "success": False,
+                    "message": "You are already on the waitlist."
+                }), 400
+
+            cur.execute("""
+                INSERT INTO waitlist (
+                    name,
+                    email,
+                    phone,
+                    telegram
+                )
+                VALUES (%s, %s, %s, %s)
+            """, (
+                name,
+                email,
+                phone,
+                telegram
+            ))
+
+    except Exception:
+        current_app.logger.exception("Waitlist insert failed")
+        return jsonify({
+            "success": False,
+            "message": "Internal server error."
+        }), 500
+
+    return jsonify({
+        "success": True,
+        "message": "Successfully added to waitlist."
+    }), 200
 
 # -------------------- GOOGLE LOGIN --------------------
 @auth_bp.route("/login/google")
