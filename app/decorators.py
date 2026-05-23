@@ -47,6 +47,35 @@ def role_required(required_role):
         return wrapped_view
     return decorator
 
+def company_access_required(view):
+
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+
+        # =========================
+        # NORMAL COMPANY ACCOUNT
+        # =========================
+        if (
+            session.get("user_id")
+            and (session.get("role") or "").strip().lower() == "company"
+        ):
+            return view(*args, **kwargs)
+
+        # =========================
+        # EXTERNAL COMPANY ACCESS
+        # =========================
+        if (
+            session.get("external_company_access")
+            and session.get("external_company_id")
+        ):
+            return view(*args, **kwargs)
+
+        flash("Please log in first.", "warning")
+
+        return redirect(url_for("auth.login"))
+
+    return wrapped_view
+
 
 def admin_required(view):
     return role_required("admin")(view)

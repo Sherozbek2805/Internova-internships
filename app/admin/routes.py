@@ -3,18 +3,20 @@ from flask import session, abort
 from app.db import get_db
 from app.decorators import login_required, role_required
 from app.db import get_cursor
+import secrets
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
+
 
 
 # ================================
 # HELPER: HANDLE AJAX OR NORMAL
 # ================================
-def handle_response(message, data=None):
+def handle_response(message, data=None, status=200):
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         response = {"success": True}
         if data:
             response.update(data)
-        return jsonify(response)
+        return jsonify(response), status    
 
     flash(message, "success")
     return redirect(request.referrer or url_for("admin.overview"))
@@ -136,13 +138,26 @@ def companies():
     try:
         with get_cursor() as cur:
             cur.execute("""
-                SELECT 
-                    companies.*,
-                    users.name AS owner_name,
-                    users.email AS owner_email
-                FROM companies
-                LEFT JOIN users ON users.id = companies.user_id
-                ORDER BY companies.created_at DESC
+                    SELECT 
+                        companies.*,
+                        users.name AS owner_name,
+                        users.email AS owner_email,
+
+                        (
+                            SELECT access_code
+                            FROM external_company_access
+                            WHERE company_id = companies.id
+                            AND is_active = TRUE
+                            ORDER BY created_at DESC
+                            LIMIT 1
+                        ) AS access_code
+
+                    FROM companies
+
+                    LEFT JOIN users
+                    ON users.id = companies.user_id
+
+                    ORDER BY companies.created_at DESC
             """)
             company_list = cur.fetchall()
 
@@ -155,6 +170,59 @@ def companies():
     except Exception as e:
         print("ADMIN COMPANIES ERROR:", e)
         return "Internal Server Error", 500
+    
+@admin_bp.route("/generate-company-code/<int:company_id>", methods=["POST"])
+@login_required
+@role_required("admin")
+def generate_company_code(company_id):
+
+    try:
+
+        access_code = secrets.token_urlsafe(12)
+
+        with get_cursor() as cur:
+
+            # deactivate old codes
+            cur.execute("""
+                UPDATE external_company_access
+                SET is_active = FALSE
+                WHERE company_id = %s
+            """, (company_id,))
+
+            # create new code
+            cur.execute("""
+                INSERT INTO external_company_access (
+                    company_id,
+                    access_code,
+                    created_by_admin
+                )
+                VALUES (%s,%s,%s)
+                RETURNING access_code
+            """, (
+                company_id,
+                access_code,
+                session.get("user_id")
+            ))
+
+            code = cur.fetchone()
+
+        return handle_response(
+            "Access code generated.",
+            {
+                "success": True,
+                "access_code": code["access_code"]
+            }
+        )
+
+    except Exception as e:
+
+        print("GENERATE CODE ERROR:", e)
+
+        return handle_response(
+            "Internal server error.",
+            {"success": False},
+            status=500
+        )
 
 
 # ================================
@@ -504,3 +572,174 @@ def waitlist_users():
     except Exception as e:
         print("ADMIN WAITLIST ERROR:", e)
         return "Internal Server Error", 500
+    
+@admin_bp.route("/create-internship")
+@login_required
+@role_required("admin")
+def create_internship_page():
+
+    try:
+        with get_cursor() as cur:
+
+            cur.execute("""
+                SELECT id, name
+                FROM companies
+                WHERE verified = TRUE
+                ORDER BY name
+            """)
+
+            companies = cur.fetchall()
+
+        return render_template(
+            "admin/create_internship.html",
+            active="create_internship",
+            companies=companies
+        )
+
+    except Exception as e:
+        print("CREATE INTERNSHIP PAGE ERROR:", e)
+        return "Internal Server Error", 500
+    
+@admin_bp.route("/create-internship", methods=["POST"])
+@login_required
+@role_required("admin")
+def create_internship():
+
+    try:
+        company_id = request.form.get("company_id")
+        title = (request.form.get("title") or "").strip()
+        description = (request.form.get("description") or "").strip()
+
+        if not company_id or not title:
+            return handle_response(
+                "Missing required fields.",
+                {"success": False},
+                status=400
+            )
+
+        stipend = request.form.get("stipend") or 0
+
+        with get_cursor() as cur:
+
+            cur.execute("""
+                INSERT INTO internships (
+                    company_id,
+                    title,
+                    description,
+                    location,
+                    duration,
+                    deadline,
+                    stipend,
+                    type,
+                    approved,
+                    source_type,
+                    created_by_admin
+                )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                RETURNING id
+            """, (
+                company_id,
+                title,
+                description,
+                request.form.get("location"),
+                request.form.get("duration"),
+                request.form.get("deadline"),
+                stipend,
+                request.form.get("type"),
+                True,
+                "admin",
+                session.get("user_id")
+            ))
+
+            internship = cur.fetchone()
+
+        return handle_response(
+            "Internship created successfully.",
+            {
+                "success": True,
+                "internship_id": internship["id"]
+            }
+        )
+
+    except Exception as e:
+        print("CREATE INTERNSHIP ERROR:", e)
+
+        return handle_response(
+            "Internal server error.",
+            {"success": False},
+            status=500
+        )
+
+@admin_bp.route("/create-company")
+@login_required
+@role_required("admin")
+def create_company_page():
+
+    return render_template(
+        "admin/create_company.html",
+        active="companies"
+    )
+
+@admin_bp.route("/create-company", methods=["POST"])
+@login_required
+@role_required("admin")
+def create_company():
+
+    try:
+
+        name = (request.form.get("name") or "").strip()
+
+        if not name:
+            return handle_response(
+                "Company name required.",
+                {"success": False},
+                status=400
+            )
+
+        with get_cursor() as cur:
+
+            cur.execute("""
+                INSERT INTO companies (
+                    name,
+                    phone1,
+                    website,
+                    description,
+                    logo_url,
+                    industry,
+                    address,
+                    verified,
+                    public_visible
+                )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                RETURNING id
+            """, (
+                name,
+                request.form.get("phone1"),
+                request.form.get("website"),
+                request.form.get("description"),
+                request.form.get("logo_url"),
+                request.form.get("industry"),
+                request.form.get("address"),
+                True,
+                True
+            ))
+
+            company = cur.fetchone()
+
+        return handle_response(
+            "Company created successfully.",
+            {
+                "success": True,
+                "company_id": company["id"]
+            }
+        )
+
+    except Exception as e:
+
+        print("CREATE COMPANY ERROR:", e)
+
+        return handle_response(
+            "Internal server error.",
+            {"success": False},
+            status=500
+        )

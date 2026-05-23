@@ -49,6 +49,7 @@
       <a href="{{ url_for('admin.companies') }}" class="{% if active=='companies' %}active{% endif %}">Companies</a>
       <a href="{{ url_for('admin.internships') }}" class="{% if active=='internships' %}active{% endif %}">Internships</a>
       <a href="{{ url_for('admin.applications') }}" class="{% if active=='applications' %}active{% endif %}">Applications</a>
+      <a href="{{ url_for('admin.create_internship_page') }}" class="{% if active=='create_internship' %}active{% endif %}">Create Internship</a>
     </nav>
 
     <form action="/logout" method="POST">
@@ -109,6 +110,11 @@ function updateUI(form, data) {
   // =========================
   // COMPANY TOGGLE
   // =========================
+ function updateUI(form, data) {
+
+  // =========================
+  // COMPANY TOGGLE
+  // =========================
   if (form.action.includes("company")) {
 
     const container = form.closest("div.flex.flex-col");
@@ -136,6 +142,18 @@ function updateUI(form, data) {
       btn.className = "px-4 py-2 rounded-lg bg-green-500/20 border border-green-500/30 text-green-300 hover:bg-green-500/30 transition";
     }
   }
+
+  // =========================
+  // COMPANY ACCESS CODE
+  // =========================
+  if (data.access_code) {
+
+    showToast(
+      "Access Code: " + data.access_code
+    );
+  }
+
+}
 
   // =========================
   // USER BAN / UNBAN

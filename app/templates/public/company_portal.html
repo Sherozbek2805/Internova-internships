@@ -1,0 +1,57 @@
+{% extends "public/base.html" %} {% block content %}
+
+<section class="max-w-5xl mx-auto px-6 py-16">
+  <!-- COMPANY -->
+  <div class="mb-10">
+    <h1 class="text-5xl font-bold text-white">{{ company.name }}</h1>
+
+    <p class="text-blue-400 mt-3">{{ company.industry or "Company" }}</p>
+
+    <p class="text-gray-400 mt-6">{{ company.description }}</p>
+  </div>
+
+  <!-- INTERNSHIPS -->
+  <div class="space-y-6">
+    {% for internship in internships %}
+
+    <div class="rounded-3xl bg-white/5 border border-white/10 p-6">
+      <h2 class="text-2xl font-semibold text-white">{{ internship.title }}</h2>
+
+      <p class="text-gray-400 mt-3">{{ internship.description }}</p>
+    </div>
+
+    {% endfor %}
+  </div>
+
+  <!-- ACCESS -->
+  <div class="mt-12 rounded-3xl bg-white/5 border border-white/10 p-8">
+    <h2 class="text-2xl font-semibold text-white mb-4">Company Access</h2>
+
+    <p class="text-gray-400 mb-6">Enter your access code to view applicants.</p>
+
+    <form
+      method="POST"
+      action="/companies/{{ company.id }}/access"
+      class="flex gap-4"
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <input
+        type="text"
+        name="access_code"
+        placeholder="Enter access code"
+        required
+        class="flex-1 px-4 py-3 rounded-2xl bg-white/5 border border-white/10"
+      />
+
+      <button
+        type="submit"
+        class="px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+      >
+        Access
+      </button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

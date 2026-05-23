@@ -85,7 +85,7 @@ def init_db():
         cur.execute("""
         CREATE TABLE IF NOT EXISTS companies (
             id SERIAL PRIMARY KEY,
-            user_id INTEGER UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+            user_id INTEGER UNIQUE REFERENCES users(id) ON DELETE SET NULL,
             name TEXT NOT NULL,
             phone1 TEXT,
             phone2 TEXT,
@@ -97,6 +97,28 @@ def init_db():
             address TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
+        """)
+
+        # =========================
+        # FIX COMPANY USER DELETE BEHAVIOR
+        # =========================
+
+        cur.execute("""
+        DO $$ BEGIN
+
+            ALTER TABLE companies
+            DROP CONSTRAINT IF EXISTS companies_user_id_fkey;
+
+            ALTER TABLE companies
+            ADD CONSTRAINT companies_user_id_fkey
+            FOREIGN KEY (user_id)
+            REFERENCES users(id)
+            ON DELETE SET NULL;
+
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+
+        END $$;
         """)
 
         # =========================
@@ -366,6 +388,40 @@ def init_db():
         ON waitlist (LOWER(email));
         """)
 
+        cur.execute("""
+        ALTER TABLE internships
+        ADD COLUMN IF NOT EXISTS source_type TEXT
+        CHECK (source_type IN ('company','admin'))
+        DEFAULT 'company';""")
+
+        cur.execute("""
+        ALTER TABLE internships
+        ADD COLUMN IF NOT EXISTS created_by_admin INTEGER
+        REFERENCES users(id) ON DELETE SET NULL;""")
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS external_company_access (
+            id SERIAL PRIMARY KEY,
+            company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE,
+            access_code TEXT UNIQUE NOT NULL,
+            is_active BOOLEAN DEFAULT TRUE,
+            expires_at TIMESTAMP,
+            created_by_admin INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );""")
+
+        cur.execute("""
+        ALTER TABLE companies
+        ADD COLUMN IF NOT EXISTS public_visible BOOLEAN DEFAULT TRUE;""")
+
+        cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_internships_source_type
+        ON internships(source_type);""")
+
+        cur.execute("""
+        CREATE INDEX IF NOT EXISTS idx_external_company_code
+        ON external_company_access(access_code); """)
+
         # =========================
         # ⚡ INDEXES (CRITICAL)
         # =========================
@@ -373,5 +429,4 @@ def init_db():
         cur.execute("CREATE INDEX IF NOT EXISTS idx_app_student ON applications(student_id)")
         cur.execute("CREATE INDEX IF NOT EXISTS idx_app_internship ON applications(internship_id)")
         cur.execute("CREATE INDEX IF NOT EXISTS idx_internships_company ON internships(company_id)")
-        cur.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)")
         cur.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)")

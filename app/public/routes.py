@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, render_template, redirect, session, jsonify
+from flask import Blueprint, abort, render_template, redirect, session, jsonify, request, flash
 from app.db import get_db
 from app.decorators import login_required, role_required
 from flask import url_for
@@ -11,8 +11,8 @@ public_bp = Blueprint("public", __name__)
 def index():
     if session.get("user_id"):
         return redirect(url_for("public.dashboard"))  # 🔥 FIX
-    return render_template("public/waitlist.html")
-    #return render_template("public/index.html")
+    #return render_template("public/waitlist.html")
+    return render_template("public/index.html")
 
 def get_dashboard_url(role):
     routes = {
@@ -132,3 +132,129 @@ def track_view(id):
     except Exception as e:
         print("TRACK VIEW ERROR:", e)
         return jsonify({"success": False}), 500
+
+@public_bp.route("/directory/companies")
+def company_directory():
+
+    try:
+
+        with get_cursor() as cur:
+
+            cur.execute("""
+                SELECT
+                    id,
+                    name,
+                    description,
+                    website,
+                    logo_url,
+                    industry
+                FROM companies
+                WHERE verified = TRUE
+                ORDER BY name
+            """)
+
+            companies = cur.fetchall()
+
+        return render_template(
+            "public/company_directory.html",
+            companies=companies
+        )
+
+    except Exception as e:
+
+        print("COMPANY DIRECTORY ERROR:", e)
+
+        return "Internal Server Error", 500
+    
+@public_bp.route("/companies/<int:id>")
+def company_portal(id):
+
+    try:
+
+        with get_cursor() as cur:
+
+            # COMPANY
+            cur.execute("""
+                SELECT *
+                FROM companies
+                WHERE id = %s
+            """, (id,))
+
+            company = cur.fetchone()
+
+            if not company:
+                abort(404)
+
+            # INTERNSHIPS
+            cur.execute("""
+                SELECT *
+                FROM internships
+                WHERE company_id = %s
+                ORDER BY created_at DESC
+            """, (id,))
+
+            internships = cur.fetchall()
+
+        return render_template(
+            "public/company_portal.html",
+            company=company,
+            internships=internships
+        )
+
+    except Exception as e:
+
+        print("COMPANY PORTAL ERROR:", e)
+
+        return "Internal Server Error", 500
+
+    
+@public_bp.route("/companies/<int:id>/access", methods=["POST"])
+def company_access(id):
+    try:
+
+        access_code = (
+            request.form.get("access_code") or ""
+        ).strip()
+
+        if not access_code:
+
+            flash("Access code required.", "error")
+
+            return redirect(f"/companies/{id}")
+
+        with get_cursor() as cur:
+
+            # CHECK CODE
+            cur.execute("""
+                SELECT *
+                FROM external_company_access
+                WHERE
+                    company_id = %s
+                    AND access_code = %s
+                    AND is_active = TRUE
+            """, (
+                id,
+                access_code
+            ))
+
+            access = cur.fetchone()
+
+            if not access:
+
+                flash("Invalid access code.", "error")
+
+                return redirect(f"/companies/{id}")
+
+        # ✅ EXTERNAL COMPANY SESSION
+        session["external_company_access"] = True
+        session["external_company_id"] = id
+
+        return redirect(
+            url_for("company.dashboard")
+        )
+
+    except Exception as e:
+
+        print("COMPANY ACCESS ERROR:", e)
+
+        return "Internal Server Error", 500

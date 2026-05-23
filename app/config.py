@@ -47,6 +47,8 @@ class Config:
     GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
     GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
+    DATABASE_URL= "postgresql://postgres:Qazwsx$$111@localhost:5432/internova"
+
     DATABASE_URL = os.getenv("DATABASE_URL")
 
     if DATABASE_URL and DATABASE_URL.startswith("postgres://"):

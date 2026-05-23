@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, session, jsonif
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.extensions import limiter
 from app.db import get_db
-from app.decorators import login_required, role_required
+from app.decorators import login_required, role_required, company_access_required
 import os
 from app.db import get_cursor
 import json
@@ -23,18 +23,50 @@ def validate_email(email):
     return re.match(r"^[^@]+@[^@]+\.[^@]+$", email)
 
 def get_company():
+
+    # =========================
+    # NORMAL COMPANY ACCOUNT
+    # =========================
     user_id = session.get("user_id")
 
-    if not user_id:
-        return None
+    if user_id:
 
-    with get_cursor() as cur:
-        cur.execute("""
-            SELECT * FROM companies WHERE user_id = %s
-        """, (user_id,))
-        company = cur.fetchone()
+        with get_cursor() as cur:
 
-    return company  # dict or None
+            cur.execute("""
+                SELECT *
+                FROM companies
+                WHERE user_id = %s
+            """, (user_id,))
+
+            company = cur.fetchone()
+
+        if company:
+            return company
+
+    # =========================
+    # EXTERNAL COMPANY ACCESS
+    # =========================
+    external_company_id = session.get(
+        "external_company_id"
+    )
+
+    if external_company_id:
+
+        with get_cursor() as cur:
+
+            cur.execute("""
+                SELECT *
+                FROM companies
+                WHERE id = %s
+            """, (external_company_id,))
+
+            company = cur.fetchone()
+
+        if company:
+            return company
+
+    return None
 
 
 def get_status_counts(company_id):
@@ -44,7 +76,7 @@ def get_status_counts(company_id):
                 COUNT(a.id) AS total_applications,
                 COUNT(*) FILTER (WHERE a.status = 'reviewing') AS reviewing_count,
                 COUNT(*) FILTER (WHERE a.status = 'shortlisted') AS shortlisted_count,
-                COUNT(*) FILTER (WHERE a.status = 'accepted') AS selected_count,
+                COUNT(*) FILTER (WHERE a.status = 'accepted') AS accepted_count,
                 COUNT(*) FILTER (WHERE a.status = 'rejected') AS rejected_count
             FROM applications a
             WHERE a.company_id = %s
@@ -92,9 +124,8 @@ def build_candidates_query(company_id, internship_title, status, min_score):
 # =========================
 
 @company_bp.route("/dashboard")
+@company_access_required
 @limiter.exempt
-@login_required
-@role_required("company")
 def dashboard():
     # 🏢 GET COMPANY
     company = get_company()
@@ -126,8 +157,7 @@ def dashboard():
 # =========================
 
 @company_bp.route("/post")
-@login_required
-@role_required("company")
+@company_access_required
 def post_page():
     company = get_company()
 
@@ -138,8 +168,7 @@ def post_page():
 
 
 @company_bp.route("/internships/create", methods=["POST"])
-@login_required
-@role_required("company")
+@company_access_required
 def create_internship():
     company = get_company()
 
@@ -235,9 +264,8 @@ def create_internship():
 # =========================
 
 @company_bp.route("/candidates")
+@company_access_required
 @limiter.exempt
-@login_required
-@role_required("company")
 def candidates():
     company = get_company()
 
@@ -333,8 +361,7 @@ def candidates():
     return render_template("company/candidates.html")
 
 @company_bp.route("/applications/update", methods=["POST"])
-@login_required
-@role_required("company")
+@company_access_required
 def update_application():
     company = get_company()
 
@@ -405,8 +432,7 @@ def update_application():
     
 
 @company_bp.route("/applications/<int:id>")
-@login_required
-@role_required("company")
+@company_access_required
 def get_application(id):
     company = get_company()
 
@@ -494,8 +520,7 @@ def get_application(id):
 # =========================
 
 @company_bp.route("/settings")
-@login_required
-@role_required("company")
+@company_access_required
 def settings_page():
     company = get_company()
 
@@ -508,8 +533,7 @@ def settings_page():
     )
 
 @company_bp.route("/settings/update", methods=["POST"])
-@login_required
-@role_required("company")
+@company_access_required
 def update_settings():
     company = get_company()
 
@@ -602,9 +626,15 @@ def update_settings():
 # CHANGE PASSWORD
 # =========================
 @company_bp.route("/change-password", methods=["POST"])
-@login_required
-@role_required("company")
+@company_access_required
 def change_password():
+    # 🚫 EXTERNAL COMPANIES
+    if session.get("external_company_access"):
+
+        return jsonify({
+            "status": "error",
+            "message": "External companies cannot change passwords."
+        }), 403
     user_id = session.get("user_id")
 
     if not user_id:
