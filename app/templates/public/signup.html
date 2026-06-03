@@ -1,605 +1,259 @@
 {% extends "public/base.html" %}
+{% block title %}
+  <span class="uz">Ro'yxatdan o'tish</span><span class="en">Sign Up</span> — Internova
+{% endblock %}
 
-{% block title %}Signup{% endblock %}
-
-<style>
-input:focus, select:focus {
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
-}
-
-.input-success {
-  border-color: #22c55e !important;
-}
-
-.input-error {
-  border-color: #ef4444 !important;
-}
-</style>
 {% block content %}
+<div class="w-full max-w-md px-4 sm:px-0 py-10">
 
-<button onclick="window.history.back()"
-  class="fixed top-6 left-6 z-50 w-11 h-11 flex items-center justify-center
-         rounded-full bg-white/10 backdrop-blur-md border border-white/20
-         text-white shadow-lg
-         hover:bg-white/20 hover:scale-105 active:scale-95
-         transition-all duration-200">
+  <button onclick="window.history.back()" class="btn btn-ghost mb-6 w-10 h-10 p-0 rounded-full" aria-label="Back">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
 
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-       fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15 19l-7-7 7-7" />
-  </svg>
-</button>
+  <div class="flex items-center gap-2 mb-8">
+    <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
+    <span class="font-semibold" style="color:var(--text)">Internova</span>
+  </div>
 
-  <div class="w-full max-w-md">
-    <div class="flex justify-center items-center gap-2 mb-8">
-      <img src="/static/logo.png" 
-     alt="Internova Logo" 
-     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
+  <div class="card p-6 sm:p-8">
+    <h1 class="text-xl sm:text-2xl font-semibold mb-1" style="color:var(--text)">
+      <span class="uz">Akkaunt yaratish</span><span class="en">Create an account</span>
+    </h1>
+    <p class="text-sm mb-6" style="color:var(--muted)">
+      <span class="uz">Talaba yoki kompaniya sifatida qo'shiling.</span>
+      <span class="en">Join as a student or company.</span>
+    </p>
 
-      <span class="text-lg font-semibold">Internova</span>
+    <div id="message" class="mb-4"></div>
+
+    <!-- Role selector -->
+    <div class="flex gap-1 p-1 rounded-lg mb-6" style="background:var(--surface2)">
+      <button id="studentBtn" class="flex-1 py-2 rounded-md text-sm font-medium transition-all">
+        <span class="uz">Talaba</span><span class="en">Student</span>
+      </button>
+      <button id="companyBtn" class="flex-1 py-2 rounded-md text-sm font-medium transition-all">
+        <span class="uz">Kompaniya</span><span class="en">Company</span>
+      </button>
     </div>
 
-    <div class="rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl p-8 shadow-xl">
-      <h1 class="text-2xl font-semibold mb-1">Akkaunt yaratish</h1>
-      <p class="text-gray-400 text-sm mb-6">Talaba yoki kompaniya sifatida qo‘shiling</p>
+    <form id="signupForm" class="space-y-4" novalidate>
+      <input type="hidden" id="role" value="student">
 
-      <div id="message" class="mb-4"></div>
-
-      <div class="flex bg-white/10 rounded-xl p-1 mb-6">
-        <button type="button" id="studentBtn"
-          class="flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium">
-          Talaba
-        </button>
-
-        <button type="button" id="companyBtn"
-          class="flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium">
-          Kompaniya
-        </button>
+      <div>
+        <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">Email</label>
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com" class="input">
+        <p id="emailStatus" class="text-xs mt-1"></p>
       </div>
 
-      <form id="signupForm" class="space-y-4" novalidate>
-        <input type="hidden" id="role" value="student">
-
-        <div>
-          <label for="email" class="text-sm">Email</label>
-          <input id="email"
-            type="email"
-            required
-            autocomplete="email"
-            placeholder="you@example.com"
-            class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
-          <p id="emailStatus" class="text-sm mt-1"></p>
-        </div>
-
+      <div>
+        <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+          <span class="uz">Parol</span><span class="en">Password</span>
+        </label>
         <div class="relative">
-          <label for="password" class="text-sm">Parol</label>
-          <input id="password"
-            type="password"
-            required
-            autocomplete="new-password"
-            placeholder="••••••••"
-            class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 pr-12 outline-none focus:border-blue-400">
-          <button type="button" id="togglePassword"
-          class="absolute right-3 top-9 text-gray-400 hover:text-white transition"
-          aria-label="Parolni ko‘rsatish/yashirish">
-
-          <!-- Eye icon -->
-          <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M2.458 12C3.732 7.943 7.523 5 12 5
-                      c4.477 0 8.268 2.943 9.542 7
-                      -1.274 4.057-5.065 7-9.542 7
-                      -4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-
-                <!-- Eye off -->
-                <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg"
-                    class="w-5 h-5 hidden"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13.875 18.825A10.05 10.05 0 0112 19
-                      c-4.477 0-8.268-2.943-9.542-7
-                      a9.956 9.956 0 012.042-3.362M6.18 6.18
-                      A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7
-                      a9.956 9.956 0 01-4.043 5.362M6.18 6.18L3 3m3.18 3.18l11.64 11.64"/>
-                </svg>
-
+          <input id="password" type="password" autocomplete="new-password" placeholder="••••••••" class="input pr-10">
+          <button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2" style="color:var(--muted)">
+            <svg id="eyeOpen" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <svg id="eyeClosed" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.042-3.362M6.18 6.18A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.043 5.362M6.18 6.18L3 3m3.18 3.18l11.64 11.64"/></svg>
           </button>
         </div>
-
-        <div>
-          <div class="w-full bg-gray-700 rounded h-2 overflow-hidden">
-            <div id="strengthBar" class="h-2 rounded bg-red-500 w-0 transition-all"></div>
-          </div>
-          <p id="strengthText" class="text-sm mt-1"></p>
+        <div class="strength-track mt-2">
+          <div id="strengthBar" class="strength-fill" style="width:0"></div>
         </div>
+        <p id="strengthText" class="text-xs mt-1" style="color:var(--muted)"></p>
+      </div>
 
-        <div>
-          <label for="confirmPassword" class="text-sm">Parolni takrorlang</label>
-          <input id="confirmPassword"
-            type="password"
-            required
-            autocomplete="new-password"
-            placeholder="••••••••"
-            class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
-            
-        </div>
+      <div>
+        <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+          <span class="uz">Parolni takrorlang</span><span class="en">Confirm Password</span>
+        </label>
+        <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="••••••••" class="input">
+      </div>
 
-        <div id="studentFields" class="space-y-4">
-          <div>
-            <label for="name" class="text-sm">Ism-familya</label>
-            <input id="name"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
-          </div>
-          <div>
-            <label class="text-sm">Telefon raqam</label>
-            <input id="studentPhone"
-              placeholder="+998 90 123 45 67"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
-          </div>
+      <!-- Student fields -->
+      <div id="studentFields" class="space-y-3">
+        <input id="name"        placeholder="Full name"        class="input">
+        <input id="studentPhone" placeholder="+998 90 123 45 67" class="input">
+        <input id="telegram"    placeholder="@telegram"        class="input">
+        <input id="school"      placeholder="School / University" class="input">
+      </div>
 
-          <div>
-            <label class="text-sm">Telegram username</label>
-            <input id="telegram"
-              placeholder="@username"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
-          </div>
-                    <div>
-            <label for="school" class="text-sm">Maktab</label>
-            <input id="school"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
-          </div>
-        </div>
+      <!-- Company fields -->
+      <div id="companyFields" class="space-y-3 hidden">
+        <input id="companyName" placeholder="Company name" class="input">
+        <input id="phone1"      placeholder="+998 90 123 45 67 (Phone 1)" class="input">
+        <input id="phone2"      placeholder="+998 91 765 43 21 (Phone 2, optional)" class="input">
+        <input id="address"     placeholder="Address" class="input">
+        <select id="industry" class="input" style="color:var(--text)">
+          <option value="" style="background:var(--surface)">
+            <span class="uz">Sohani tanlang</span><span class="en">Select industry</span>
+          </option>
+          <option value="IT and engineering">IT &amp; Engineering</option>
+          <option value="Media and Marketing">Media &amp; Marketing</option>
+          <option value="Finance and Business">Finance &amp; Business</option>
+          <option value="Health and Pharmacy">Health &amp; Pharmacy</option>
+          <option value="Others">Others</option>
+        </select>
+      </div>
 
-        <div id="companyFields" class="space-y-4 hidden">
-          <div>
-            <label for="companyName" class="text-sm">Kompaniya nomi</label>
-            <input id="companyName"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400">
-          </div>
-          <!-- 🔥 NEW: COMPANY EXTRA INFO -->
-          <div>
-            <label class="text-sm">Telefon 1</label>
-            <input id="phone1"
-              placeholder="+998 90 123 45 67"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all">
-          </div>
+      <button type="submit" class="btn btn-primary w-full py-3">
+        <span class="uz">Ro'yxatdan o'tish</span><span class="en">Create Account</span>
+      </button>
 
-          <div>
-            <label class="text-sm">Telefon 2 (ixtiyoriy)</label>
-            <input id="phone2"
-              placeholder="+998 91 765 43 21"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all">
-          </div>
-
-          <div>
-            <label class="text-sm">Manzil</label>
-            <input id="address"
-              placeholder="Toshkent, Yunusobod..."
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all">
-          </div>
-
-          <div>
-            <label class="text-sm">Sohasi</label>
-            <select id="industry"
-              class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none focus:border-blue-400 transition-all text-gray-300">
-              <option value="">Tanlang</option>
-              <option>IT and engineering</option>
-              <option>Media and Marketing</option>
-              <option>Finance and Business</option>
-              <option>Health and Pharmacy</option>
-              <option>Others</option>
-            </select>
-          </div>
-        </div>
-
-        <button type="submit"
-          class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium hover:opacity-95 transition">
-          Ro‘yxatdan o‘tish
-        </button>
-              <a
-        href="{{ url_for('auth.google_login') }}"
-        class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-gray-800 font-medium hover:bg-gray-100 transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 48 48"
-          width="20"
-          height="20"
-        >
-          <path
-            fill="#FFC107"
-            d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10.4 0 19-7.5 19-20 0-1.3-.1-2.7-.4-3.5z"
-          />
-          <path
-            fill="#FF3D00"
-            d="M6.3 14.7l6.6 4.8C14.5 16.1 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.4 6.3 14.7z"
-          />
-          <path
-            fill="#4CAF50"
-            d="M24 44c5.2 0 10-2 13.5-5.3l-6.2-5.1C29.3 36 26.8 37 24 37c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"
-          />
-          <path
-            fill="#1976D2"
-            d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.5-6.2 7.1l6.2 5.1C38.6 37.2 44 31.2 44 24c0-1.3-.1-2.7-.4-3.5z"
-          />
+      <a href="{{ url_for('auth.google_login') }}" class="btn btn-ghost w-full py-3 gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="18" height="18">
+          <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10.4 0 19-7.5 19-20 0-1.3-.1-2.7-.4-3.5z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16.1 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.4 6.3 14.7z"/>
+          <path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.5-5.3l-6.2-5.1C29.3 36 26.8 37 24 37c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+          <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.5-6.2 7.1l6.2 5.1C38.6 37.2 44 31.2 44 24c0-1.3-.1-2.7-.4-3.5z"/>
         </svg>
-
-        Google orqali kirish
+        <span class="uz">Google orqali kirish</span><span class="en">Continue with Google</span>
       </a>
-      </form>
+    </form>
 
-      <p class="text-center text-sm text-gray-400 mt-6">
-        Akkauntingiz bormi?
-        <a href="{{ url_for('auth.login') }}" class="text-blue-400 hover:underline">Kirish</a>
-      </p>
+    <p class="text-center text-sm mt-6" style="color:var(--muted)">
+      <span class="uz">Akkauntingiz bormi?</span><span class="en">Already have an account?</span>
+      <a href="{{ url_for('auth.login') }}" class="font-medium ml-1" style="color:var(--text)">
+        <span class="uz">Kirish</span><span class="en">Log in</span>
+      </a>
+    </p>
+
+    <div class="flex justify-center gap-2 mt-4 pt-4" style="border-top:1px solid var(--border)">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">🌐 EN</span><span class="en">🌐 UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
     </div>
   </div>
-  <br>
-  <br>
+</div>
+{% endblock %}
 
+{% block scripts %}
 <script>
-const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  (function() {
+    const t = document.documentElement.getAttribute('data-theme') || 'dark';
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
 
-// =========================
-// 🔥 SAFE FALLBACK FUNCTIONS (FIX)
-// =========================
-function setBtnState(btn, state) {
-  if (!btn) return;
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  const roleInput       = document.getElementById('role');
+  const studentFields   = document.getElementById('studentFields');
+  const companyFields   = document.getElementById('companyFields');
+  const studentBtn      = document.getElementById('studentBtn');
+  const companyBtn      = document.getElementById('companyBtn');
+  const passwordEl      = document.getElementById('password');
+  const confirmEl       = document.getElementById('confirmPassword');
+  const emailEl         = document.getElementById('email');
+  const emailStatus     = document.getElementById('emailStatus');
+  let emailAvailable    = false;
 
-  if (state === "loading") {
-    btn.disabled = true;
-    btn.innerText = "Loading...";
-  } else if (state === "success") {
-    btn.innerText = "Success ✅";
-  } else if (state === "error") {
-    btn.innerText = "Error ❌";
-    btn.disabled = false;
-  } else {
-    btn.disabled = false;
-    btn.innerText = "Ro‘yxatdan o‘tish";
-  }
-}
-
-function toast(message, type="info") {
-  console.log(type.toUpperCase() + ":", message);
-  alert(message);
-}
-
-// =========================
-// ELEMENTS
-// =========================
-const studentBtn = document.getElementById("studentBtn");
-const companyBtn = document.getElementById("companyBtn");
-const studentFields = document.getElementById("studentFields");
-const companyFields = document.getElementById("companyFields");
-const roleInput = document.getElementById("role");
-
-const email = document.getElementById("email");
-const emailStatus = document.getElementById("emailStatus");
-const password = document.getElementById("password");
-const confirmPassword = document.getElementById("confirmPassword");
-const strengthBar = document.getElementById("strengthBar");
-const strengthText = document.getElementById("strengthText");
-const companyName = document.getElementById("companyName");
-const signupForm = document.getElementById("signupForm");
-const togglePassword = document.getElementById("togglePassword");
-
-const phone1 = document.getElementById("phone1");
-const phone2 = document.getElementById("phone2");
-const address = document.getElementById("address");
-const industry = document.getElementById("industry");
-
-let emailAvailable = false;
-
-// =========================
-// ROLE SWITCH
-// =========================
-function setRole(role) {
-  roleInput.value = role;
-
-  if (role === "student") {
-    studentFields.classList.remove("hidden");
-    companyFields.classList.add("hidden");
-    companyName.required = false;
-
-    studentBtn.className = "flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium";
-    companyBtn.className = "flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium";
-  } else {
-    companyFields.classList.remove("hidden");
-    studentFields.classList.add("hidden");
-    companyName.required = true;
-
-    companyBtn.className = "flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium";
-    studentBtn.className = "flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium";
-  }
-}
-
-// =========================
-// VALIDATION
-// =========================
-function isValidEmail(emailValue) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
-}
-
-function isStrongEnoughPassword(value) {
-  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
-}
-
-function isValidTelegram(username) {
-  return /^@?[a-zA-Z0-9_]{5,}$/.test(username);
-}
-
-// =========================
-// 🔥 CONFIRM PASSWORD LIVE CHECK (NEW)
-// =========================
-function checkPasswordMatch() {
-  const pass = password.value.trim();
-  const confirm = confirmPassword.value.trim();
-
-  if (!confirm) {
-    confirmPassword.classList.remove("input-error", "input-success");
-    return;
-  }
-
-  if (pass === confirm) {
-    confirmPassword.classList.add("input-success");
-    confirmPassword.classList.remove("input-error");
-  } else {
-    confirmPassword.classList.add("input-error");
-    confirmPassword.classList.remove("input-success");
-  }
-}
-
-// =========================
-// PASSWORD STRENGTH
-// =========================
-function updatePasswordStrength() {
-  const val = password.value;
-  let score = 0;
-
-  if (val.length >= 8) score++;
-  if (/[A-Z]/.test(val)) score++;
-  if (/[a-z]/.test(val)) score++;
-  if (/[0-9]/.test(val)) score++;
-  if (/[@$!%*?&]/.test(val)) score++;
-
-  const percent = Math.min(score * 20, 100);
-  strengthBar.style.width = percent + "%";
-
-  if (score <= 2) {
-    strengthBar.className = "h-2 rounded bg-red-500 transition-all";
-    strengthText.innerText = "Zaif parol";
-  } else if (score <= 4) {
-    strengthBar.className = "h-2 rounded bg-yellow-500 transition-all";
-    strengthText.innerText = "O‘rtacha parol";
-  } else {
-    strengthBar.className = "h-2 rounded bg-green-500 transition-all";
-    strengthText.innerText = "Kuchli parol";
-  }
-
-  checkPasswordMatch(); // 🔥 update on typing
-}
-
-// =========================
-// EMAIL CHECK (FIXED)
-// =========================
-async function checkEmailAvailability() {
-  const emailValue = email.value.trim().toLowerCase();
-  emailAvailable = false;
-
-  if (!emailValue) return false;
-
-  if (!isValidEmail(emailValue)) {
-    emailStatus.innerText = "Email noto‘g‘ri";
-    emailStatus.className = "text-sm mt-1 text-red-400";
-    return false;
-  }
-
-  try {
-    const res = await fetch("/check-email", {  // 🔥 FIXED
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrfToken
-      },
-      body: JSON.stringify({ email: emailValue })
+  function setRole(role) {
+    roleInput.value = role;
+    const isStudent = role === 'student';
+    studentFields.classList.toggle('hidden', !isStudent);
+    companyFields.classList.toggle('hidden', isStudent);
+    [studentBtn, companyBtn].forEach((b, i) => {
+      const active = (i === 0) === isStudent;
+      b.style.background = active ? 'var(--surface)' : 'transparent';
+      b.style.color       = active ? 'var(--text)'   : 'var(--muted)';
+      b.style.border      = active ? '1px solid var(--border)' : 'none';
     });
-
-    const data = await res.json();
-
-    if (!res.ok) return false;
-
-    if (data.available) {
-      emailStatus.innerText = "Email bo‘sh";
-      emailStatus.className = "text-green-400 text-sm";
-      emailAvailable = true;
-      return true;
-    } else {
-      emailStatus.innerText = "Email band";
-      emailStatus.className = "text-red-400 text-sm";
-      return false;
-    }
-
-  } catch (err) {
-    console.error("Email check error:", err);
-    return false;
-  }
-}
-
-// =========================
-// PHONE VALIDATION
-// =========================
-function validatePhone(input, required=false) {
-  if (!input) return true;
-
-  const val = input.value.trim().replace(/\s/g, "");
-
-  if (!val && !required) return true;
-
-  if (!/^\+?\d{9,15}$/.test(val)) {
-    return false;
   }
 
-  return true;
-}
+  studentBtn.onclick = () => setRole('student');
+  companyBtn.onclick = () => setRole('company');
 
-// =========================
-// EVENTS
-// =========================
-studentBtn.onclick = () => setRole("student");
-companyBtn.onclick = () => setRole("company");
-
-password.addEventListener("input", updatePasswordStrength);
-confirmPassword.addEventListener("input", checkPasswordMatch); // 🔥 NEW
-
-const eyeOpen = document.getElementById("eyeOpen");
-const eyeClosed = document.getElementById("eyeClosed");
-
-togglePassword.onclick = () => {
-  const isHidden = password.type === "password";
-
-  password.type = isHidden ? "text" : "password";
-
-  eyeOpen.classList.toggle("hidden", isHidden);
-  eyeClosed.classList.toggle("hidden", !isHidden);
-};
-
-email.addEventListener("blur", checkEmailAvailability);
-
-// =========================
-// MAIN SUBMIT (FINAL FIX)
-// =========================
-signupForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  console.log("🚀 SUBMIT TRIGGERED"); // 🔥 DEBUG
-
-  if (signupForm.dataset.processing === "true") return;
-  signupForm.dataset.processing = "true";
-
-  const btn = signupForm.querySelector("button[type='submit']");
-  setBtnState(btn, "loading");
-
-  const emailValue = email.value.trim().toLowerCase();
-  const pass = password.value.trim();
-  const confirm = confirmPassword.value.trim();
-
-  if (!isValidEmail(emailValue)) {
-    toast("Email noto‘g‘ri", "error");
-    setBtnState(btn, "idle");
-    signupForm.dataset.processing = "false";
-    return;
-  }
-
-  if (!isStrongEnoughPassword(pass)) {
-    toast("Parol kuchsiz", "error");
-    setBtnState(btn, "idle");
-    signupForm.dataset.processing = "false";
-    return;
-  }
-
-  if (pass !== confirm) {
-    toast("Parollar mos emas", "error");
-    setBtnState(btn, "idle");
-    signupForm.dataset.processing = "false";
-    return;
-  }
-
-  if (roleInput.value === "company") {
-    if (!companyName.value.trim()) {
-      toast("Kompaniya nomi kerak", "error");
-      setBtnState(btn, "idle");
-      signupForm.dataset.processing = "false";
-      return;
-    }
-
-    if (!validatePhone(phone1, true)) {
-      toast("Telefon noto‘g‘ri", "error");
-      setBtnState(btn, "idle");
-      signupForm.dataset.processing = "false";
-      return;
-    }
-  }
-
-  const emailCheck = await checkEmailAvailability();
-
-  if (!emailCheck) {
-    toast("Emailni tekshiring", "error");
-    setBtnState(btn, "idle");
-    signupForm.dataset.processing = "false";
-    return;
-  }
-
-  const payload = {
-    email: emailValue,
-    password: pass,
-    role: roleInput.value,
-    name: roleInput.value === "student"
-      ? document.getElementById("name").value.trim()
-      : companyName.value.trim(),
-    school: document.getElementById("school")?.value || "",
-    phone: document.getElementById("studentPhone")?.value || "",
-    telegram: document.getElementById("telegram")?.value || "",
-    phone1: phone1?.value || "",
-    phone2: phone2?.value || "",
-    address: address?.value || "",
-    industry: industry?.value || ""
+  /* Password toggle */
+  document.getElementById('togglePassword').onclick = () => {
+    const show = passwordEl.type === 'password';
+    passwordEl.type = show ? 'text' : 'password';
+    document.getElementById('eyeOpen').classList.toggle('hidden', show);
+    document.getElementById('eyeClosed').classList.toggle('hidden', !show);
   };
 
-  try {
-    const res = await fetch("/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrfToken
-      },
-      body: JSON.stringify(payload)
-    });
+  /* Password strength */
+  passwordEl.addEventListener('input', () => {
+    const v = passwordEl.value;
+    let score = [v.length >= 8, /[A-Z]/.test(v), /[a-z]/.test(v), /\d/.test(v), /[@$!%*?&]/.test(v)].filter(Boolean).length;
+    const bar = document.getElementById('strengthBar');
+    const txt = document.getElementById('strengthText');
+    bar.style.width = (score * 20) + '%';
+    if (score <= 2)      { bar.style.background = '#ef4444'; txt.textContent = 'Weak'; txt.style.color = '#fca5a5'; }
+    else if (score <= 4) { bar.style.background = '#eab308'; txt.textContent = 'Medium'; txt.style.color = '#fde047'; }
+    else                 { bar.style.background = 'var(--accent)'; txt.textContent = 'Strong'; txt.style.color = '#86efac'; }
+  });
 
-    const result = await res.json();
-
-    if (res.ok) {
-      setBtnState(btn, "success");
-
-      // REMOVE auto redirect
-
-      document.getElementById("message").innerHTML = `
-        <div class="rounded-xl bg-green-500/10 border border-green-500/30 p-4 text-green-300">
-
-          <div class="mt-4 flex gap-2">
-            <a href="/login" class="bg-white text-black px-3 py-2 rounded">
-              Login sahifaga o‘tish
-            </a>
-          </div>
-        </div>
-      `;
-
-    } else {
-      toast(result.message || "Xatolik", "error");
-      setBtnState(btn, "error");
+  /* Email check */
+  emailEl.addEventListener('blur', async () => {
+    const v = emailEl.value.trim().toLowerCase();
+    emailAvailable = false;
+    if (!v || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      emailStatus.textContent = 'Invalid email'; emailStatus.style.color = '#fca5a5'; return;
     }
+    try {
+      const res = await fetch('/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify({ email: v })
+      });
+      const data = await res.json();
+      emailAvailable = data.available;
+      emailStatus.textContent = data.available ? '✓ Available' : '✗ Already taken';
+      emailStatus.style.color = data.available ? '#86efac' : '#fca5a5';
+    } catch { emailStatus.textContent = ''; }
+  });
 
-  } catch (err) {
-    console.error("Signup error:", err);
-    toast("Server xatosi", "error");
-    setBtnState(btn, "error");
-  }
+  /* Submit */
+  document.getElementById('signupForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    if (form.dataset.processing === 'true') return;
+    form.dataset.processing = 'true';
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = '...';
+    const pass = passwordEl.value;
+    if (pass !== confirmEl.value) { toast('Passwords do not match', 'error'); btn.disabled = false; btn.innerHTML = '<span class="uz">Ro\'yxatdan o\'tish</span><span class="en">Create Account</span>'; form.dataset.processing = 'false'; return; }
+    if (!emailAvailable) { toast('Check your email', 'error'); btn.disabled = false; btn.innerHTML = '<span class="uz">Ro\'yxatdan o\'tish</span><span class="en">Create Account</span>'; form.dataset.processing = 'false'; return; }
+    const payload = {
+      email: emailEl.value.trim().toLowerCase(),
+      password: pass,
+      role: roleInput.value,
+      name: roleInput.value === 'student' ? document.getElementById('name').value.trim() : document.getElementById('companyName').value.trim(),
+      school: document.getElementById('school')?.value || '',
+      phone: document.getElementById('studentPhone')?.value || '',
+      telegram: document.getElementById('telegram')?.value || '',
+      phone1: document.getElementById('phone1')?.value || '',
+      phone2: document.getElementById('phone2')?.value || '',
+      address: document.getElementById('address')?.value || '',
+      industry: document.getElementById('industry')?.value || ''
+    };
+    try {
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('message').innerHTML = `
+          <div class="badge-success text-sm px-4 py-3 rounded-lg" style="border:1px solid rgba(34,197,94,0.3)">
+            <p class="uz">Muvaffaqiyatli ro'yxatdan o'tdingiz!</p>
+            <p class="en">Account created successfully!</p>
+            <a href="/login" class="btn btn-primary mt-3 text-xs">
+              <span class="uz">Kirish</span><span class="en">Log in</span>
+            </a>
+          </div>`;
+        btn.textContent = '✓';
+      } else {
+        toast(data.message || 'Error', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<span class="uz">Ro\'yxatdan o\'tish</span><span class="en">Create Account</span>';
+      }
+    } catch { toast('Server error', 'error'); btn.disabled = false; }
+    form.dataset.processing = 'false';
+  });
 
-  signupForm.dataset.processing = "false";
-});
-
-// =========================
-const params = new URLSearchParams(window.location.search);
-const roleFromUrl = params.get("role");
-
-if (roleFromUrl === "company") {
-  setRole("company");
-} else {
-  setRole("student");
-}
+  /* Init from URL */
+  const role = new URLSearchParams(location.search).get('role');
+  setRole(role === 'company' ? 'company' : 'student');
 </script>
 {% endblock %}

@@ -1,91 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{% block title %}Internova{% endblock %}</title>
-
+  <link rel="stylesheet" href="/static/internova.css">
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0px); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-float { animation: float 6s ease-in-out infinite; }
-    .fade-up { animation: fadeUp 0.8s ease forwards; }
-
-    .glow:hover { box-shadow: 0 0 25px rgba(99,102,241,0.6); }
-    .card-hover:hover { transform: translateY(-8px) scale(1.02); }
-
-    .nav-link.active {
-      background: linear-gradient(to right, rgba(59,130,246,0.25), rgba(168,85,247,0.25));
-      color: white;
-      border-color: rgba(255,255,255,0.18);
-    }
-
-    .status-badge.reviewing { background: rgba(234,179,8,0.2); color: rgb(253,224,71); }
-    .status-badge.shortlisted { background: rgba(34,197,94,0.2); color: rgb(134,239,172); }
-    .status-badge.selected { background: rgba(59,130,246,0.2); color: rgb(147,197,253); }
-    .status-badge.rejected { background: rgba(239,68,68,0.2); color: rgb(252,165,165); }
-    .status-badge.new { background: rgba(107,114,128,0.2); color: rgb(209,213,219); }
-  </style>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
 </head>
 
-<body class="bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] text-gray-200 min-h-screen">
+<body>
+<div id="toast-container"></div>
 
-<header class="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10">
-  <div class="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
+<header class="site-header">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-4">
 
     <div class="flex items-center gap-3">
-      <div class="flex items-center gap-3 fade-up">
-
-<img src="/static/logo.png" 
-     alt="Internova Logo" 
-     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
-</div>
+      <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
       <div>
-        <p class="font-semibold text-white text-lg">Internova</p>
-        <p class="text-xs text-gray-400">Company dashboard</p>
+        <p class="font-semibold text-sm" style="color:var(--text)">Internova</p>
+        <p class="text-xs" style="color:var(--muted)">
+          <span class="uz">Kompaniya paneli</span>
+          <span class="en">Company Panel</span>
+        </p>
       </div>
     </div>
 
-    <nav class="hidden lg:flex gap-3 text-sm">
-      <a href="/company/dashboard" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='dashboard' %}active{% endif %}">Dashboard</a>
-      <a href="/company/post" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='post' %}active{% endif %}">Post</a>
-      <a href="/company/candidates" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='candidates' %}active{% endif %}">Candidates</a>
-      <a href="/company/settings" class="nav-link px-4 py-2 rounded-xl border border-white/10 bg-white/5 {% if active=='settings' %}active{% endif %}">Settings</a>
+    <nav class="hidden lg:flex gap-1">
+      <a href="/company/dashboard" class="nav-link {% if active=='dashboard' %}active{% endif %}">
+        <span class="uz">Kabinet</span><span class="en">Dashboard</span>
+      </a>
+      <a href="/company/post" class="nav-link {% if active=='post' %}active{% endif %}">
+        <span class="uz">Vakansiya</span><span class="en">Post Job</span>
+      </a>
+      <a href="/company/candidates" class="nav-link {% if active=='candidates' %}active{% endif %}">
+        <span class="uz">Nomzodlar</span><span class="en">Candidates</span>
+      </a>
+      <a href="/company/settings" class="nav-link {% if active=='settings' %}active{% endif %}">
+        <span class="uz">Sozlamalar</span><span class="en">Settings</span>
+      </a>
     </nav>
 
-    <form action="/logout" method="POST">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <button class="px-4 py-2 rounded-lg border border-white/10 bg-white/5">Logout</button>
-    </form>
+    <div class="flex items-center gap-2">
+      <div class="ctrl-bar">
+        <button class="ctrl-btn" onclick="toggleLang()" title="Switch language">
+          <span class="uz">EN</span><span class="en">UZ</span>
+        </button>
+        <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      </div>
 
+      <form action="/logout" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost" style="font-size:0.8rem;padding:0.4rem 0.9rem;">
+          <span class="uz">Chiqish</span><span class="en">Logout</span>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Mobile nav -->
+  <div class="lg:hidden border-t flex gap-1 px-4 py-2 overflow-x-auto" style="border-color:var(--border)">
+    <a href="/company/dashboard" class="nav-link whitespace-nowrap {% if active=='dashboard' %}active{% endif %}">
+      <span class="uz">Kabinet</span><span class="en">Dashboard</span>
+    </a>
+    <a href="/company/post" class="nav-link whitespace-nowrap {% if active=='post' %}active{% endif %}">
+      <span class="uz">Vakansiya</span><span class="en">Post</span>
+    </a>
+    <a href="/company/candidates" class="nav-link whitespace-nowrap {% if active=='candidates' %}active{% endif %}">
+      <span class="uz">Nomzodlar</span><span class="en">Candidates</span>
+    </a>
+    <a href="/company/settings" class="nav-link whitespace-nowrap {% if active=='settings' %}active{% endif %}">
+      <span class="uz">Sozlamalar</span><span class="en">Settings</span>
+    </a>
   </div>
 </header>
 
-<main class="max-w-7xl mx-auto px-6 py-10">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
   {% block content %}{% endblock %}
 </main>
 
-<footer class="border-t border-white/10 mt-16">
-  <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between text-sm text-gray-400">
-    <span>Internova</span>
+<footer class="mt-16" style="border-top:1px solid var(--border)">
+  <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between text-sm" style="color:var(--muted)">
+    <span>Internova © 2026</span>
     <div class="flex gap-4">
-      <a href="#">Terms</a>
-      <a href="#">Security</a>
+      <a href="/terms"><span class="uz">Shartlar</span><span class="en">Terms</span></a>
+      <a href="/privacy"><span class="uz">Maxfiylik</span><span class="en">Privacy</span></a>
     </div>
   </div>
 </footer>
 
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.setAttribute('lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => {
+      el.textContent = t === 'dark' ? '☀️' : '🌙';
+    });
+  })();
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  function getCSRF() { return csrfToken; }
+
+  function toast(msg, type = 'info') {
+    const c = document.getElementById('toast-container');
+    const el = document.createElement('div');
+    el.className = `toast toast-${type}`;
+    el.textContent = msg;
+    c.appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(1rem)'; setTimeout(() => el.remove(), 320); }, 3800);
+  }
+
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => {
+      el.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+  }
+
+  function toggleLang() {
+    const cur = document.documentElement.getAttribute('data-lang') || 'uz';
+    const next = cur === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', next);
+    document.documentElement.setAttribute('lang', next);
+    localStorage.setItem('lang', next);
+  }
+</script>
+
+{% block scripts %}{% endblock %}
 </body>
 </html>

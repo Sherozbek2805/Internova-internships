@@ -1,54 +1,50 @@
 {% extends "public/base.html" %}
-
-{% block title %}
-  {% if code == 403 %}Forbidden
-  {% elif code == 404 %}Not Found
-  {% elif code == 400 %}Bad Request
-  {% elif code == 429 %}Too Many Requests
-  {% else %}Error{% endif %}
-{% endblock %}
+{% block title %}{{ code }} — Internova{% endblock %}
 
 {% block content %}
-<div class="text-center max-w-lg mx-auto">
+<div class="text-center max-w-md mx-auto px-4 py-16">
 
-  <!-- 🔢 ERROR CODE -->
-  <h1 class="text-6xl font-bold mb-4
-    {% if code == 403 %}text-red-400
-    {% elif code == 404 %}text-yellow-400
-    {% elif code == 429 %}text-purple-400
-    {% else %}text-blue-400{% endif %}">
-    {{ code }}
-  </h1>
+  <p class="text-7xl font-bold mb-4" style="color:var(--text)">{{ code }}</p>
 
-  <!-- 🧠 MESSAGE -->
-  <p class="text-gray-300 mb-6 text-lg">
+  <p class="text-lg mb-2" style="color:var(--text)">
     {% if code == 403 %}
-      You don’t have permission to access this page.
+      <span class="uz">Ruxsat yo'q</span><span class="en">Access Denied</span>
     {% elif code == 404 %}
-      The page you are looking for doesn’t exist.
-    {% elif code == 400 %}
-      Bad request. Something went wrong.
-    {% elif code == 413 %}
-      The file you uploaded is too large.
+      <span class="uz">Sahifa topilmadi</span><span class="en">Page Not Found</span>
     {% elif code == 429 %}
-      Too many requests. Please slow down.
+      <span class="uz">Juda ko'p so'rov</span><span class="en">Too Many Requests</span>
     {% elif code == "csrf" %}
-      Security check failed. Please refresh and try again.
+      Security check failed
     {% else %}
-      Something unexpected happened.
+      <span class="uz">Xatolik yuz berdi</span><span class="en">Something went wrong</span>
     {% endif %}
   </p>
 
-  <!-- 🔁 ACTION -->
-  <div class="flex justify-center gap-3">
-    <a href="/"
-       class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-      Home
-    </a>
+  <p class="text-sm mb-8" style="color:var(--muted)">
+    {% if code == 403 %}
+      <span class="uz">Sizda bu sahifaga kirish ruxsati yo'q.</span>
+      <span class="en">You don't have permission to access this page.</span>
+    {% elif code == 404 %}
+      <span class="uz">Siz qidirayotgan sahifa mavjud emas.</span>
+      <span class="en">The page you're looking for doesn't exist.</span>
+    {% elif code == 429 %}
+      <span class="uz">Biroz kuting va qayta urinib ko'ring.</span>
+      <span class="en">Please wait a moment and try again.</span>
+    {% elif code == "csrf" %}
+      <span class="uz">Xavfsizlik tekshiruvi muvaffaqiyatsiz. Sahifani yangilang.</span>
+      <span class="en">Please refresh the page and try again.</span>
+    {% else %}
+      <span class="uz">Noma'lum xato. Iltimos, qayta urinib ko'ring.</span>
+      <span class="en">An unexpected error occurred. Please try again.</span>
+    {% endif %}
+  </p>
 
-    <button onclick="history.back()"
-       class="px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-gray-200">
-      Go Back
+  <div class="flex justify-center gap-3">
+    <a href="/" class="btn btn-primary px-6 py-2.5">
+      <span class="uz">Bosh sahifa</span><span class="en">Home</span>
+    </a>
+    <button onclick="history.back()" class="btn btn-ghost px-6 py-2.5">
+      <span class="uz">Orqaga</span><span class="en">Go Back</span>
     </button>
   </div>
 

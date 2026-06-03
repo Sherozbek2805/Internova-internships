@@ -486,6 +486,8 @@ def apply(internship_id):
                 VALUES (%s, 0, 1)
             """, (internship_id,))
 
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"success": True, "message": "Application submitted."})
     flash("Application submitted successfully.", "success")
     return redirect(url_for("student.student_dashboard"))
 
@@ -543,6 +545,8 @@ def save_internship(internship_id):
             internship_id
         )
 
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"success": True, "message": "Saved."})
     flash("Internship saved successfully.", "success")
     return redirect(url_for("student.student_dashboard"))
 
@@ -589,6 +593,8 @@ def unsave_internship(internship_id):
             internship_id
         )
 
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"success": True, "message": "Removed."})
     flash("Internship removed from saved list.", "success")
     return redirect(url_for("student.student_dashboard"))
 

@@ -1,574 +1,272 @@
 <section id="profile" class="spa-section hidden fade-up">
-  <!-- HEADER -->
-  <div class="mb-10">
-    <h1
-      class="text-3xl font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
-    >
-      Profile
+  <div class="mb-6">
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">
+      <span class="uz">Profil</span><span class="en">Profile</span>
     </h1>
-    <p class="text-gray-400 mt-2">Build your professional student profile.</p>
+    <p class="mt-1 text-sm" style="color:var(--muted)">
+      <span class="uz">Shaxsiy ma'lumotlaringizni yangilang.</span>
+      <span class="en">Keep your professional profile up to date.</span>
+    </p>
   </div>
 
   {% set strength = profile_strength or 0 %}
 
-  <!-- PROFILE STRENGTH -->
-  <div
-    class="mb-8 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-md"
-  >
-    <div class="flex justify-between text-sm text-gray-300 mb-2">
-      <span>Profile Strength</span>
-      <span id="profileStrength" class="text-blue-400 font-semibold">
-        {{ strength }}%
+  <!-- Strength bar -->
+  <div class="card p-5 mb-6">
+    <div class="flex justify-between text-sm mb-2" style="color:var(--muted)">
+      <span class="uz">Profil bahosi</span><span class="en">Profile Strength</span>
+      <span class="font-semibold" style="color:var(--text)">
+        <span id="profileStrength">{{ strength }}</span>%
       </span>
     </div>
-
-    <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-      <div
-        id="strengthBar"
-        class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500"
-      ></div>
+    <div class="strength-track">
+      <div class="strength-fill" id="strengthBar" style="width:{{ strength }}%"></div>
     </div>
   </div>
 
-  <!-- MAIN GRID -->
-  <div class="grid lg:grid-cols-3 gap-8">
-    <!-- LEFT SIDE -->
-    <div class="lg:col-span-2 space-y-8">
-      <!-- PERSONAL -->
-      <!-- (UNCHANGED) -->
-      <div
-        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
-      >
-        <h2 class="text-xl font-semibold mb-5">Personal Information</h2>
+  <div class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
 
-        <form
-          action="/profile/update"
-          id="profileForm"
-          method="POST"
-          class="space-y-5"
-        >
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-          <div class="grid md:grid-cols-2 gap-4">
-            <input
-              name="name"
-              value="{{ user.name or '' }}"
-              placeholder="Full Name"
-              required
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            />
-
-            <input
-              name="email"
-              value="{{ user.email or '' }}"
-              placeholder="Email"
-              required
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            />
-
-            <input
-              name="school"
-              value="{{ user.school or '' }}"
-              placeholder="School"
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            />
-
-            <input
-              name="location"
-              value="{{ user.location or '' }}"
-              placeholder="City, Country"
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            />
-
-            <input
-              name="grade"
-              value="{{ user.grade or '' }}"
-              placeholder="Grade"
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            />
-
-            <input
-              name="phone"
-              value="{{ user.phone or '' }}"
-              placeholder="Phone"
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-            />
-
-            <!-- LinkedIn -->
-            <input
-              name="linkedin"
-              value="{{ user.linkedin or '' }}"
-              placeholder="LinkedIn Profile URL"
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 md:col-span-2"
-            />
-
-            <!-- Telegram -->
-            <input
-              name="telegram"
-              value="{{ user.telegram or '' }}"
-              placeholder="Telegram Username or Link (e.g. @username or t.me/username)"
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 md:col-span-2"
-            />
+      <!-- Personal info -->
+      <div class="card p-6">
+        <h2 class="font-semibold mb-4" style="color:var(--text)">
+          <span class="uz">Shaxsiy ma'lumotlar</span><span class="en">Personal Information</span>
+        </h2>
+        <form id="profileForm" method="POST" action="/profile/update" class="space-y-4">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="grid md:grid-cols-2 gap-3">
+            <input name="name"     value="{{ user.name or '' }}"     placeholder="Full Name"    class="input">
+            <input name="email"    value="{{ user.email or '' }}"    placeholder="Email"        class="input" type="email">
+            <input name="school"   value="{{ user.school or '' }}"   placeholder="School"       class="input">
+            <input name="location" value="{{ user.location or '' }}" placeholder="City"         class="input">
+            <input name="grade"    value="{{ user.grade or '' }}"    placeholder="Grade / Year" class="input">
+            <input name="phone"    value="{{ user.phone or '' }}"    placeholder="Phone"        class="input">
+            <input name="linkedin" value="{{ user.linkedin or '' }}" placeholder="LinkedIn URL" class="input md:col-span-2">
+            <input name="telegram" value="{{ user.telegram or '' }}" placeholder="Telegram (@username)" class="input md:col-span-2">
           </div>
-
-          <button
-            type="submit"
-            class="px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow hover:scale-105 transition"
-          >
-            Save Changes
-          </button>
-          <!-- feedback -->
-          <p id="formMessage" class="text-sm mt-2"></p>
+          <div class="flex items-center gap-3">
+            <button type="submit" class="btn btn-primary">
+              <span class="uz">Saqlash</span><span class="en">Save Changes</span>
+            </button>
+            <p id="formMessage" class="text-sm"></p>
+          </div>
         </form>
       </div>
 
-      <!-- ACADEMIC -->
-      <form
-        id="academicForm"
-        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
-      >
-        <h2 class="text-xl font-semibold mb-5">Academic Information</h2>
-
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-        <div class="grid md:grid-cols-2 gap-4">
-          <input
-            name="program"
-            placeholder="Program"
-            value="{{ user.program or '' }}"
-            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
-          />
-
-          <input
-            name="gpa"
-            type="number"
-            step="0.01"
-            min="0"
-            max="5.0"
-            placeholder="GPA"
-            value="{{ user.gpa or '' }}"
-            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
-          />
-
-          <input
-            name="subjects"
-            placeholder="Subjects of Interest"
-            value="{{ user.subjects or '' }}"
-            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white md:col-span-2"
-          />
-        </div>
-
-        <!-- SAVE BUTTON -->
-        <div class="mt-6">
-          <button
-            type="submit"
-            class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition text-white font-medium shadow-lg"
-          >
-            Save Changes
-          </button>
-          <p id="academicMsg" class="text-green-400 text-sm opacity-0 transition duration-300"></p>
-        </div>
-      </form>
-
-      <!-- SKILLS -->
-      <form
-        id="skillsForm"
-        method="POST"
-        action="/profile/update-skills"
-        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
-      >
-        <!-- ✅ CSRF TOKEN -->
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-        <div class="flex justify-between items-center mb-5">
-          <h2 class="text-xl font-semibold">Skills</h2>
-
-          <button
-            type="button"
-            onclick="addSkillInput()"
-            class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm"
-          >
-            + Add
-          </button>
-        </div>
-
-        <div id="skillsContainer" class="space-y-3">
-          {% for s in skills %}
-          <div class="flex gap-3 items-center">
-            <input type="hidden" name="skill_ids[]" value="{{ s.id }}" />
-
-            <input
-              name="skills[]"
-              value="{{ s.name }}"
-              class="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white"
-            />
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-            <button
-              type="button"
-              onclick="removeSkill(this, '{{ s.id }}')"
-              class="text-red-400 hover:text-red-500 text-lg"
-            >
-              ✕
+      <!-- Academic -->
+      <div class="card p-6">
+        <h2 class="font-semibold mb-4" style="color:var(--text)">
+          <span class="uz">Akademik ma'lumotlar</span><span class="en">Academic Information</span>
+        </h2>
+        <form id="academicForm" class="space-y-4">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="grid md:grid-cols-2 gap-3">
+            <input name="program"  value="{{ user.program or '' }}"  placeholder="Program / Major" class="input">
+            <input name="gpa"      value="{{ user.gpa or '' }}"      placeholder="GPA (0–5)"       class="input" type="number" step="0.01" min="0" max="5">
+            <input name="subjects" value="{{ user.subjects or '' }}" placeholder="Subjects of interest" class="input md:col-span-2">
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="submit" class="btn btn-primary">
+              <span class="uz">Saqlash</span><span class="en">Save</span>
             </button>
+            <p id="academicMsg" class="text-sm"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Skills -->
+      <div class="card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-semibold" style="color:var(--text)">
+            <span class="uz">Ko'nikmalar</span><span class="en">Skills</span>
+          </h2>
+          <button type="button" onclick="addSkillInput()" class="btn btn-ghost text-xs">
+            + <span class="uz">Qo'shish</span><span class="en">Add</span>
+          </button>
+        </div>
+        <form id="skillsForm" method="POST" action="/profile/update-skills" class="space-y-4">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div id="skillsContainer" class="space-y-2">
+            {% for s in skills %}
+            <div class="flex gap-2 items-center">
+              <input type="hidden" name="skill_ids[]" value="{{ s.id }}">
+              <input name="skills[]" value="{{ s.name }}" class="input flex-1">
+              <button type="button" onclick="removeSkill(this, '{{ s.id }}')" class="btn btn-danger w-8 h-8 p-0 text-sm">✕</button>
+            </div>
+            {% endfor %}
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="submit" class="btn btn-primary">
+              <span class="uz">Saqlash</span><span class="en">Save Skills</span>
+            </button>
+            <p id="skillsMsg" class="text-sm"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Experience -->
+      <div class="card p-6">
+        <h2 class="font-semibold mb-1" style="color:var(--text)">
+          <span class="uz">Tajriba &amp; Faoliyat</span><span class="en">Activities &amp; Experience</span>
+        </h2>
+        <p class="text-xs mb-4" style="color:var(--muted)">
+          <span class="uz">Qo'shimcha mashg'ulotlar, loyihalar, rahbarlik</span>
+          <span class="en">Extracurriculars, projects, leadership</span>
+        </p>
+
+        <div id="experienceContainer" class="space-y-3">
+          {% for exp in experiences %}
+          <div data-id="{{ exp.id }}" class="rounded-xl" style="border:1px solid var(--border)">
+
+            <!-- View mode -->
+            <div class="view-mode p-4 group">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="font-medium text-sm" style="color:var(--text)">{{ exp.title }}</p>
+                  <p class="text-xs mt-0.5" style="color:var(--muted)">{{ exp.role }} · {{ exp.organization }}</p>
+                  {% if exp.description %}
+                    <p class="text-xs mt-2 leading-relaxed" style="color:var(--muted)">{{ exp.description }}</p>
+                  {% endif %}
+                  {% set g = exp.grade_levels or {} %}
+                  <div class="flex flex-wrap gap-1 mt-2">
+                    {% if g.grades %}<span class="badge badge-neutral text-xs">{{ g.grades | join(', ') }} grade</span>{% endif %}
+                    {% if g.hours_per_week %}<span class="badge badge-neutral text-xs">{{ g.hours_per_week }} hrs/wk</span>{% endif %}
+                    {% if g.weeks_per_year %}<span class="badge badge-neutral text-xs">{{ g.weeks_per_year }} wks/yr</span>{% endif %}
+                  </div>
+                </div>
+                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition flex-shrink-0">
+                  <button onclick="toggleEdit(this)" class="btn btn-ghost text-xs">
+                    <span class="uz">Tahrir</span><span class="en">Edit</span>
+                  </button>
+                  <button onclick="deleteExperience(this, '{{ exp.id }}')" class="btn btn-danger text-xs">
+                    <span class="uz">O'chirish</span><span class="en">Delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Edit mode -->
+            <div class="edit-mode hidden p-4 space-y-3" style="border-top:1px solid var(--border)">
+              {% set g = exp.grade_levels or {} %}
+              {% set saved_grades = g.grades or [] %}
+              {% set saved_uni = g.university_years or [] %}
+              <input value="{{ exp.title }}" class="edit_title input" placeholder="Activity Name">
+              <div class="grid md:grid-cols-2 gap-3">
+                <input value="{{ exp.organization }}" class="edit_org input" placeholder="Organization">
+                <input value="{{ exp.role }}" class="edit_role input" placeholder="Role / Position">
+              </div>
+              <textarea class="edit_desc input h-20" placeholder="Description">{{ exp.description }}</textarea>
+              <label class="flex items-center gap-2 text-sm" style="color:var(--muted)">
+                <input type="checkbox" class="edit_current" {% if exp.is_current %}checked{% endif %}> Ongoing
+              </label>
+              <div>
+                <p class="text-xs mb-1" style="color:var(--muted)">School Grades</p>
+                <div class="flex gap-2 flex-wrap">
+                  {% for gv in [9,10,11,12] %}
+                  <label class="badge badge-neutral cursor-pointer text-xs">
+                    <input type="checkbox" class="edit_grades mr-1" value="{{ gv }}" {% if gv in saved_grades %}checked{% endif %}>{{ gv }}
+                  </label>
+                  {% endfor %}
+                </div>
+              </div>
+              <div>
+                <p class="text-xs mb-1" style="color:var(--muted)">University Years</p>
+                <div class="flex gap-2 flex-wrap">
+                  {% for yv in [1,2,3,4] %}
+                  <label class="badge badge-neutral cursor-pointer text-xs">
+                    <input type="checkbox" class="edit_uni mr-1" value="{{ yv }}" {% if yv in saved_uni %}checked{% endif %}>Year {{ yv }}
+                  </label>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="grid md:grid-cols-2 gap-3">
+                <input value="{{ g.hours_per_week or '' }}" class="edit_hours input" placeholder="Hours/week">
+                <input value="{{ g.weeks_per_year or '' }}" class="edit_weeks input" placeholder="Weeks/year">
+              </div>
+              <div class="flex gap-2">
+                <button onclick="saveEdit(this)" class="btn btn-primary text-xs">
+                  <span class="uz">Saqlash</span><span class="en">Save</span>
+                </button>
+                <button onclick="toggleEdit(this)" class="btn btn-ghost text-xs">
+                  <span class="uz">Bekor</span><span class="en">Cancel</span>
+                </button>
+              </div>
+            </div>
+
           </div>
           {% endfor %}
         </div>
 
-        <div class="mt-6">
-          <button
-            type="submit"
-            class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white"
-          >
-            Save Changes
-          </button>
-          <p id="skillsMsg" class="text-green-400 text-sm opacity-0 transition duration-300"></p>
-        </div>
-      </form>
-      <input type="hidden" id="csrfToken" value="{{ csrf_token() }}" />
-      <!-- EXPERIENCE (FULL WIDTH) -->
-      <div
-        class="md:col-span-2 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
-      >
-        <!-- EVERYTHING INSIDE EXPERIENCE UNCHANGED -->
-        <h2 class="text-xl font-semibold">Activities & Experience</h2>
-        <p class="text-sm text-gray-400 mb-4">
-          Extracurriculars, leadership, projects
-        </p>
-
-        <div id="experienceContainer" class="space-y-4">
-          {% for exp in experiences %}
-          <div data-id="{{ exp.id }}" class="space-y-4">
-            <div
-              class="view-mode p-6 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl shadow-lg space-y-4 relative group hover:shadow-xl transition duration-300"
-            >
-              {% set g = exp.grade_levels or {} %}
-
-              <!-- HEADER -->
-              <div class="flex justify-between items-start">
-                <div class="space-y-1">
-                  <h3 class="text-lg font-semibold text-white tracking-tight">
-                    {{ exp.title }}
-                  </h3>
-
-                  <p class="text-sm text-gray-400 flex items-center gap-2">
-                    <span>{{exp.role}} | {{ exp.organization }}</span>
-
-                    {% if exp.role %}
-                    <span
-                      class="px-2 py-0.5 text-xs rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                    >
-                      {{ exp.role }}
-                    </span>
-                    {% endif %}
-                  </p>
-                </div>
-
-                <!-- ACTIONS -->
-                <div
-                  class="flex gap-3 opacity-0 group-hover:opacity-100 transition"
-                >
-                  <button
-                    onclick="toggleEdit(this)"
-                    class="text-blue-400 hover:text-blue-300 text-sm transition"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onclick="deleteExperience(this, '{{ exp.id }}')"
-                    class="text-red-400 hover:text-red-300 text-sm transition"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-
-              <!-- DESCRIPTION -->
-              <p class="text-sm text-gray-300 leading-relaxed">
-                {{ exp.description }}
-              </p>
-
-              <!-- META TAGS -->
-              <div class="flex flex-wrap gap-2 pt-1">
-                {% if g.grades %}
-                <span
-                  class="px-3 py-1 text-xs rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                >
-                  🎓 {{ g.grades | join(", ") }}
-                </span>
-                {% endif %} {% if g.university_years %}
-                <span
-                  class="px-3 py-1 text-xs rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
-                >
-                  🎓 Year {{ g.university_years | join(", ") }}
-                </span>
-                {% endif %} {% if g.hours_per_week %}
-                <span
-                  class="px-3 py-1 text-xs rounded-full bg-green-500/10 text-green-400 border border-green-500/20"
-                >
-                  ⏱ {{ g.hours_per_week }} hrs/week
-                </span>
-                {% endif %} {% if g.weeks_per_year %}
-                <span
-                  class="px-3 py-1 text-xs rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20"
-                >
-                  📅 {{ g.weeks_per_year }} weeks/year
-                </span>
-                {% endif %}
-              </div>
-            </div>
-
-            <!-- EDIT MODE -->
-            <div class="edit-mode hidden space-y-5">
-              <!-- TITLE -->
-              <input
-                value="{{ exp.title }}"
-                class="edit_title w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50"
-                placeholder="Activity Name"
-              />
-
-              <!-- ORG + ROLE -->
-              <div class="grid md:grid-cols-2 gap-4">
-                <input
-                  value="{{ exp.organization }}"
-                  class="edit_org px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50"
-                  placeholder="Organization"
-                />
-
-                <input
-                  value="{{ exp.role }}"
-                  class="edit_role px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50"
-                  placeholder="Position"
-                />
-              </div>
-
-              <!-- DESCRIPTION -->
-              <textarea
-                class="edit_desc w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 h-24 focus:ring-2 focus:ring-blue-500/50"
-                placeholder="What did you do?"
-              >
-{{ exp.description }}</textarea
-              >
-
-              <!-- CURRENT -->
-              <label class="flex items-center gap-2 text-sm text-gray-300">
-                <input
-                  type="checkbox"
-                  class="edit_current accent-blue-500"
-                  {%
-                  if
-                  exp.is_current
-                  %}checked{%
-                  endif
-                  %}
-                />
-                Ongoing
-              </label>
-
-              <!-- GRADES -->
-              <div>
-                <p class="text-sm text-gray-400 mb-2">School Grades</p>
-                {% set grade_data = exp.grade_levels or {} %}
-                {% set saved_grades = grade_data.grades or [] %}
-                {% set saved_uni = grade_data.university_years or [] %}
-                <div class="flex gap-2">
-                  {% for g in [9,10,11,12] %}
-                  <label class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
-                    
-                    <input
-                      type="checkbox"
-                      value="{{ g }}"
-                      class="edit_grades"
-                      {% if g in saved_grades %}checked{% endif %}
-                    />
-                    {{ g }}
-
-                  </label>
-                  {% endfor %}
-                </div>
-              </div>
-
-              <!-- UNIVERSITY -->
-              <div>
-                <p class="text-sm text-gray-400 mb-2">University Years</p>
-                <div class="flex gap-2">
-                  {% for y in [1,2,3,4] %}
-                  <label class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">
-
-                    <input
-                      type="checkbox"
-                      value="{{ y }}"
-                      class="edit_uni"
-                      {% if y in saved_uni %}checked{% endif %}
-                    />
-                    Year {{ y }}
-
-                  </label>
-                  {% endfor %}
-                </div>
-              </div>
-
-              <!-- TIME -->
-              {% set g = exp.grade_levels or {} %}
-
-              <div class="grid md:grid-cols-2 gap-4">
-                <input
-                  value="{{ g.hours_per_week or '' }}"
-                  placeholder="Hours/week"
-                  class="edit_hours px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
-                />
-
-                <input
-                  value="{{ g.weeks_per_year or '' }}"
-                  placeholder="Weeks/year"
-                  class="edit_weeks px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50"
-                />
-              </div>
-
-              <!-- ACTIONS -->
-              <div class="flex justify-between items-center pt-2">
-                <button
-                  onclick="saveEdit(this)"
-                  class="px-5 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white text-sm shadow transition"
-                >
-                  Save
-                </button>
-
-                <button
-                  onclick="toggleEdit(this)"
-                  class="text-gray-400 hover:text-white text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>  
-          {% endfor %}
-        </div>
-
-        <button
-          type="button"
-          onclick="addExperience()"
-          class="w-full mt-4 py-5 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-lg shadow-lg hover:scale-[1.02] hover:shadow-xl transition duration-300 flex items-center justify-center gap-2"
-        >
-          <span class="text-2xl">＋</span>
-          Add Activity / Experience
+        <button type="button" onclick="addExperience()" class="btn btn-ghost w-full mt-4 py-3">
+          + <span class="uz">Amaliyot / Faoliyat qo'shish</span><span class="en">Add Experience</span>
         </button>
       </div>
 
-      <div class="mb-4 p-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 text-sm">
-        ⚠️ <strong>Test Mode:</strong> Uploaded CVs may be deleted, not saved permanently, or not visible to companies.
-      </div>
-
       <!-- CV -->
-      <div
-        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
-      >
-        <h2 class="text-xl font-red mb-5">This is in test mode</h2>
-        <h2 class="text-xl font-semibold mb-5">CV / Resume</h2>
-
-        <form
-          action="/profile/upload-cv"
-          method="POST"
-          enctype="multipart/form-data"
-        >
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-          <div
-            class="border-2 border-dashed border-white/10 rounded-xl p-6 text-center hover:border-blue-400 transition"
-          >
-            <input type="file" name="cv" id="cvUpload" hidden required />
-            <label for="cvUpload" class="cursor-pointer">
-              Click to upload your CV
-            </label>
+      <div class="card p-6">
+        <h2 class="font-semibold mb-4" style="color:var(--text)">CV / Resume</h2>
+        <div class="p-3 rounded-lg mb-4 text-xs" style="background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.25);color:#fde047">
+          ⚠️ <span class="uz">Test rejimi: CV vaqtincha saqlanadi.</span><span class="en">Test mode: CVs are temporarily stored.</span>
+        </div>
+        <form action="/profile/upload-cv" method="POST" enctype="multipart/form-data" class="space-y-3">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition" style="border-color:var(--border2)" onclick="document.getElementById('cvUpload').click()">
+            <input type="file" name="cv" id="cvUpload" hidden>
+            <p class="text-sm" style="color:var(--muted)">
+              <span class="uz">PDF, DOCX faylini tanlang</span><span class="en">Click to select PDF or DOCX</span>
+            </p>
+            <p id="cvFileName" class="text-xs mt-2" style="color:var(--text)">
+              {% if user.cv_path %}
+                <a href="{{ user.cv_path }}" target="_blank" id="cvLink" style="color:var(--text);text-decoration:underline">
+                  <span class="uz">Mavjud CV ko'rish</span><span class="en">View current CV</span>
+                </a>
+              {% endif %}
+            </p>
           </div>
-
-          <p id="cvFileName" class="text-xs text-gray-400 mt-3"></p>
-
-          <button class="mt-4 px-5 py-3 rounded-xl bg-green-500 text-white">
-            Upload
+          <button type="submit" class="btn btn-primary text-xs">
+            <span class="uz">Yuklash</span><span class="en">Upload</span>
           </button>
         </form>
       </div>
 
-      <!-- PASSWORD -->
-      <div
-        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
-      >
-        <h2 class="text-xl font-semibold mb-5 text-white/90">
-          Change Password
+      <!-- Password -->
+      <div class="card p-6">
+        <h2 class="font-semibold mb-4" style="color:var(--text)">
+          <span class="uz">Parolni o'zgartirish</span><span class="en">Change Password</span>
         </h2>
-
-        <form action="/profile/change-password" method="POST" class="space-y-4">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-          <!-- CURRENT -->
-          <div class="relative">
-            <input
-              type="password"
-              name="current_password"
-              placeholder="Current Password"
-              class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white"
-            />
-          </div>
-
-          <!-- NEW -->
-          <div class="relative">
-            <input
-              type="password"
-              name="new_password"
-              id="newPassword"
-              placeholder="New Password"
-              class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white"
-            />
-          </div>
-
-          <!-- STRENGTH -->
-          <div class="text-sm text-gray-400" id="passwordStrengthText">
-            Password strength: —
-          </div>
-
-          <!-- CONFIRM -->
-          <div class="relative">
-            <input
-              type="password"
-              name="confirm_password"
-              id="confirmPassword"
-              placeholder="Confirm New Password"
-              class="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white"
-            />
-          </div>
-
-          <!-- MATCH -->
-          <div id="passwordMatchText" class="text-sm"></div>
-
-          <!-- SUBMIT -->
-          <button
-            type="submit"
-            class="w-full px-5 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold"
-          >
-            Update Password
+        <form action="/profile/change-password" method="POST" class="space-y-3">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="password" name="current_password" placeholder="Current Password" class="input">
+          <input type="password" name="new_password" id="newPassword" placeholder="New Password" class="input">
+          <p id="passwordStrengthText" class="text-xs" style="color:var(--muted)"></p>
+          <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm New Password" class="input">
+          <p id="passwordMatchText" class="text-xs"></p>
+          <button type="submit" class="btn btn-ghost w-full text-sm" style="border-color:rgba(239,68,68,0.4);color:#fca5a5">
+            <span class="uz">Parolni o'zgartirish</span><span class="en">Change Password</span>
           </button>
         </form>
       </div>
-      <!-- END INNER GRID -->
-    </div>
-    <!-- END LEFT -->
 
-    <!-- RIGHT SIDE -->
-    <div class="space-y-6 lg:sticky lg:top-6 h-fit self-start">
-      <div
-        class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg"
-      >
-        <h2 class="text-lg font-semibold mb-4">Tips</h2>
-        <ul class="text-sm text-gray-300 space-y-2">
-          <li>✔ Add achievements</li>
-          <li>✔ Show impact</li>
-          <li>✔ Keep updated</li>
-          <li>✔ Add leadership</li>
+    </div><!-- end left col -->
+
+    <!-- Right sidebar -->
+    <div class="space-y-4 lg:sticky lg:top-24 h-fit">
+      <div class="card p-5">
+        <h3 class="font-medium mb-3 text-sm" style="color:var(--text)">
+          <span class="uz">Maslahatlar</span><span class="en">Tips</span>
+        </h3>
+        <ul class="space-y-2 text-xs" style="color:var(--muted)">
+          <li class="uz">✓ Ko'proq tajriba va yutuqlarni qo'shing</li>
+          <li class="uz">✓ Ta'sir doirangizni ko'rsating</li>
+          <li class="uz">✓ LinkedIn havolasini kiriting</li>
+          <li class="uz">✓ CV yuklang</li>
+          <li class="en">✓ Add more activities and achievements</li>
+          <li class="en">✓ Show your impact with numbers</li>
+          <li class="en">✓ Include your LinkedIn profile</li>
+          <li class="en">✓ Upload your CV / resume</li>
         </ul>
       </div>
     </div>
+
   </div>
 </section>

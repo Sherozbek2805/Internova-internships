@@ -1,70 +1,91 @@
-  <header class="sticky top-0 z-30 border-b border-white/10 bg-white/5 backdrop-blur-xl">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <img src="/static/logo.png" 
-     alt="Internova Logo" 
-     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
-        <div>
-          <p class="font-semibold text-white">Internova</p>
-          <p class="text-xs text-gray-400">Student panel</p>
-        </div>
-      </div>
+<header class="site-header">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
 
-      <nav class="hidden lg:flex items-center gap-3 text-sm">
-        <button data-section="overview" onclick="showSection('overview')" class="nav-btn nav-active px-4 py-2 rounded-lg border border-white/10 transition">
-          Overview
-        </button>
-        <button data-section="explore" onclick="showSection('explore')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
-          Explore
-        </button>
-        <button data-section="applications" onclick="showSection('applications')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
-          Applications
-        </button>
-        <button data-section="saved" onclick="showSection('saved')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
-          Saved
-        </button>
-        <button data-section="profile" onclick="showSection('profile')" class="nav-btn px-4 py-2 rounded-lg border border-transparent text-gray-300 hover:text-white transition">
-          Profile
-        </button>
-      </nav>
-
-      <div class="flex items-center gap-3">
-        <div class="hidden md:flex items-center gap-3 px-3 py-2 rounded-xl border border-white/10 bg-white/5">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center font-semibold text-white">
-            {{ user.name[0]|upper if user and user.name else 'S' }}
-          </div>
-          <div class="leading-tight">
-            <p class="text-sm font-medium text-white">{{ user.name or 'Student' }}</p>
-            <p class="text-xs text-gray-400">Student</p>
-          </div>
-        </div>
-
-        <form action="/logout" method="POST">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button type="submit" class="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm hover:bg-white/10 transition">
-    Logout
-  </button>
-</form>
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
+      <div>
+        <p class="font-semibold text-sm" style="color:var(--text)">Internova</p>
+        <p class="text-xs" style="color:var(--muted)">
+          <span class="uz">Talaba paneli</span>
+          <span class="en">Student Panel</span>
+        </p>
       </div>
     </div>
 
-    <div class="lg:hidden max-w-7xl mx-auto px-6 pb-4">
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
-        <button data-section="overview" onclick="showSection('overview')" class="nav-btn nav-active px-3 py-2 rounded-lg border border-white/10 bg-white/10">
-          Overview
-        </button>
-        <button data-section="explore" onclick="showSection('explore')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
-          Explore
-        </button>
-        <button data-section="applications" onclick="showSection('applications')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
-          Applications
-        </button>
-        <button data-section="saved" onclick="showSection('saved')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
-          Saved
-        </button>
-        <button data-section="profile" onclick="showSection('profile')" class="nav-btn px-3 py-2 rounded-lg border border-white/10 bg-white/5">
-          Profile
-        </button>
+    <!-- Desktop nav -->
+    <nav class="hidden lg:flex items-center gap-1">
+      <button data-section="overview"   onclick="showSection('overview')"   class="nav-link nav-btn">
+        <span class="uz">Umumiy</span><span class="en">Overview</span>
+      </button>
+      <button data-section="explore"    onclick="showSection('explore')"    class="nav-link nav-btn">
+        <span class="uz">Izlash</span><span class="en">Explore</span>
+      </button>
+      <button data-section="applications" onclick="showSection('applications')" class="nav-link nav-btn">
+        <span class="uz">Arizalar</span><span class="en">Applications</span>
+      </button>
+      <button data-section="saved"      onclick="showSection('saved')"      class="nav-link nav-btn">
+        <span class="uz">Saqlangan</span><span class="en">Saved</span>
+      </button>
+      <button data-section="profile"    onclick="showSection('profile')"    class="nav-link nav-btn">
+        <span class="uz">Profil</span><span class="en">Profile</span>
+      </button>
+    </nav>
+
+    <!-- Right controls -->
+    <div class="flex items-center gap-2">
+      <!-- User chip (desktop) -->
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg" style="background:var(--surface2);border:1px solid var(--border)">
+        <div class="avatar w-7 h-7 text-xs font-bold" style="background:var(--surface3)">
+          {{ user.name[0]|upper if user and user.name else 'S' }}
+        </div>
+        <span class="text-sm font-medium" style="color:var(--text)">{{ user.name or 'Student' }}</span>
       </div>
+
+      <div class="ctrl-bar">
+        <button class="ctrl-btn" onclick="toggleLang()">
+          <span class="uz">EN</span><span class="en">UZ</span>
+        </button>
+        <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      </div>
+
+      <form action="/logout" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost" style="font-size:0.8rem;padding:0.4rem 0.9rem">
+          <span class="uz">Chiqish</span><span class="en">Logout</span>
+        </button>
+      </form>
     </div>
-  </header>
+  </div>
+
+  <!-- Mobile nav -->
+  <div class="lg:hidden px-4 pb-3">
+    <div class="grid grid-cols-5 gap-1 text-xs">
+      <button data-section="overview"     onclick="showSection('overview')"     class="nav-link nav-btn text-center py-2">
+        <span class="uz">Umumiy</span><span class="en">Home</span>
+      </button>
+      <button data-section="explore"      onclick="showSection('explore')"      class="nav-link nav-btn text-center py-2">
+        <span class="uz">Izlash</span><span class="en">Explore</span>
+      </button>
+      <button data-section="applications" onclick="showSection('applications')" class="nav-link nav-btn text-center py-2">
+        <span class="uz">Ariza</span><span class="en">Apply</span>
+      </button>
+      <button data-section="saved"        onclick="showSection('saved')"        class="nav-link nav-btn text-center py-2">
+        <span class="uz">Saqlangan</span><span class="en">Saved</span>
+      </button>
+      <button data-section="profile"      onclick="showSection('profile')"      class="nav-link nav-btn text-center py-2">
+        <span class="uz">Profil</span><span class="en">Profile</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  /* Apply init state for theme-icon buttons */
+  document.addEventListener('DOMContentLoaded', () => {
+    const t = document.documentElement.getAttribute('data-theme') || 'dark';
+    document.querySelectorAll('[data-theme-icon]').forEach(el => {
+      el.textContent = t === 'dark' ? '☀️' : '🌙';
+    });
+  });
+</script>

@@ -1,74 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
-  <meta charset="UTF-8" />
-  <title>Choose Role</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Choose Role — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
 </head>
+<body>
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-2xl py-10">
 
-<body class="bg-[#020617] text-white flex items-center justify-center min-h-screen">
-
-  <div class="w-full max-w-3xl p-8">
-
-    <!-- HEADER -->
-    <div class="text-center mb-10">
-      <h1 class="text-3xl font-semibold">Welcome 👋</h1>
-      <p class="text-gray-400 mt-2">Choose how you want to use the platform</p>
+    <div class="flex items-center gap-2 mb-10 justify-center">
+      <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
+      <span class="font-semibold" style="color:var(--text)">Internova</span>
     </div>
 
-    <!-- ROLE CARDS -->
-    <form method="POST" action="/set-role" class="grid md:grid-cols-2 gap-6">
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">Xush Kelibsiz</span><span class="en">Welcome</span>
+      </h1>
+      <p style="color:var(--muted)">
+        <span class="uz">Platformadagi o'rningizni tanlang</span>
+        <span class="en">Select your role to continue</span>
+      </p>
+    </div>
+
+    <form method="POST" action="/set-role" class="grid md:grid-cols-2 gap-4">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-      <!-- 🎓 STUDENT -->
-      <button 
-        type="submit" 
-        name="role" 
-        value="student"
-        class="group p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition text-left">
-
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-semibold">🎓 Student</h2>
-          <span class="text-xs text-gray-400 group-hover:text-indigo-300">Select →</span>
+      <button type="submit" name="role" value="student" class="card p-7 text-left group">
+        <div class="text-2xl mb-3">🎓</div>
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="font-semibold" style="color:var(--text)">
+            <span class="uz">Talaba</span><span class="en">Student</span>
+          </h2>
+          <span style="color:var(--faint)" class="text-xs">→</span>
         </div>
-
-        <p class="text-gray-400 text-sm mt-3">
-          Apply for internships, build your profile, and get hired.
+        <p class="text-sm mb-4" style="color:var(--muted)">
+          <span class="uz">Stajirovkalarga ariza topshiring va profilingizni yuriting.</span>
+          <span class="en">Apply to internships and manage your profile.</span>
         </p>
-
-        <ul class="mt-4 text-xs text-gray-500 space-y-1">
-          <li>• Apply to internships</li>
-          <li>• Track applications</li>
-          <li>• Showcase skills & experience</li>
+        <ul class="text-xs space-y-1" style="color:var(--faint)">
+          <li class="uz">• Ishga ariza topshirish</li>
+          <li class="uz">• Arizalarni kuzatish</li>
+          <li class="uz">• Ko'nikmalar ko'rsatish</li>
+          <li class="en">• Apply to internships</li>
+          <li class="en">• Track your applications</li>
+          <li class="en">• Showcase your skills</li>
         </ul>
       </button>
 
-      <!-- 🏢 COMPANY -->
-      <button 
-        type="submit" 
-        name="role" 
-        value="company"
-        class="group p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition text-left">
-
-        <div class="flex items-center justify-between">
-          <h2 class="text-xl font-semibold">🏢 Company</h2>
-          <span class="text-xs text-gray-400 group-hover:text-indigo-300">Select →</span>
+      <button type="submit" name="role" value="company" class="card p-7 text-left group">
+        <div class="text-2xl mb-3">🏢</div>
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="font-semibold" style="color:var(--text)">
+            <span class="uz">Kompaniya</span><span class="en">Company</span>
+          </h2>
+          <span style="color:var(--faint)" class="text-xs">→</span>
         </div>
-
-        <p class="text-gray-400 text-sm mt-3">
-          Post internships, review candidates, and hire talent.
+        <p class="text-sm mb-4" style="color:var(--muted)">
+          <span class="uz">Stajirovkalarni e'lon qiling va nomzodlarni baholang.</span>
+          <span class="en">Post internships and evaluate candidates.</span>
         </p>
-
-        <ul class="mt-4 text-xs text-gray-500 space-y-1">
-          <li>• Post internships</li>
-          <li>• Evaluate candidates</li>
-          <li>• Manage applications</li>
+        <ul class="text-xs space-y-1" style="color:var(--faint)">
+          <li class="uz">• Stajirovkalar e'lon qilish</li>
+          <li class="uz">• Kandidatlarni baholash</li>
+          <li class="uz">• Arizalarni boshqarish</li>
+          <li class="en">• Post internship listings</li>
+          <li class="en">• Review candidates</li>
+          <li class="en">• Manage applications</li>
         </ul>
       </button>
-
     </form>
 
+    <div class="flex justify-center gap-2 mt-6">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">🌐 EN</span><span class="en">🌐 UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+    </div>
   </div>
+</div>
 
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = next === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const next = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', next);
+    localStorage.setItem('lang', next);
+  }
+</script>
 </body>
 </html>

@@ -1,567 +1,276 @@
-{% extends "company/base.html" %} {% block content %}
+{% extends "company/base.html" %}
+{% block title %}
+  <span class="uz">Nomzodlar</span><span class="en">Candidates</span> — Internova
+{% endblock %}
 
-<!-- ✅ CSRF TOKEN -->
-<meta name="csrf-token" content="{{ csrf_token() }}" />
+{% block content %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
-<section class="space-y-10">
+<div class="space-y-6 fade-up">
+
   <div>
-    <h1 class="text-4xl font-bold text-white">Candidates</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold" style="color:var(--text)">
+      <span class="uz">Nomzodlar</span><span class="en">Candidates</span>
+    </h1>
+    <p class="mt-1 text-sm" style="color:var(--muted)">
+      <span class="uz">Arizalarni ko'rib chiqing va baholang.</span>
+      <span class="en">Review and evaluate applications.</span>
+    </p>
   </div>
 
-  <!-- 📊 STATS -->
-  <div class="grid md:grid-cols-4 gap-4">
-    <div class="stat-card">
-      <p>Total</p>
-      <h2 id="stat-total">0</h2>
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)"><span class="uz">Jami</span><span class="en">Total</span></p>
+      <p class="text-2xl font-bold" style="color:var(--text)" id="stat-total">0</p>
     </div>
-    <div class="stat-card">
-      <p>Reviewing</p>
-      <h2 id="stat-reviewing">0</h2>
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)"><span class="uz">Ko'rib chiqilmoqda</span><span class="en">Reviewing</span></p>
+      <p class="text-2xl font-bold" style="color:#fde047" id="stat-reviewing">0</p>
     </div>
-    <div class="stat-card">
-      <p>Shortlisted</p>
-      <h2 id="stat-shortlisted">0</h2>
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)"><span class="uz">Qisqa ro'yxat</span><span class="en">Shortlisted</span></p>
+      <p class="text-2xl font-bold" style="color:#93c5fd" id="stat-shortlisted">0</p>
     </div>
-    <div class="stat-card">
-      <p>Selected</p>
-      <h2 id="stat-selected">0</h2>
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)"><span class="uz">Saralangan</span><span class="en">Selected</span></p>
+      <p class="text-2xl font-bold" style="color:#86efac" id="stat-selected">0</p>
     </div>
   </div>
 
-  <!-- 🔍 FILTERS -->
-  <div class="grid md:grid-cols-5 gap-4">
-    <input id="searchInput" placeholder="Search..." class="filter-input" />
-
-    <select id="internshipFilter" class="filter-input">
-      <option value="all">All Internships</option>
-    </select>
-
-    <select id="statusFilter" class="filter-input">
-      <option value="all">All Status</option>
+  <!-- Filters -->
+  <div class="grid sm:grid-cols-2 md:grid-cols-5 gap-3">
+    <input id="searchInput" placeholder="Search..." class="input">
+    <select id="internshipFilter" class="input"><option value="all"><span class="uz">Barcha stajirovkalar</span><span class="en">All internships</span></option></select>
+    <select id="statusFilter" class="input">
+      <option value="all"><span class="uz">Barcha holatlar</span><span class="en">All statuses</span></option>
       <option>Yangi</option>
       <option>Ko'rib chiqilmoqda</option>
       <option>Qisqa ro'yxat</option>
       <option>Saralangan</option>
     </select>
-
-    <input
-      type="number"
-      id="scoreFilter"
-      placeholder="Min Score"
-      class="filter-input"
-    />
-
-    <select id="sortFilter" class="filter-input">
-      <option value="default">Sort</option>
+    <input type="number" id="scoreFilter" placeholder="Min Score" class="input">
+    <select id="sortFilter" class="input">
+      <option value="default"><span class="uz">Saralash</span><span class="en">Sort</span></option>
       <option value="score-desc">Score ↓</option>
       <option value="score-asc">Score ↑</option>
     </select>
   </div>
 
-  <!-- 👥 CARDS -->
-  <div id="candidatesContainer" class="grid lg:grid-cols-2 gap-6"></div>
-</section>
+  <!-- Cards -->
+  <div id="candidatesContainer" class="grid lg:grid-cols-2 gap-4"></div>
 
-<style>
-  .stat-card {
-    background: rgba(255, 255, 255, 0.06);
-    padding: 20px;
-    border-radius: 16px;
-  }
-  .filter-input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    border-radius: 10px;
-    color: white;
-  }
-  .candidate-card {
-    background: rgba(255, 255, 255, 0.04);
-    padding: 20px;
-    border-radius: 16px;
-  }
-</style>
-
-<script>
-  const el = (id) => document.getElementById(id);
-
-  const state = {
-    search: "",
-    internship: "all",
-    status: "all",
-    min_score: -1,
-    sort: "default",
-  };
-
-  let isLoading = false;
-  let searchTimeout;
-
-  // 🔐 CSRF
-  function getCSRF() {
-    return document.querySelector('meta[name="csrf-token"]').content;
-  }
-
-  // 🔥 SAFE PARAM BUILDER (added)
-  function buildParams() {
-    const params = new URLSearchParams();
-
-    if (state.search) params.append("search", state.search);
-    if (state.internship !== "all")
-      params.append("internship", state.internship);
-    if (state.status !== "all") params.append("status", state.status);
-
-    // 🔥 FORCE
-    params.append("min_score", state.min_score);
-
-    if (state.sort !== "default") params.append("sort", state.sort);
-
-    return params;
-  }
-
-  // 🔥 STATS
-  async function loadStats() {
-    const res = await fetch("/company/candidates/stats");
-    const data = await res.json();
-
-    el("stat-total").innerText = data.total;
-    el("stat-reviewing").innerText = data.reviewing;
-    el("stat-shortlisted").innerText = data.shortlisted;
-    el("stat-selected").innerText = data.selected;
-  }
-
-  // 🔥 LOAD DATA (improved but same structure)
-  async function loadCandidates() {
-    if (isLoading) return;
-    isLoading = true;
-
-    try {
-      const params = buildParams();
-
-      console.log("REQUEST:", Object.fromEntries(params));
-
-      const res = await fetch(`/company/candidates?${params}`, {
-        headers: { "X-Requested-With": "XMLHttpRequest" },
-      });
-
-      if (!res.ok) {
-        console.error("Request failed:", res.status);
-        return;
-      }
-
-      const data = await res.json();
-
-      renderCandidates(data.applications);
-      renderInternships(data.internships);
-
-      console.log("STATE:", state);
-    } catch (err) {
-      console.error("Error:", err);
-    } finally {
-      isLoading = false;
-    }
-  }
-
-  // 🔥 INTERNSHIP FILTER
-  function renderInternships(list) {
-    const select = el("internshipFilter");
-    if (select.options.length > 1) return;
-
-    list.forEach((i) => {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = i;
-      select.appendChild(opt);
-    });
-  }
-
-  // 🔥 CARDS (UNCHANGED)
-  function renderCandidates(apps) {
-    const container = document.getElementById("candidatesContainer");
-
-    if (!apps.length) {
-      container.innerHTML = `<p class="text-gray-400">No candidates</p>`;
-      return;
-    }
-
-    container.innerHTML = apps
-      .map(
-        (a) => `
-
-<div class="candidate-card relative group" data-id="${a.id}">
-  <div class="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 opacity-0 blur-xl transition duration-500 group-hover:opacity-80"></div>
-
-  <div class="relative bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-5 transition duration-300 
-              group-hover:scale-[1.02] group-hover:border-indigo-400/40 
-              ${a.score > 85 ? "ring-2 ring-indigo-400/40 shadow-[0_0_35px_rgba(99,102,241,0.5)]" : ""}">
-
-    <div class="flex gap-4">
-
-      <div class="w-12 h-12 flex items-center justify-center rounded-full 
-                  bg-gradient-to-br from-indigo-500 to-purple-500 
-                  text-white font-semibold text-lg shadow-lg shadow-indigo-500/30">
-        ${a.student_name.charAt(0)}
-      </div>
-
-      <div class="flex-1">
-
-        <div class="flex items-center justify-between">
-          <h2 class="text-white font-semibold text-base tracking-wide group-hover:text-indigo-300 transition">
-            ${a.student_name}
-          </h2>
-
-          <span class="${getStatusClass(a.status)} text-xs px-3 py-1 rounded-full font-medium shadow-sm">
-            ${a.status}
-          </span>
-        </div>
-
-        <p class="text-gray-400 text-sm mt-0.5">${a.student_email}</p>
-        <p class="text-indigo-400 text-xs mt-1">${a.internship_title}</p>
-
-        <div class="grid grid-cols-3 gap-3 mt-4">
-          <input type="number" value="${a.score || 0}"
-            class="score-input bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-
-          <select class="status-select bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-            ${["Yangi", "Ko'rib chiqilmoqda", "Qisqa ro'yxat", "Saralangan"]
-              .map(
-                (s) =>
-                  `<option ${a.status === s ? "selected" : ""}>${s}</option>`,
-              )
-              .join("")}
-          </select>
-
-          <div></div>
-        </div>
-
-        <textarea class="evaluation-note w-full mt-3 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm">
-          ${a.evaluation_note || ""}
-        </textarea>
-
-        <div class="flex gap-3 mt-4">
-  <button class="save-btn flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg py-2">
-    Save
-  </button>
-
-  <button class="view-btn flex-1 bg-white/10 border border-white/20 text-white rounded-lg py-2">
-    Details
-  </button>
 </div>
 
-      </div>
+<!-- Candidate detail modal -->
+<div id="candidateModal" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:640px;max-height:85vh;overflow-y:auto">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="font-semibold" style="color:var(--text)">
+        <span class="uz">Kandidat Profili</span><span class="en">Candidate Profile</span>
+      </h2>
+      <button id="closeModal" class="btn btn-ghost w-8 h-8 p-0 rounded-full text-lg">✕</button>
     </div>
-  </div>
-</div>
-
-`,
-      )
-      .join("");
-  }
-
-  function getStatusClass(status) {
-    return (
-      {
-        Yangi: "bg-blue-500/10 text-blue-400",
-        "Ko'rib chiqilmoqda": "bg-yellow-500/10 text-yellow-400",
-        "Qisqa ro'yxat": "bg-purple-500/10 text-purple-400",
-        Saralangan: "bg-green-500/10 text-green-400",
-      }[status] || "bg-gray-500/10 text-gray-400"
-    );
-  }
-
-  // 🔥 FILTERS (same but fixed)
-  searchInput.addEventListener("input", (e) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      state.search = e.target.value;
-      loadCandidates();
-    }, 400);
-  });
-
-  statusFilter.addEventListener("change", (e) => {
-    state.status = e.target.value;
-    loadCandidates();
-  });
-
-  internshipFilter.addEventListener("change", (e) => {
-    state.internship = e.target.value;
-    loadCandidates();
-  });
-
-  scoreFilter.addEventListener("input", (e) => {
-    const val = e.target.value;
-    state.min_score = val === "" ? -1 : parseInt(val); // 🔥 fallback to -1
-    loadCandidates();
-  });
-
-  sortFilter.addEventListener("change", (e) => {
-    state.sort = e.target.value;
-    loadCandidates();
-  });
-
-  // 🔥 SAVE + VIEW (UNCHANGED)
-  document.addEventListener("click", async (e) => {
-    if (!e.target.classList.contains("save-btn")) return;
-
-    const card = e.target.closest(".candidate-card");
-
-    const data = new FormData();
-    data.append("id", card.dataset.id);
-    data.append("score", card.querySelector(".score-input").value);
-    data.append("status", card.querySelector(".status-select").value);
-    data.append("note", card.querySelector(".evaluation-note").value);
-
-    e.target.innerText = "Saving...";
-
-    const res = await fetch("/company/applications/update", {
-      method: "POST",
-      headers: { "X-CSRFToken": getCSRF() },
-      body: data,
-    });
-
-    const result = await res.json();
-
-    if (result.status === "success") {
-      e.target.innerText = "Saved ✓";
-      loadStats();
-    } else {
-      e.target.innerText = "Error";
-    }
-
-    setTimeout(() => (e.target.innerText = "Save"), 2000);
-  });
-
-  document.addEventListener("click", async (e) => {
-    if (!e.target.classList.contains("view-btn")) return;
-
-    const card = e.target.closest(".candidate-card");
-    const id = card.dataset.id;
-
-    try {
-      const res = await fetch(`/company/applications/${id}`);
-
-      const data = await res.json();
-
-      if (!res.ok || data.error) {
-        console.error("Backend error:", data.error);
-        alert("Failed to load candidate");
-        return;
-      }
-
-      const p = data.profile;
-
-      document.getElementById("modalContent").innerHTML = `
-
-<!-- HEADER -->
-<div class="flex items-center gap-4">
-  <div class="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
-    ${p.name.charAt(0)}
-  </div>
-
-  <div>
-    <h3 class="text-xl text-white font-semibold">${p.name}</h3>
-    <p class="text-gray-400">${p.email}</p>
-  </div>
-</div>
-
-<hr class="border-white/10">
-
-<!-- 🎓 ACADEMIC -->
-<div>
-  <h4 class="text-indigo-400 font-medium mb-2">🎓 Academic Info</h4>
-  <div class="grid grid-cols-2 gap-3">
-    <p><strong>School:</strong> ${p.school || "-"}</p>
-    <p><strong>Program:</strong> ${p.program || "-"}</p>
-    <p><strong>Grade:</strong> ${p.grade || "-"}</p>
-    <p><strong>GPA:</strong> ${p.gpa || "-"}</p>
-  </div>
-</div>
-
-<hr class="border-white/10">
-
-<!-- 📍 CONTACT -->
-<div>
-  <h4 class="text-indigo-400 font-medium mb-2">📍 Contact</h4>
-  <div class="grid grid-cols-2 gap-3">
-    <p><strong>Location:</strong> ${p.location || "-"}</p>
-    <p><strong>Phone:</strong> ${p.phone || "-"}</p>
-    <p><strong>Telegram:</strong> ${p.telegram || "-"}</p>
-    <p><strong>GitHub:</strong> ${
-      p.github
-        ? `<a href="${p.github}" target="_blank" class="text-indigo-400">Open</a>`
-        : "-"
-    }</p>
-    <p><strong>LinkedIn:</strong> ${
-      p.linkedin
-        ? `<a href="${p.linkedin}" target="_blank" class="text-indigo-400">Open</a>`
-        : "-"
-    }</p>
-  </div>
-</div>
-
-<hr class="border-white/10">
-
-<!-- 💬 MOTIVATION -->
-<div>
-  <h4 class="text-indigo-400 font-medium mb-2">💬 Motivation</h4>
-  <p class="text-gray-400 leading-relaxed">
-    ${p.motivation || "No motivation provided"}
-  </p>
-</div>
-
-<hr class="border-white/10">
-
-<!-- 🧠 SKILLS -->
-<div>
-  <h4 class="text-indigo-400 font-medium mb-2">🧠 Skills</h4>
-  <div class="flex flex-wrap gap-2">
-    ${
-      data.skills.length
-        ? data.skills
-            .map(
-              (s) => `
-          <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs">
-            ${s}
-          </span>
-        `,
-            )
-            .join("")
-        : "<p class='text-gray-400'>No skills listed</p>"
-    }
-  </div>
-</div>
-
-<hr class="border-white/10">
-
-<!-- 💼 EXPERIENCE -->
-<div>
-  <h4 class="text-indigo-400 font-medium mb-3">💼 Experience</h4>
-  ${
-    data.experiences.length
-      ? data.experiences.map(exp => {
-
-        // 🧠 parse grade_levels safely
-        let grades = "-";
-        let hours = "-";
-        let weeks = "-";
-        let uniYears = "-";
-
-        try {
-          const gl = exp.grade_levels || {};
-
-          grades = Array.isArray(gl.grades) ? gl.grades.join(", ") : "-";
-          hours = gl.hours_per_week ?? "-";
-          weeks = gl.weeks_per_year ?? "-";
-          uniYears = Array.isArray(gl.university_years)
-            ? gl.university_years.join(", ")
-            : "-";
-        } catch (e) {}
-
-        return `
-        <div class="relative border border-white/10 rounded-xl p-4 mb-4 bg-gradient-to-br from-white/5 to-white/2 hover:border-indigo-400/40 transition">
-
-          <!-- HEADER -->
-          <div class="flex items-start justify-between mb-2">
-            <div>
-              <p class="text-white font-semibold text-sm">${exp.title}</p>
-              <p class="text-xs text-gray-400">${exp.organization}</p>
-            </div>
-
-            ${
-              exp.is_current
-                ? `<span class="text-[10px] px-2 py-1 bg-green-500/20 text-green-400 rounded-full">Current</span>`
-                : ""
-            }
-          </div>
-
-          <!-- ROLE -->
-          <p class="text-xs text-indigo-300 mb-2">Role: ${exp.role || "-"}</p>
-
-          <!-- DESCRIPTION -->
-          <p class="text-xs text-gray-400 leading-relaxed mb-3">
-            ${exp.description || "No description provided"}
-          </p>
-
-          <!-- DETAILS GRID -->
-          <div class="grid grid-cols-2 gap-2 text-[11px] text-gray-400">
-            <div>📚 Grades: <span class="text-white">${grades}</span></div>
-            <div>⏱ Hours/week: <span class="text-white">${hours}</span></div>
-            <div>📅 Weeks/year: <span class="text-white">${weeks}</span></div>
-            <div>🎓 Uni years: <span class="text-white">${uniYears}</span></div>
-          </div>
-
-        </div>
-        `;
-      }).join("")
-      : "<p class='text-gray-400'>No experience</p>"
-  }
-</div>
-
-`;
-
-      // ✅ CV FIX
-      document.getElementById("viewCV").href = p.cv_url || "#";
-
-      const modal = document.getElementById("candidateModal");
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-    } catch (err) {
-      console.error("ERROR:", err);
-      alert("Something went wrong");
-    }
-  });
-
-  document.addEventListener("click", (e) => {
-    const modal = document.getElementById("candidateModal");
-
-    if (e.target.id === "closeModal" || e.target.id === "candidateModal") {
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-    }
-  });
-
-  // INIT
-  loadStats();
-  loadCandidates();
-</script>
-
-<div
-  id="candidateModal"
-  class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50"
->
-  <div
-    class="bg-[#0f172a] border border-white/10 rounded-2xl p-8 w-full max-w-4xl relative shadow-2xl"
-  >
-    <button
-      id="closeModal"
-      class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"
-    >
-      ✕
-    </button>
-
-    <h2 class="text-2xl font-semibold text-white mb-6">Candidate Profile</h2>
-
-    <div
-      id="modalContent"
-      class="space-y-6 text-sm text-gray-300 overflow-y-auto max-h-[75vh] pr-2"
-    ></div>
-
-    <div class="mt-6 flex gap-3">
-      <a
-        id="viewCV"
-        href="#"
-        target="_blank"
-        class="flex-1 text-center bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-lg"
-      >
-        📄 View CV
+    <div id="modalContent" class="space-y-4 text-sm" style="color:var(--muted)"></div>
+    <div class="flex gap-3 mt-6">
+      <a id="viewCV" href="#" target="_blank" class="btn btn-primary flex-1 text-center">
+        <span class="uz">📄 CV ko'rish</span><span class="en">📄 View CV</span>
       </a>
-
-      <button
-        id="closeModalBtn"
-        class="flex-1 bg-white/10 border border-white/20 text-white py-3 rounded-lg"
-      >
-        Close
+      <button id="closeModalBtn" class="btn btn-ghost flex-1">
+        <span class="uz">Yopish</span><span class="en">Close</span>
       </button>
     </div>
   </div>
 </div>
+
+<script>
+  const state = { search:'', internship:'all', status:'all', min_score:-1, sort:'default' };
+  let isLoading = false, searchTimeout;
+
+  function buildParams() {
+    const p = new URLSearchParams();
+    if (state.search) p.append('search', state.search);
+    if (state.internship !== 'all') p.append('internship', state.internship);
+    if (state.status !== 'all') p.append('status', state.status);
+    p.append('min_score', state.min_score);
+    if (state.sort !== 'default') p.append('sort', state.sort);
+    return p;
+  }
+
+  async function loadStats() {
+    const res = await fetch('/company/candidates/stats');
+    const d   = await res.json();
+    document.getElementById('stat-total').textContent       = d.total;
+    document.getElementById('stat-reviewing').textContent   = d.reviewing;
+    document.getElementById('stat-shortlisted').textContent = d.shortlisted;
+    document.getElementById('stat-selected').textContent    = d.selected;
+  }
+
+  async function loadCandidates() {
+    if (isLoading) return;
+    isLoading = true;
+    try {
+      const res = await fetch(`/company/candidates?${buildParams()}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      const data = await res.json();
+      renderCandidates(data.applications);
+      renderInternships(data.internships);
+    } catch(err) { console.error(err); }
+    finally { isLoading = false; }
+  }
+
+  function renderInternships(list) {
+    const sel = document.getElementById('internshipFilter');
+    if (sel.options.length > 1) return;
+    list.forEach(i => { const o = document.createElement('option'); o.value = o.textContent = i; sel.appendChild(o); });
+  }
+
+  function statusBadge(s) {
+    const map = {
+      'Yangi':              'badge-neutral',
+      "Ko'rib chiqilmoqda": 'badge-warning',
+      "Qisqa ro'yxat":      'badge-info',
+      'Saralangan':         'badge-success'
+    };
+    return map[s] || 'badge-neutral';
+  }
+
+  function renderCandidates(apps) {
+    const c = document.getElementById('candidatesContainer');
+    if (!apps.length) {
+      c.innerHTML = `<p class="col-span-full text-center py-8" style="color:var(--muted)">
+        <span class="uz">Nomzodlar yo'q.</span><span class="en">No candidates found.</span>
+      </p>`;
+      return;
+    }
+    c.innerHTML = apps.map(a => `
+      <div class="card p-5 candidate-card" data-id="${a.id}">
+        <div class="flex items-start gap-4">
+          <div class="avatar w-11 h-11 font-semibold flex-shrink-0" style="background:var(--surface3)">
+            ${a.student_name.charAt(0)}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-2 mb-0.5">
+              <p class="font-medium text-sm truncate" style="color:var(--text)">${a.student_name}</p>
+              <span class="badge ${statusBadge(a.status)} text-xs flex-shrink-0">${a.status}</span>
+            </div>
+            <p class="text-xs mb-0.5" style="color:var(--muted)">${a.student_email}</p>
+            <p class="text-xs" style="color:var(--faint)">${a.internship_title}</p>
+
+            <div class="grid grid-cols-3 gap-2 mt-3">
+              <input type="number" value="${a.score || 0}" class="score-input input text-sm" placeholder="Score">
+              <select class="status-select input text-sm" style="grid-column:span 2">
+                ${['Yangi',"Ko'rib chiqilmoqda","Qisqa ro'yxat","Saralangan"]
+                  .map(s => `<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
+              </select>
+            </div>
+            <textarea class="evaluation-note input mt-2 h-16 text-xs" placeholder="Evaluation note...">${a.evaluation_note || ''}</textarea>
+
+            <div class="flex gap-2 mt-3">
+              <button class="save-btn btn btn-primary flex-1 text-xs">
+                <span class="uz">Saqlash</span><span class="en">Save</span>
+              </button>
+              <button class="view-btn btn btn-ghost flex-1 text-xs">
+                <span class="uz">Tafsilotlar</span><span class="en">Details</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* Filters */
+  document.getElementById('searchInput').addEventListener('input', e => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => { state.search = e.target.value; loadCandidates(); }, 400);
+  });
+  document.getElementById('statusFilter').addEventListener('change', e => { state.status = e.target.value; loadCandidates(); });
+  document.getElementById('internshipFilter').addEventListener('change', e => { state.internship = e.target.value; loadCandidates(); });
+  document.getElementById('scoreFilter').addEventListener('input', e => { state.min_score = e.target.value === '' ? -1 : parseInt(e.target.value); loadCandidates(); });
+  document.getElementById('sortFilter').addEventListener('change', e => { state.sort = e.target.value; loadCandidates(); });
+
+  /* Save */
+  document.addEventListener('click', async e => {
+    if (!e.target.closest('.save-btn')) return;
+    const card = e.target.closest('.candidate-card');
+    const btn  = e.target.closest('.save-btn');
+    const fd   = new FormData();
+    fd.append('id',    card.dataset.id);
+    fd.append('score', card.querySelector('.score-input').value);
+    fd.append('status', card.querySelector('.status-select').value);
+    fd.append('note',  card.querySelector('.evaluation-note').value);
+    btn.disabled = true; btn.textContent = '...';
+    const res    = await fetch('/company/applications/update', {
+      method: 'POST', headers: { 'X-CSRFToken': getCSRF() }, body: fd
+    });
+    const result = await res.json();
+    btn.disabled = false;
+    btn.innerHTML = result.status === 'success'
+      ? '<span class="uz">Saqlandi ✓</span><span class="en">Saved ✓</span>'
+      : '<span class="uz">Xatolik</span><span class="en">Error</span>';
+    if (result.status === 'success') loadStats();
+    setTimeout(() => { btn.innerHTML = '<span class="uz">Saqlash</span><span class="en">Save</span>'; }, 2000);
+  });
+
+  /* View details */
+  document.addEventListener('click', async e => {
+    if (!e.target.closest('.view-btn')) return;
+    const id  = e.target.closest('.candidate-card').dataset.id;
+    try {
+      const res  = await fetch(`/company/applications/${id}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      const p    = data.profile;
+      document.getElementById('modalContent').innerHTML = `
+        <div class="flex items-center gap-3 mb-4">
+          <div class="avatar w-12 h-12 text-lg font-bold" style="background:var(--surface3)">${p.name.charAt(0)}</div>
+          <div><p class="font-medium" style="color:var(--text)">${p.name}</p><p class="text-xs">${p.email}</p></div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div><strong style="color:var(--text)">School</strong><p>${p.school||'—'}</p></div>
+          <div><strong style="color:var(--text)">Program</strong><p>${p.program||'—'}</p></div>
+          <div><strong style="color:var(--text)">Grade</strong><p>${p.grade||'—'}</p></div>
+          <div><strong style="color:var(--text)">GPA</strong><p>${p.gpa||'—'}</p></div>
+          <div><strong style="color:var(--text)">Location</strong><p>${p.location||'—'}</p></div>
+          <div><strong style="color:var(--text)">Phone</strong><p>${p.phone||'—'}</p></div>
+        </div>
+        <hr style="border-color:var(--border);margin:1rem 0">
+        <p class="text-xs font-medium mb-2" style="color:var(--text)">Motivation</p>
+        <p class="text-xs leading-relaxed">${p.motivation||'—'}</p>
+        <hr style="border-color:var(--border);margin:1rem 0">
+        <p class="text-xs font-medium mb-2" style="color:var(--text)">Skills</p>
+        <div class="flex flex-wrap gap-1">
+          ${data.skills.length ? data.skills.map(s=>`<span class="badge badge-neutral text-xs">${s}</span>`).join('') : '—'}
+        </div>
+        ${data.experiences.length ? `
+        <hr style="border-color:var(--border);margin:1rem 0">
+        <p class="text-xs font-medium mb-2" style="color:var(--text)">Experience</p>
+        ${data.experiences.map(exp=>`
+          <div class="p-3 rounded-lg mb-2" style="background:var(--surface2)">
+            <p class="text-xs font-medium" style="color:var(--text)">${exp.title}</p>
+            <p class="text-xs">${exp.role||''} · ${exp.organization||''}</p>
+            <p class="text-xs mt-1">${exp.description||''}</p>
+          </div>
+        `).join('')}` : ''}
+      `;
+      document.getElementById('viewCV').href = p.cv_url || '#';
+      document.getElementById('candidateModal').classList.remove('hidden');
+    } catch(err) { toast(err.message || 'Failed to load', 'error'); }
+  });
+
+  /* Close modal */
+  ['closeModal','closeModalBtn'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', () => {
+      document.getElementById('candidateModal').classList.add('hidden');
+    });
+  });
+  document.getElementById('candidateModal')?.addEventListener('click', e => {
+    if (e.target.id === 'candidateModal') e.target.classList.add('hidden');
+  });
+
+  loadStats();
+  loadCandidates();
+</script>
 {% endblock %}

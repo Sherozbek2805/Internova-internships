@@ -1,251 +1,182 @@
-{% extends "public/base.html" %} {% block title %}Login{% endblock %} {% block
-content %}
-<div class="w-full max-w-md">
-  <button
-    onclick="window.history.back()"
-    class="fixed top-6 left-6 z-50 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="w-5 h-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M15 19l-7-7 7-7"
-      />
+{% extends "public/base.html" %}
+{% block title %}
+  <span class="uz">Kirish</span>
+  <span class="en">Login</span>
+  — Internova
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-md px-4 sm:px-0 py-10">
+
+  <!-- Back -->
+  <button onclick="window.history.back()"
+    class="btn btn-ghost mb-6 w-10 h-10 p-0 rounded-full" aria-label="Back">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
     </svg>
   </button>
 
-  <div class="flex justify-center items-center gap-2 mb-8">
-    <img
-      src="/static/logo.png"
-      alt="Internova Logo"
-      class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]"
-    />
-
-    <span class="text-lg font-semibold">Internova</span>
+  <!-- Logo -->
+  <div class="flex items-center gap-2 mb-8">
+    <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
+    <span class="font-semibold" style="color:var(--text)">Internova</span>
   </div>
 
-  <div
-    class="rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl p-8 shadow-xl"
-  >
-    <h1 class="text-2xl font-semibold mb-1">Akkauntga kirish</h1>
-    <p class="text-sm text-gray-400 mb-6">
-      Shaxsiy kabinetga kirish uchun ma’lumotlaringizni kiriting.
+  <div class="card p-6 sm:p-8">
+    <h1 class="text-xl sm:text-2xl font-semibold mb-1" style="color:var(--text)">
+      <span class="uz">Akkauntga kirish</span>
+      <span class="en">Sign in to your account</span>
+    </h1>
+    <p class="text-sm mb-6" style="color:var(--muted)">
+      <span class="uz">Ma'lumotlaringizni kiriting.</span>
+      <span class="en">Enter your credentials to continue.</span>
     </p>
 
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %}
-    <div class="space-y-3 mb-4">
-      {% for category, message in messages %}
-      <div
-        class="rounded-xl px-4 py-3 text-sm {% if category == 'warning' %}bg-yellow-500/10 text-yellow-300 border border-yellow-500/30 {% elif category == 'error' %}bg-red-500/10 text-red-300 border border-red-500/30 {% elif category == 'success' %}bg-green-500/10 text-green-300 border border-green-500/30 {% else %}bg-blue-500/10 text-blue-300 border border-blue-500/30{% endif %}"
-      >
-        {{ message }}
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-2 mb-4">
+          {% for category, message in messages %}
+            <div class="text-sm px-4 py-3 rounded-lg
+              {% if category == 'success' %}badge-success
+              {% elif category == 'error' %}badge-danger
+              {% else %}badge-neutral{% endif %}"
+              style="border:1px solid var(--border)">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% if request.args.get('verified') == '1' %}
+      <div class="badge badge-success text-sm px-4 py-3 rounded-lg w-full mb-4 block">
+        <span class="uz">Email tasdiqlandi. Kirish mumkin.</span>
+        <span class="en">Email verified. You can now log in.</span>
       </div>
-      {% endfor %}
-    </div>
-    {% endif %} {% endwith %} {% if request.args.get('verified') == '1' %}
-    <div
-      class="rounded-xl px-4 py-3 text-sm bg-green-500/10 text-green-300 border border-green-500/30 mb-4"
-    >
-      Email muvaffaqiyatli tasdiqlandi. Endi login qilishingiz mumkin.
-    </div>
     {% endif %}
 
-    <div class="flex bg-white/10 rounded-xl p-1 mb-6">
-      <button
-        type="button"
-        id="studentBtn"
-        class="flex-1 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium"
-      >
-        Talaba
+    <!-- Role selector -->
+    <div class="flex gap-1 p-1 rounded-lg mb-6" style="background:var(--surface2)">
+      <button id="studentBtn" class="flex-1 py-2 rounded-md text-xs sm:text-sm font-medium transition-all">
+        <span class="uz">Talaba</span><span class="en">Student</span>
       </button>
-      <button
-        type="button"
-        id="companyBtn"
-        class="flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium"
-      >
-        Kompaniya
+      <button id="companyBtn" class="flex-1 py-2 rounded-md text-xs sm:text-sm font-medium transition-all">
+        <span class="uz">Kompaniya</span><span class="en">Company</span>
       </button>
-      <button
-        type="button"
-        id="adminBtn"
-        class="flex-1 py-2 rounded-lg text-gray-400 text-sm font-medium"
-      >
+      <button id="adminBtn" class="flex-1 py-2 rounded-md text-xs sm:text-sm font-medium transition-all">
         Admin
       </button>
     </div>
 
-    <!-- 🔥 KEEP FORM (NO DELETION) -->
-    <form
-      id="loginForm"
-      method="POST"
-      action="{{ url_for('auth.login') }}"
-      class="space-y-4"
-    >
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-      <input type="hidden" name="role" id="role" value="student" />
+    <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}" class="space-y-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="role" id="role" value="student">
 
       <div>
-        <label for="email" class="text-sm text-gray-300">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none"
-        />
+        <label for="email" class="text-sm font-medium mb-1 block" style="color:var(--muted)">Email</label>
+        <input id="email" name="email" type="email" required class="input">
       </div>
 
       <div>
-        <label for="password" class="text-sm text-gray-300">Parol</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          class="mt-1 w-full rounded-xl bg-white/10 border border-white/20 px-4 py-3 outline-none"
-        />
+        <label for="password" class="text-sm font-medium mb-1 block" style="color:var(--muted)">
+          <span class="uz">Parol</span><span class="en">Password</span>
+        </label>
+        <input id="password" name="password" type="password" required class="input">
       </div>
 
-      <button
-        type="submit"
-        class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white"
-      >
-        Kirish
+      <button type="submit" class="btn btn-primary w-full py-3 text-sm sm:text-base">
+        <span class="uz">Kirish</span><span class="en">Log In</span>
       </button>
 
-      <a
-        href="{{ url_for('auth.google_login') }}"
-        class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-gray-800 font-medium hover:bg-gray-100 transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 48 48"
-          width="20"
-          height="20"
-        >
-          <path
-            fill="#FFC107"
-            d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10.4 0 19-7.5 19-20 0-1.3-.1-2.7-.4-3.5z"
-          />
-          <path
-            fill="#FF3D00"
-            d="M6.3 14.7l6.6 4.8C14.5 16.1 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.4 6.3 14.7z"
-          />
-          <path
-            fill="#4CAF50"
-            d="M24 44c5.2 0 10-2 13.5-5.3l-6.2-5.1C29.3 36 26.8 37 24 37c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"
-          />
-          <path
-            fill="#1976D2"
-            d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.5-6.2 7.1l6.2 5.1C38.6 37.2 44 31.2 44 24c0-1.3-.1-2.7-.4-3.5z"
-          />
+      <a href="{{ url_for('auth.google_login') }}"
+        class="btn btn-ghost w-full py-3 text-sm sm:text-base gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="18" height="18">
+          <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12S17.4 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c10.4 0 19-7.5 19-20 0-1.3-.1-2.7-.4-3.5z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16.1 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.4 6.3 14.7z"/>
+          <path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.5-5.3l-6.2-5.1C29.3 36 26.8 37 24 37c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+          <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.4 5.5-6.2 7.1l6.2 5.1C38.6 37.2 44 31.2 44 24c0-1.3-.1-2.7-.4-3.5z"/>
         </svg>
-
-        Google orqali kirish
+        <span class="uz">Google orqali kirish</span>
+        <span class="en">Continue with Google</span>
       </a>
     </form>
-    <p class="text-center text-sm text-gray-400 mt-6">
-        Akkauntingiz yo'qmi?
-        <a href="{{ url_for('auth.signup') }}" class="text-blue-400 hover:underline">Ro'yxatdan o'tish</a>
-      </p>
+
+    <p class="text-center text-sm mt-6" style="color:var(--muted)">
+      <span class="uz">Akkauntingiz yo'qmi?</span>
+      <span class="en">Don't have an account?</span>
+      <a href="{{ url_for('auth.signup') }}" class="font-medium ml-1" style="color:var(--text)">
+        <span class="uz">Ro'yxatdan o'tish</span>
+        <span class="en">Sign up</span>
+      </a>
+    </p>
+
+    <!-- Controls -->
+    <div class="flex justify-center gap-2 mt-6 pt-4" style="border-top:1px solid var(--border)">
+      <button class="ctrl-btn" onclick="toggleLang()">
+        <span class="uz">🌐 EN</span><span class="en">🌐 UZ</span>
+      </button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+    </div>
   </div>
 </div>
-{% endblock %} {% block scripts %}
+{% endblock %}
+
+{% block scripts %}
 <script>
-  const studentBtn = document.getElementById("studentBtn");
-  const companyBtn = document.getElementById("companyBtn");
-  const adminBtn = document.getElementById("adminBtn");
-  const roleInput = document.getElementById("role");
-
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-
-  // ---------------- ROLE SWITCH ----------------
-  function resetRoleButtons() {
-    [studentBtn, companyBtn, adminBtn].forEach((btn) => {
-      if (!btn) return;
-      btn.classList.remove(
-        "bg-gradient-to-r",
-        "from-blue-500",
-        "to-purple-500",
-        "text-white",
-      );
-      btn.classList.add("text-gray-400");
+  /* Theme icon init */
+  (function() {
+    const t = document.documentElement.getAttribute('data-theme') || 'dark';
+    document.querySelectorAll('[data-theme-icon]').forEach(el => {
+      el.textContent = t === 'dark' ? '☀️' : '🌙';
     });
-  }
+  })();
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+  /* Role selector */
+  const roleInput = document.getElementById('role');
+  const roleBtns  = { student: document.getElementById('studentBtn'), company: document.getElementById('companyBtn'), admin: document.getElementById('adminBtn') };
 
   function setRole(role) {
-    resetRoleButtons();
     roleInput.value = role;
-
-    const map = { student: studentBtn, company: companyBtn, admin: adminBtn };
-    if (map[role]) {
-      map[role].classList.add(
-        "bg-gradient-to-r",
-        "from-blue-500",
-        "to-purple-500",
-        "text-white",
-      );
-      map[role].classList.remove("text-gray-400");
-    }
-  }
-
-  studentBtn?.addEventListener("click", () => setRole("student"));
-  companyBtn?.addEventListener("click", () => setRole("company"));
-  adminBtn?.addEventListener("click", () => setRole("admin"));
-
-  setRole("student");
-
-  // ---------------- LOGIN ----------------
-  const loginForm = document.getElementById("loginForm");
-
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const btn = loginForm.querySelector("button[type='submit']");
-      setBtnState(btn, "loading");
-
-      try {
-        const data = await api("{{ url_for('auth.login') }}", {
-          method: "POST",
-          body: JSON.stringify({
-            email: emailInput.value.trim(),
-            password: passwordInput.value.trim(),
-            role: roleInput.value,
-          }),
-        });
-
-        // ✅ SUCCESS
-        setBtnState(btn, "success");
-        toast("Login successful!", "success");
-
-        // small delay for UX
-        setTimeout(() => {
-          window.location.href = data.redirect;
-        }, 500);
-      } catch (err) {
-        // ❌ ERROR (real message already shown by api())
-        setBtnState(btn, "error");
-
-        console.error("Login error:", err);
-
-        // Optional: show fallback if no message
-        if (!err.message) {
-          toast("Something went wrong", "error");
-        }
-      }
-
-      setTimeout(() => setBtnState(btn, "idle"), 1500);
+    Object.entries(roleBtns).forEach(([r, btn]) => {
+      if (!btn) return;
+      const active = r === role;
+      btn.style.background = active ? 'var(--surface)' : 'transparent';
+      btn.style.color       = active ? 'var(--text)'    : 'var(--muted)';
+      btn.style.border      = active ? '1px solid var(--border)' : 'none';
     });
   }
+
+  Object.entries(roleBtns).forEach(([role, btn]) => btn?.addEventListener('click', () => setRole(role)));
+  setRole('student');
+
+  /* AJAX login */
+  document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = '...';
+    try {
+      const res = await fetch('{{ url_for("auth.login") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify({
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value,
+          role: roleInput.value
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Error');
+      toast(data.message || 'Success', 'success');
+      setTimeout(() => window.location.href = data.redirect, 500);
+    } catch(err) {
+      toast(err.message || 'Login failed', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="uz">Kirish</span><span class="en">Log In</span>';
+    }
+  });
 </script>
 {% endblock %}

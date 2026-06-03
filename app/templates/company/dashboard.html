@@ -1,194 +1,161 @@
 {% extends "company/base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard — Internova{% endblock %}
 
 {% block content %}
+<div class="space-y-8 fade-up">
 
-<section id="dashboard" class="page-section active space-y-10">
-
-  <!-- HERO -->
-  <section class="grid md:grid-cols-2 gap-16 items-center py-6">
-
+  <!-- Header -->
+  <div class="grid md:grid-cols-2 gap-8 items-center">
     <div>
-      <p class="text-blue-400 text-sm mb-4 tracking-widest uppercase">
-        Company dashboard
+      <p class="text-xs tracking-widest uppercase mb-3" style="color:var(--muted)">
+        <span class="uz">Kompaniya paneli</span><span class="en">Company Dashboard</span>
       </p>
-
-      <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-6">
-        Welcome back, <br>
-        <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
-          {{ company.name or "Company" }}
-        </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-3" style="color:var(--text)">
+        <span class="uz">Xush kelibsiz,</span><span class="en">Welcome,</span><br>
+        {{ company.name or 'Company' }}
       </h1>
-
-      <p class="text-gray-400 text-lg mb-8">
-        Manage internships and track candidate performance in real-time.
+      <p class="mb-6" style="color:var(--muted)">
+        <span class="uz">Stajirovkalarni yarating va nomzodlarni ko'rib chiqing.</span>
+        <span class="en">Post internships and review candidates.</span>
       </p>
-
-      <div class="flex flex-wrap gap-4">
-        <a href="/company/post"
-          class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl hover:scale-105 transition">
-          + Create Internship
+      <div class="flex flex-wrap gap-3">
+        <a href="/company/post" class="btn btn-primary">
+          + <span class="uz">Stajirovka yaratish</span><span class="en">Post Internship</span>
         </a>
-
-        <a href="/company/candidates"
-          class="px-6 py-3 rounded-xl border border-white/20 hover:bg-white/10 hover:scale-105 transition">
-          View Candidates
+        <a href="/company/candidates" class="btn btn-ghost">
+          <span class="uz">Nomzodlarni ko'rish</span><span class="en">View Candidates</span>
         </a>
       </div>
     </div>
 
-    <!-- PROFILE CARD -->
-    <div class="flex justify-center">
-      <div class="relative w-full max-w-md">
-
-        <div class="absolute inset-0 blur-3xl bg-blue-500/20 rounded-3xl"></div>
-
-        <div class="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 shadow-2xl">
-
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-2xl font-bold text-white">
-              {{ company.name[0] if company and company.name else "C" }}
-            </div>
-            <div>
-              <h3 class="text-xl font-semibold text-white">
-                {{ company.name or "Company" }}
-              </h3>
-              <p class="text-sm text-gray-400">Company profile</p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <p class="text-gray-400 text-xs">Internships</p>
-              <p class="text-2xl font-semibold text-white">
-                {{ internships|length }}
-              </p>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <p class="text-gray-400 text-xs">Candidates</p>
-              <p class="text-2xl font-semibold text-white">
-                {{ stats.total_applications or 0 }}
-              </p>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <p class="text-gray-400 text-xs">Reviewing</p>
-              <p class="text-2xl font-semibold text-yellow-400">
-                {{ stats.reviewing_count or 0 }}
-              </p>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <p class="text-gray-400 text-xs">Status</p>
-              <p class="{% if company.verified %}text-green-400{% else %}text-red-400{% endif %}">
-                {{ "Verified" if company.verified else "Not verified" }}
-              </p>
-            </div>
-          </div>
-
+    <!-- Company card -->
+    <div class="card p-6">
+      <div class="flex items-center gap-4 mb-5">
+        <div class="avatar w-14 h-14 text-xl font-bold" style="background:var(--surface3)">
+          {{ company.name[0] if company and company.name else 'C' }}
+        </div>
+        <div>
+          <h3 class="font-semibold" style="color:var(--text)">{{ company.name or 'Company' }}</h3>
+          <p class="text-xs mt-0.5" style="color:var(--muted)">
+            <span class="{% if company.verified %}badge badge-success{% else %}badge badge-danger{% endif %}">
+              {% if company.verified %}
+                <span class="uz">✓ Tasdiqlangan</span><span class="en">✓ Verified</span>
+              {% else %}
+                <span class="uz">Tasdiqlanmagan</span><span class="en">Not verified</span>
+              {% endif %}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-4 rounded-xl" style="background:var(--surface2)">
+          <p class="text-xs mb-1" style="color:var(--muted)">
+            <span class="uz">Stajirovkalar</span><span class="en">Internships</span>
+          </p>
+          <p class="text-2xl font-bold" style="color:var(--text)">{{ internships|length }}</p>
+        </div>
+        <div class="p-4 rounded-xl" style="background:var(--surface2)">
+          <p class="text-xs mb-1" style="color:var(--muted)">
+            <span class="uz">Jami arizalar</span><span class="en">Applications</span>
+          </p>
+          <p class="text-2xl font-bold" style="color:var(--text)">{{ stats.total_applications or 0 }}</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- 🔥 QUICK STATS -->
-  <section class="grid md:grid-cols-4 gap-6">
-
-    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-      <p class="text-gray-400 text-sm">Total Applications</p>
-      <h2 class="text-3xl font-bold text-white">
-        {{ stats.total_applications or 0 }}
-      </h2>
+  <!-- Stats row -->
+  <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Barcha Arizalar</span><span class="en">Total Applications</span>
+      </p>
+      <p class="text-3xl font-bold" style="color:var(--text)">{{ stats.total_applications or 0 }}</p>
     </div>
-
-    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-      <p class="text-gray-400 text-sm">Shortlisted</p>
-      <h2 class="text-3xl font-bold text-blue-400">
-        {{ stats.shortlisted_count or 0 }}
-      </h2>
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Qisqa ro'yxat</span><span class="en">Shortlisted</span>
+      </p>
+      <p class="text-3xl font-bold" style="color:var(--text)">{{ stats.shortlisted_count or 0 }}</p>
     </div>
-
-    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-      <p class="text-gray-400 text-sm">Accepted</p>
-      <h2 class="text-3xl font-bold text-green-400">
-        {{ stats.accepted_count or 0 }}
-      </h2>
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Qabul qilingan</span><span class="en">Accepted</span>
+      </p>
+      <p class="text-3xl font-bold" style="color:#86efac">{{ stats.accepted_count or 0 }}</p>
     </div>
-
-    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-      <p class="text-gray-400 text-sm">Rejected</p>
-      <h2 class="text-3xl font-bold text-red-400">
-        {{ stats.rejected_count or 0 }}
-      </h2>
+    <div class="card p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Rad etilgan</span><span class="en">Rejected</span>
+      </p>
+      <p class="text-3xl font-bold" style="color:#fca5a5">{{ stats.rejected_count or 0 }}</p>
     </div>
+  </div>
 
-  </section>
-
-  <!-- 📊 RECENT INTERNSHIPS -->
-  <section class="p-6 rounded-2xl bg-white/5 border border-white/10">
-    <h2 class="text-xl font-semibold mb-4">Recent Internships</h2>
-
+  <!-- Internships table -->
+  <div class="card p-6">
+    <h2 class="font-semibold mb-4" style="color:var(--text)">
+      <span class="uz">So'nggi Stajirovkalar</span><span class="en">Recent Internships</span>
+    </h2>
     <div class="overflow-x-auto">
-      <table class="w-full text-left">
-        <thead class="text-gray-400 text-sm">
+      <table class="table-std">
+        <thead>
           <tr>
-            <th class="pb-3">Title</th>
-            <th>Status</th>
-            <th>Applicants</th>
+            <th><span class="uz">Sarlavha</span><span class="en">Title</span></th>
+            <th><span class="uz">Holat</span><span class="en">Status</span></th>
+            <th><span class="uz">Arizalar</span><span class="en">Applications</span></th>
           </tr>
         </thead>
-
-        <tbody class="text-white">
+        <tbody>
           {% for internship in internships[:5] %}
-          <tr class="border-t border-white/10">
-            <td class="py-3">{{ internship.title }}</td>
-            <td class="text-green-400">Active</td>
-            <td>{{ internship.applications_count or 0 }}</td>
+          <tr>
+            <td class="font-medium" style="color:var(--text)">{{ internship.title }}</td>
+            <td><span class="badge badge-success">
+              <span class="uz">Faol</span><span class="en">Active</span>
+            </span></td>
+            <td style="color:var(--muted)">{{ internship.applications_count or 0 }}</td>
           </tr>
           {% else %}
           <tr>
-            <td colspan="3" class="py-4 text-gray-400">
-              No internships yet
+            <td colspan="3" class="text-center py-6" style="color:var(--muted)">
+              <span class="uz">Hali stajirovka yo'q.</span><span class="en">No internships yet.</span>
             </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-  </section>
+  </div>
 
-  <!-- 👥 RECENT CANDIDATES -->
-  <section class="p-6 rounded-2xl bg-white/5 border border-white/10">
-    <h2 class="text-xl font-semibold mb-4">Recent Candidates</h2>
-
-    <div class="space-y-4">
-
-      {% for candidate in recent_candidates %}
-      <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
-
-        <div>
-          <p class="font-medium">{{ candidate.name }}</p>
-          <p class="text-sm text-gray-400">{{ candidate.position }}</p>
+  <!-- Recent candidates -->
+  <div class="card p-6">
+    <h2 class="font-semibold mb-4" style="color:var(--text)">
+      <span class="uz">So'nggi Nomzodlar</span><span class="en">Recent Candidates</span>
+    </h2>
+    {% if recent_candidates %}
+      <div class="space-y-3">
+        {% for c in recent_candidates %}
+        <div class="flex items-center justify-between p-3 rounded-xl" style="background:var(--surface2)">
+          <div>
+            <p class="text-sm font-medium" style="color:var(--text)">{{ c.name }}</p>
+            <p class="text-xs mt-0.5" style="color:var(--muted)">{{ c.position }}</p>
+          </div>
+          <span class="badge
+            {% if c.status == 'accepted' %}badge-success
+            {% elif c.status == 'shortlisted' %}badge-info
+            {% elif c.status == 'rejected' %}badge-danger
+            {% else %}badge-warning{% endif %}">
+            {{ c.status }}
+          </span>
         </div>
-
-        <span class="text-xs px-3 py-1 rounded-full
-          {% if candidate.status == 'Saralangan' %}bg-green-500/20 text-green-400
-          {% elif candidate.status == 'Qisqa ro\'yxat' %}bg-blue-500/20 text-blue-400
-          {% else %}bg-yellow-500/20 text-yellow-400{% endif %}">
-          {{ candidate.status }}
-        </span>
-
+        {% endfor %}
       </div>
-      {% else %}
-      <p class="text-gray-400">No recent candidates</p>
-      {% endfor %}
+    {% else %}
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Nomzodlar mavjud emas.</span><span class="en">No candidates yet.</span>
+      </p>
+    {% endif %}
+  </div>
 
-    </div>
-  </section>
-
-</section>
-<br>
-<br>
-
+</div>
 {% endblock %}

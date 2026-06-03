@@ -1,73 +1,72 @@
 <section id="applications" class="spa-section hidden fade-up">
-      <div class="mb-8">
-        <h1 class="text-3xl font-semibold">My Applications</h1>
-        <p class="text-gray-400 mt-2">All applications you have submitted.</p>
-      </div>
+  <div class="mb-6">
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">
+      <span class="uz">Mening Arizalarim</span>
+      <span class="en">My Applications</span>
+    </h1>
+    <p class="mt-1 text-sm" style="color:var(--muted)">
+      <span class="uz">Barcha arizalaringiz va ularning holati.</span>
+      <span class="en">All your submitted applications and their current status.</span>
+    </p>
+  </div>
 
-      <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
-        <table class="w-full text-sm">
-          <thead class="border-b border-white/10 text-gray-400">
+  <div class="card overflow-x-auto">
+    <table class="table-std">
+      <thead>
+        <tr>
+          <th><span class="uz">Stajirovka</span><span class="en">Internship</span></th>
+          <th><span class="uz">Kompaniya</span><span class="en">Company</span></th>
+          <th><span class="uz">Sana</span><span class="en">Date</span></th>
+          <th><span class="uz">Holat</span><span class="en">Status</span></th>
+          <th><span class="uz">Ball</span><span class="en">Score</span></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if applications %}
+          {% for app in applications %}
             <tr>
-              <th class="text-left px-5 py-4">Internship</th>
-              <th>Company</th>
-              <th>Date</th>
-              <th>Status</th>
+              <td class="font-medium" style="color:var(--text)">{{ app.title }}</td>
+              <td style="color:var(--muted)">{{ app.company_name or '—' }}</td>
+              <td style="color:var(--muted)">{{ app.created_at.strftime('%d %b %Y') if app.created_at else '—' }}</td>
+              <td>
+                <span class="badge status-{{ app.status }}">{{ app.status }}</span>
+              </td>
+              <td style="color:var(--muted)">{{ app.score if app.score is not none else '—' }}</td>
+              <td>
+                <button
+                  class="btn btn-ghost text-xs view-feedback-btn"
+                  data-note="{{ app.evaluation_note or '' }}"
+                  data-score="{{ app.score or '' }}"
+                  data-status="{{ app.status }}">
+                  <span class="uz">Ko'rish</span><span class="en">View</span>
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {% if applications %}
-              {% for app in applications %}
-                <tr class="border-b border-white/5 hover:bg-white/5 transition">
-                  <td class="px-5 py-4 font-semibold">{{ app.title }}</td>
-                  <td class="text-center">{{ app.company_name or 'Unknown' }}</td>
-                  <td class="text-center">{{ app.created_at }}</td>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="6" class="text-center py-8" style="color:var(--muted)">
+              <span class="uz">Hech qanday ariza topshirilmagan.</span>
+              <span class="en">No applications submitted yet.</span>
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</section>
 
-                  <td class="text-center 
-                    {% if app.status == 'accepted' %}text-green-400
-                    {% elif app.status == 'rejected' %}text-red-400
-                    {% else %}text-yellow-400{% endif %}">
-                    {{ app.status }}
-                  </td>
-
-                  <!-- ⭐ SCORE -->
-                  <td class="text-center">
-                    {{ app.score if app.score is not none else "-" }}
-                  </td>
-
-                  <!-- 🔥 BUTTON -->
-                  <td class="text-center">
-                    <button 
-                      class="view-feedback-btn px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded"
-                      data-note="{{ app.evaluation_note }}"
-                      data-score="{{ app.score }}"
-                      data-status="{{ app.status }}"
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              {% endfor %}
-            {% else %}
-              <tr>
-                <td colspan="6" class="px-5 py-6 text-center text-gray-400">
-                  You have not applied to any internships yet.
-                </td>
-              </tr>
-            {% endif %}
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <div id="feedbackModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
-
-  <div class="bg-[#0f172a] border border-white/10 rounded-2xl p-6 w-full max-w-lg relative">
-
-    <button id="closeFeedbackModal" class="absolute top-3 right-3 text-gray-400 hover:text-white">✕</button>
-
-    <h2 class="text-xl font-semibold text-white mb-4">Application Feedback</h2>
-
-    <div id="feedbackContent" class="space-y-3 text-sm text-gray-300"></div>
-
+<!-- Feedback Modal -->
+<div id="feedbackModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-semibold" style="color:var(--text)">
+        <span class="uz">Ariza tafsiloti</span>
+        <span class="en">Application Feedback</span>
+      </h2>
+      <button id="closeFeedbackModal" class="btn btn-ghost w-8 h-8 p-0 rounded-full text-lg">✕</button>
+    </div>
+    <div id="feedbackContent" class="space-y-3 text-sm" style="color:var(--muted)"></div>
   </div>
 </div>

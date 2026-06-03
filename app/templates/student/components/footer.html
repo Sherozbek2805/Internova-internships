@@ -1,44 +1,46 @@
-<footer class="border-t border-white/10 mt-20 bg-[#0b0f1a]">
-  <div class="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-8">
+<footer class="mt-16" style="border-top:1px solid var(--border)">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-2 sm:grid-cols-4 gap-8">
 
-    <!-- Brand -->
-    <div>
-      <h2 class="text-2xl font-bold mb-3">Internova</h2>
-      <p class="text-gray-400 text-sm">
-        Connecting students with real opportunities.
+    <div class="col-span-2 sm:col-span-1">
+      <div class="flex items-center gap-2 mb-3">
+        <img src="/static/logo.png" alt="Internova" class="w-7 h-7 object-contain">
+        <span class="font-semibold" style="color:var(--text)">Internova</span>
+      </div>
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Iqtidorlarni imkoniyat bilan bog'laymiz.</span>
+        <span class="en">Connecting talent with opportunity.</span>
       </p>
     </div>
 
-    <!-- Links -->
     <div>
-      <h3 class="font-semibold mb-3">Platform</h3>
-      <ul class="space-y-2 text-gray-400 text-sm">
-        <li><a href="/discover" class="hover:text-white">Find Internships</a></li>
-        <li><a href="/post" class="hover:text-white">Post Internship</a></li>
-        <li><a href="/dashboard" class="hover:text-white">Dashboard</a></li>
+      <h3 class="font-medium text-sm mb-3" style="color:var(--text)">Platform</h3>
+      <ul class="space-y-2 text-sm" style="color:var(--muted)">
+        <li><a href="/discover"><span class="uz">Vakansiyalar</span><span class="en">Internships</span></a></li>
+        <li><a href="/student-dashboard"><span class="uz">Kabinet</span><span class="en">Dashboard</span></a></li>
       </ul>
     </div>
 
     <div>
-      <h3 class="font-semibold mb-3">Company</h3>
-      <ul class="space-y-2 text-gray-400 text-sm">
-        <li><a href="/about" class="hover:text-white">About</a></li>
-        <li><a href="/faq" class="hover:text-white">FAQ</a></li>
-        <li><a href="/contact" class="hover:text-white">Contact</a></li>
+      <h3 class="font-medium text-sm mb-3" style="color:var(--text)">
+        <span class="uz">Kompaniya</span><span class="en">Company</span>
+      </h3>
+      <ul class="space-y-2 text-sm" style="color:var(--muted)">
+        <li><a href="/about"><span class="uz">Biz haqimizda</span><span class="en">About</span></a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/contact"><span class="uz">Bog'lanish</span><span class="en">Contact</span></a></li>
       </ul>
     </div>
 
     <div>
-      <h3 class="font-semibold mb-3">Legal</h3>
-      <ul class="space-y-2 text-gray-400 text-sm">
-        <li><a href="/privacy" class="hover:text-white">Privacy Policy</a></li>
-        <li><a href="/terms" class="hover:text-white">Terms of Service</a></li>
+      <h3 class="font-medium text-sm mb-3" style="color:var(--text)">Legal</h3>
+      <ul class="space-y-2 text-sm" style="color:var(--muted)">
+        <li><a href="/privacy"><span class="uz">Maxfiylik</span><span class="en">Privacy</span></a></li>
+        <li><a href="/terms"><span class="uz">Shartlar</span><span class="en">Terms</span></a></li>
       </ul>
     </div>
 
   </div>
-
-  <div class="text-center text-gray-500 text-sm pb-6">
-    © 2026 Internova. All rights reserved.
+  <div class="text-center text-xs py-4" style="color:var(--faint)">
+    © 2026 Internova. <span class="uz">Barcha huquqlar himoyalangan.</span><span class="en">All rights reserved.</span>
   </div>
 </footer>

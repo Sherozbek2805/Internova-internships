@@ -1,76 +1,114 @@
 <section id="overview" class="spa-section fade-up">
-      <div class="mb-8">
-        <h1 class="text-3xl font-semibold">Welcome, {{ user.name or 'Student' }}</h1>
-        <p class="text-gray-400 mt-2">Manage your applications, saved internships, and profile from one place.</p>
+  <div class="mb-8">
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">
+      <span class="uz">Xush kelibsiz, {{ user.name or 'Talaba' }}</span>
+      <span class="en">Welcome, {{ user.name or 'Student' }}</span>
+    </h1>
+    <p class="mt-1 text-sm" style="color:var(--muted)">
+      <span class="uz">Arizalaringizni kuzating, stajirovkalarni saqlang va profilingizni yangilang.</span>
+      <span class="en">Track your applications, save internships, and update your profile.</span>
+    </p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="card p-5">
+      <p class="text-xs" style="color:var(--muted)">
+        <span class="uz">Jami Arizalar</span><span class="en">Total Applications</span>
+      </p>
+      <p class="text-3xl font-semibold mt-2" style="color:var(--text)">{{ total_applications or 0 }}</p>
+    </div>
+    <div class="card p-5">
+      <p class="text-xs" style="color:var(--muted)">
+        <span class="uz">Ko'rib chiqilmoqda</span><span class="en">Under Review</span>
+      </p>
+      <p class="text-3xl font-semibold mt-2" style="color:#fde047">{{ reviewing_count or 0 }}</p>
+    </div>
+    <div class="card p-5">
+      <p class="text-xs" style="color:var(--muted)">
+        <span class="uz">Saqlangan</span><span class="en">Saved</span>
+      </p>
+      <p class="text-3xl font-semibold mt-2" style="color:var(--text)">{{ saved_count or 0 }}</p>
+    </div>
+    <div class="card p-5">
+      <p class="text-xs" style="color:var(--muted)">
+        <span class="uz">Profil bahosi</span><span class="en">Profile Score</span>
+      </p>
+      <p class="text-3xl font-semibold mt-2" style="color:#86efac">
+        <span id="profileStrength">{{ profile_strength or 0 }}</span>%
+      </p>
+      <div class="strength-track mt-2">
+        <div class="strength-fill" id="strengthBar" style="width:{{ profile_strength or 0 }}%"></div>
       </div>
+    </div>
+  </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
-          <p class="text-gray-400 text-sm">Total applications</p>
-          <p class="text-3xl font-semibold mt-2">{{ total_applications or 0 }}</p>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
-          <p class="text-gray-400 text-sm">Under review</p>
-          <p class="text-3xl font-semibold mt-2 text-yellow-400">{{ reviewing_count or 0 }}</p>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
-          <p class="text-gray-400 text-sm">Saved internships</p>
-          <p class="text-3xl font-semibold mt-2">{{ saved_count or 0 }}</p>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 card">
-          <p class="text-gray-400 text-sm">Profile strength</p>
-          <p class="text-3xl font-semibold mt-2 text-green-400">{{ profile_strength or 0 }}%</p>
-        </div>
-      </div>
-
-      <div class="grid lg:grid-cols-2 gap-8">
-        <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-          <h2 class="text-xl font-semibold mb-5">Recent activity</h2>
-
-          {% if recent_activity %}
-            <div class="space-y-4">
-              {% for app in recent_activity %}
-                <div class="p-4 rounded-xl border border-white/10 bg-white/5">
-                  <p class="font-medium text-white">{{ app.title }}</p>
-                  <p class="text-sm text-gray-400 mt-1">
-                    {{ app.company_name or 'Unknown company' }} • {{ app.status }}
-                  </p>
-                </div>
-              {% endfor %}
+  <!-- Recent + Quick actions -->
+  <div class="grid lg:grid-cols-2 gap-6">
+    <div class="card p-6">
+      <h2 class="font-semibold mb-4" style="color:var(--text)">
+        <span class="uz">So'nggi faoliyat</span><span class="en">Recent Activity</span>
+      </h2>
+      {% if recent_activity %}
+        <div class="space-y-3">
+          {% for app in recent_activity %}
+            <div class="flex items-center justify-between p-3 rounded-lg" style="background:var(--surface2)">
+              <div>
+                <p class="text-sm font-medium" style="color:var(--text)">{{ app.title }}</p>
+                <p class="text-xs mt-0.5" style="color:var(--muted)">
+                  {{ app.company_name or 'Unknown' }}
+                </p>
+              </div>
+              <span class="badge badge-neutral status-{{ app.status }} text-xs">{{ app.status }}</span>
             </div>
-          {% else %}
-            <div class="p-4 rounded-xl border border-white/10 bg-white/5 text-gray-400">
-              No recent activity yet.
-            </div>
-          {% endif %}
+          {% endfor %}
         </div>
+      {% else %}
+        <p class="text-sm" style="color:var(--muted)">
+          <span class="uz">Hech qanday faoliyat yo'q.</span>
+          <span class="en">No recent activity yet.</span>
+        </p>
+      {% endif %}
+    </div>
 
-        <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-          <h2 class="text-xl font-semibold mb-5">Quick actions</h2>
-          <div class="grid sm:grid-cols-2 gap-4">
-            <button onclick="showSection('explore')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
-              <p class="font-medium text-white">Explore internships</p>
-              <p class="text-sm text-gray-400 mt-1">Find new opportunities</p>
-            </button>
-
-            <button onclick="showSection('applications')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
-              <p class="font-medium text-white">My applications</p>
-              <p class="text-sm text-gray-400 mt-1">Track progress</p>
-            </button>
-
-            <button onclick="showSection('profile')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
-              <p class="font-medium text-white">Update profile</p>
-              <p class="text-sm text-gray-400 mt-1">Improve your profile score</p>
-            </button>
-
-            <button onclick="showSection('saved')" class="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
-              <p class="font-medium text-white">Saved jobs</p>
-              <p class="text-sm text-gray-400 mt-1">Review later</p>
-            </button>
-          </div>
-        </div>
+    <div class="card p-6">
+      <h2 class="font-semibold mb-4" style="color:var(--text)">
+        <span class="uz">Tezkor harakatlar</span><span class="en">Quick Actions</span>
+      </h2>
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="showSection('explore')" class="p-4 rounded-xl text-left transition" style="background:var(--surface2);border:1px solid var(--border)" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='var(--surface2)'">
+          <p class="text-sm font-medium" style="color:var(--text)">
+            <span class="uz">Stajirovkalar</span><span class="en">Explore Jobs</span>
+          </p>
+          <p class="text-xs mt-1" style="color:var(--muted)">
+            <span class="uz">Yangi imkoniyatlar</span><span class="en">Find new opportunities</span>
+          </p>
+        </button>
+        <button onclick="showSection('applications')" class="p-4 rounded-xl text-left transition" style="background:var(--surface2);border:1px solid var(--border)" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='var(--surface2)'">
+          <p class="text-sm font-medium" style="color:var(--text)">
+            <span class="uz">Arizalarim</span><span class="en">My Applications</span>
+          </p>
+          <p class="text-xs mt-1" style="color:var(--muted)">
+            <span class="uz">Progressni kuzatish</span><span class="en">Track progress</span>
+          </p>
+        </button>
+        <button onclick="showSection('profile')" class="p-4 rounded-xl text-left transition" style="background:var(--surface2);border:1px solid var(--border)" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='var(--surface2)'">
+          <p class="text-sm font-medium" style="color:var(--text)">
+            <span class="uz">Profil</span><span class="en">Update Profile</span>
+          </p>
+          <p class="text-xs mt-1" style="color:var(--muted)">
+            <span class="uz">Profil bahosini oshirish</span><span class="en">Improve your score</span>
+          </p>
+        </button>
+        <button onclick="showSection('saved')" class="p-4 rounded-xl text-left transition" style="background:var(--surface2);border:1px solid var(--border)" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='var(--surface2)'">
+          <p class="text-sm font-medium" style="color:var(--text)">
+            <span class="uz">Saqlangan</span><span class="en">Saved Jobs</span>
+          </p>
+          <p class="text-xs mt-1" style="color:var(--muted)">
+            <span class="uz">Keyinroq ko'rish</span><span class="en">Review later</span>
+          </p>
+        </button>
       </div>
-    </section>
+    </div>
+  </div>
+</section>

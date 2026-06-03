@@ -1,48 +1,41 @@
 {% extends "company/base.html" %}
-{% block title %}Post Internship{% endblock %}
+{% block title %}
+  <span class="uz">Vakansiya joylash</span><span class="en">Post Internship</span> — Internova
+{% endblock %}
 
 {% block content %}
+<div class="space-y-8 fade-up">
 
-<section id="post" class="page-section space-y-10">
-
-  <!-- HEADER -->
   <div>
-    <p class="text-blue-400 text-sm tracking-widest uppercase mb-3">
-      Post internship
+    <p class="text-xs tracking-widest uppercase mb-2" style="color:var(--muted)">
+      <span class="uz">Yangi vakansiya</span><span class="en">New Listing</span>
     </p>
-    <h1 class="text-4xl font-bold text-white">
-      Create a new internship
+    <h1 class="text-2xl sm:text-3xl font-bold" style="color:var(--text)">
+      <span class="uz">Stajirovka yoki ish e'lon qiling</span>
+      <span class="en">Post an Internship or Job</span>
     </h1>
-    <p class="text-gray-400 mt-3">
-      Publish a new internship or job opportunity for students.
-    </p>
   </div>
 
-  <!-- MESSAGE -->
-  <div id="form-message" class="hidden p-4 rounded-xl text-sm"></div>
+  <div id="form-message" class="hidden text-sm px-4 py-3 rounded-lg" style="border:1px solid var(--border)"></div>
 
-  <!-- CONTENT -->
-  <div class="grid lg:grid-cols-3 gap-8">
+  <div class="grid lg:grid-cols-3 gap-6">
 
-    <!-- FORM -->
-    <div class="lg:col-span-2 p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl">
-
-      <form id="internshipForm" class="space-y-6">
-
+    <div class="lg:col-span-2 card p-6 sm:p-8">
+      <form id="internshipForm" class="space-y-5">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-        <!-- TITLE + TYPE -->
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm text-gray-300 mb-2">Title</label>
-            <input type="text" name="title" required
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-blue-400 outline-none">
+            <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+              <span class="uz">Sarlavha</span><span class="en">Title</span>
+            </label>
+            <input type="text" name="title" required class="input">
           </div>
-
           <div>
-            <label class="block text-sm text-gray-300 mb-2">Internship Type</label>
-            <select name="internship_type"
-              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+            <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+              <span class="uz">Tur</span><span class="en">Type</span>
+            </label>
+            <select name="internship_type" class="input">
               <option value="Internship">Internship</option>
               <option value="Full-time">Full-time</option>
               <option value="Part-time">Part-time</option>
@@ -51,101 +44,104 @@
           </div>
         </div>
 
-        <!-- LOCATION + SALARY -->
-        <div class="grid md:grid-cols-2 gap-6">
-          <input type="text" name="location" placeholder="Location"
-            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
-
-          <input type="number" name="stipend" placeholder="Salary"
-            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+              <span class="uz">Joylashuv</span><span class="en">Location</span>
+            </label>
+            <input type="text" name="location" placeholder="Tashkent" class="input">
+          </div>
+          <div>
+            <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+              <span class="uz">Maosh / Stipendiya</span><span class="en">Stipend / Salary</span>
+            </label>
+            <input type="number" name="stipend" placeholder="0" class="input">
+          </div>
         </div>
 
-        <!-- DURATION + DEADLINE -->
-        <div class="grid md:grid-cols-2 gap-6">
-          <input type="text" name="duration" placeholder="Duration"
-            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
-
-          <input type="date" name="deadline"
-            class="px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+              <span class="uz">Muddati</span><span class="en">Duration</span>
+            </label>
+            <input type="text" name="duration" placeholder="3 months" class="input">
+          </div>
+          <div>
+            <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+              <span class="uz">Ariza tugash sanasi</span><span class="en">Deadline</span>
+            </label>
+            <input type="date" name="deadline" class="input">
+          </div>
         </div>
 
-        <!-- SKILLS -->
-        <input type="text" name="skills" placeholder="Skills"
-          class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Ko'nikmalar</span><span class="en">Skills Required</span>
+          </label>
+          <input type="text" name="skills" placeholder="Python, Excel, Figma..." class="input">
+        </div>
 
-        <!-- DESCRIPTION -->
-        <textarea name="description" rows="5" required
-          class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10"
-          placeholder="Description..."></textarea>
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Tavsif</span><span class="en">Description</span>
+          </label>
+          <textarea name="description" rows="5" required class="input"
+            placeholder="Describe the role, responsibilities, requirements..."></textarea>
+        </div>
 
-        <!-- BUTTON -->
-        <button id="submitBtn" type="submit"
-          class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white w-full">
-          🚀 Publish Internship
+        <button id="submitBtn" type="submit" class="btn btn-primary w-full py-3">
+          <span class="uz">E'lon qilish</span><span class="en">Post Internship</span>
         </button>
-
       </form>
     </div>
 
-    <!-- SIDEBAR -->
-    <div class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl h-fit shadow-xl">
-      <h3 class="text-xl font-semibold text-white mb-4">💡 Tips</h3>
-      <ul class="text-gray-300 space-y-2 text-sm">
-        <li>✔ Clear title</li>
-        <li>✔ Add skills</li>
-        <li>✔ Short description</li>
-        <li>✔ Add salary</li>
+    <div class="card p-6 h-fit">
+      <h3 class="font-semibold mb-4" style="color:var(--text)">
+        <span class="uz">Maslahatlar</span><span class="en">Tips</span>
+      </h3>
+      <ul class="space-y-2 text-sm" style="color:var(--muted)">
+        <li class="uz">✓ Aniq sarlavha yozing</li>
+        <li class="uz">✓ Kerakli ko'nikmalarni kiriting</li>
+        <li class="uz">✓ Qisqa va tushunarli tavsif</li>
+        <li class="uz">✓ Maoshni ko'rsating</li>
+        <li class="en">✓ Write a clear, specific title</li>
+        <li class="en">✓ List required skills clearly</li>
+        <li class="en">✓ Keep description concise</li>
+        <li class="en">✓ Include compensation info</li>
       </ul>
     </div>
 
   </div>
+</div>
 
-</section>
-
-<!-- ✅ AJAX SCRIPT -->
 <script>
-const form = document.getElementById("internshipForm");
-const messageBox = document.getElementById("form-message");
-const btn = document.getElementById("submitBtn");
+const form       = document.getElementById('internshipForm');
+const messageBox = document.getElementById('form-message');
+const btn        = document.getElementById('submitBtn');
 
-form.addEventListener("submit", async (e) => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
-
-  btn.innerText = "⏳ Posting...";
   btn.disabled = true;
-
-  const formData = new FormData(form);
-
+  btn.textContent = '...';
+  const fd = new FormData(form);
   try {
-    const res = await fetch("/company/internships/create", {
-      method: "POST",
-      body: formData,
-      headers: {
-        "X-CSRFToken": formData.get("csrf_token")
-      }
+    const res  = await fetch('/company/internships/create', {
+      method: 'POST', body: fd,
+      headers: { 'X-CSRFToken': fd.get('csrf_token') }
     });
-
     const data = await res.json();
-
-    if (data.status === "success") {
-      messageBox.className = "p-4 rounded-xl bg-green-500/20 text-green-300";
-      form.reset();
-    } else {
-      messageBox.className = "p-4 rounded-xl bg-red-500/20 text-red-300";
-    }
-
-    messageBox.innerText = data.message;
-    messageBox.classList.remove("hidden");
-
-  } catch (err) {
-    messageBox.className = "p-4 rounded-xl bg-red-500/20 text-red-300";
-    messageBox.innerText = "Server error";
-    messageBox.classList.remove("hidden");
+    messageBox.className = `text-sm px-4 py-3 rounded-lg ${data.status === 'success' ? 'badge-success' : 'badge-danger'}`;
+    messageBox.style.border = '1px solid var(--border)';
+    messageBox.textContent = data.message;
+    messageBox.classList.remove('hidden');
+    if (data.status === 'success') form.reset();
+  } catch {
+    messageBox.className = 'badge-danger text-sm px-4 py-3 rounded-lg';
+    messageBox.textContent = 'Server error. Please try again.';
+    messageBox.classList.remove('hidden');
   }
-
-  btn.innerText = "🚀 Publish Internship";
   btn.disabled = false;
+  btn.innerHTML = '<span class="uz">E\'lon qilish</span><span class="en">Post Internship</span>';
 });
 </script>
-
 {% endblock %}

@@ -1,21 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{% block title %}Internova{% endblock %}</title>
+  <link rel="stylesheet" href="/static/internova.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] text-gray-200">
+<body>
+  <div id="toast-container"></div>
 
   {% include "student/components/navbar.html" %}
 
-  <main class="max-w-7xl mx-auto px-6 py-10">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     {% block content %}{% endblock %}
   </main>
 
   {% include "student/components/footer.html" %}
 
+  <script>
+    /* ---- INIT ---- */
+    (function() {
+      const t = localStorage.getItem('theme') || 'dark';
+      const l = localStorage.getItem('lang') || 'uz';
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-lang', l);
+      document.documentElement.setAttribute('lang', l);
+    })();
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+    function getCSRF() { return csrfToken; }
+
+    function toast(msg, type = 'info') {
+      const c = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = `toast toast-${type}`;
+      el.textContent = msg;
+      c.appendChild(el);
+      setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(1rem)'; setTimeout(() => el.remove(), 320); }, 3800);
+    }
+
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.querySelectorAll('[data-theme-icon]').forEach(el => {
+        el.textContent = next === 'dark' ? '☀️' : '🌙';
+      });
+    }
+
+    function toggleLang() {
+      const cur = document.documentElement.getAttribute('data-lang') || 'uz';
+      const next = cur === 'uz' ? 'en' : 'uz';
+      document.documentElement.setAttribute('data-lang', next);
+      document.documentElement.setAttribute('lang', next);
+      localStorage.setItem('lang', next);
+    }
+
+    function showMessage(el, text, isError = false) {
+      if (!el) return;
+      el.textContent = text;
+      el.className = isError ? 'text-sm mt-2 text-red-400' : 'text-sm mt-2 text-green-400';
+      setTimeout(() => { el.textContent = ''; }, 5000);
+    }
+  </script>
+
+  {% block scripts %}{% endblock %}
 </body>
 </html>
