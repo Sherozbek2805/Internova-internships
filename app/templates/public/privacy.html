@@ -1,84 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy - Internova</title>
+  <title>Privacy Policy — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
 </head>
+<body>
 
-<body class="text-white bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
+<header class="site-header">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/static/logo.png" alt="Internova" class="w-7 h-7 object-contain">
+      <span class="font-semibold text-sm" style="color:var(--text)">Internova</span>
+    </a>
+    <div class="flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <button onclick="window.history.back()" class="btn btn-ghost text-xs">← <span class="uz">Orqaga</span><span class="en">Back</span></button>
+    </div>
+  </div>
+</header>
 
-<button onclick="window.history.back()"
-  class="fixed top-6 left-6 z-50 w-11 h-11 flex items-center justify-center
-         rounded-full bg-white/10 backdrop-blur-md border border-white/20
-         text-white shadow-lg
-         hover:bg-white/20 hover:scale-105 active:scale-95
-         transition-all duration-200">
+<main class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
 
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-       fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15 19l-7-7 7-7" />
-  </svg>
-</button>
+  <h1 class="text-3xl sm:text-4xl font-bold mb-10" style="color:var(--text)">Privacy Policy</h1>
 
-<section class="max-w-4xl mx-auto px-6 py-20">
+  <div class="space-y-8 text-sm leading-relaxed" style="color:var(--muted)">
 
-  <h1 class="text-5xl font-bold mb-10">
-    Privacy 
-    <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-      Policy
-    </span>
-  </h1>
-
-  <div class="space-y-8 text-gray-300 leading-relaxed">
-
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-2">1. Information We Collect</h2>
-      <p>
-        We collect personal information such as name, email, and profile data when you register or use our platform.
-      </p>
+    <div class="card p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">1. Information We Collect</h2>
+      <p>We collect personal information such as name, email, and profile data when you register or use our platform.</p>
     </div>
 
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-2">2. How We Use Information</h2>
-      <p>
-        Your information is used to provide services, improve user experience, and connect students with companies.
-      </p>
+    <div class="card p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">2. How We Use Information</h2>
+      <p>Your information is used to provide services, improve user experience, and connect students with companies.</p>
     </div>
 
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-2">3. Data Protection</h2>
-      <p>
-        We use industry-standard security measures to protect your data from unauthorized access.
-      </p>
+    <div class="card p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">3. Data Protection</h2>
+      <p>We use industry-standard security measures to protect your data from unauthorized access.</p>
     </div>
 
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-2">4. Sharing Information</h2>
-      <p>
-        We do not sell your data. Information may be shared with companies only when you apply for internships.
-      </p>
+    <div class="card p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">4. Sharing Information</h2>
+      <p>We do not sell your data. Information may be shared with companies only when you apply for internships.</p>
     </div>
 
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-2">5. Cookies</h2>
-      <p>
-        We use cookies to enhance your experience and analyze usage patterns.
-      </p>
+    <div class="card p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">5. Cookies</h2>
+      <p>We use cookies to enhance your experience and analyze usage patterns.</p>
     </div>
 
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-2">6. Changes</h2>
-      <p>
-        We may update this policy occasionally. Continued use means acceptance of updates.
-      </p>
+    <div class="card p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">6. Changes</h2>
+      <p>We may update this policy occasionally. Continued use means acceptance of updates.</p>
     </div>
 
   </div>
 
-</section>
+</main>
 
+<footer style="border-top:1px solid var(--border)">
+  <div class="max-w-4xl mx-auto px-6 py-5 flex justify-between text-sm" style="color:var(--muted)">
+    <span>© 2026 Internova</span>
+    <a href="/terms">Terms of Service</a>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('theme', n);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = n === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const n = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', n);
+    localStorage.setItem('lang', n);
+  }
+</script>
 </body>
 </html>

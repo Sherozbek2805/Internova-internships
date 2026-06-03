@@ -1,123 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAQ - Internova</title>
+  <title>FAQ — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
+  <style>
+    details summary { list-style: none; cursor: pointer; }
+    details summary::-webkit-details-marker { display: none; }
+    details[open] .faq-icon { transform: rotate(180deg); }
+    .faq-icon { transition: transform 0.2s; }
+    details[open] { border-color: var(--border2); }
+  </style>
 </head>
+<body>
 
-<body class="text-white bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
+<header class="site-header">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/static/logo.png" alt="Internova" class="w-7 h-7 object-contain">
+      <span class="font-semibold text-sm" style="color:var(--text)">Internova</span>
+    </a>
+    <div class="flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <button onclick="window.history.back()" class="btn btn-ghost text-xs">← <span class="uz">Orqaga</span><span class="en">Back</span></button>
+    </div>
+  </div>
+</header>
 
-<button onclick="window.history.back()"
-  class="fixed top-6 left-6 z-50 w-11 h-11 flex items-center justify-center
-         rounded-full bg-white/10 backdrop-blur-md border border-white/20
-         text-white shadow-lg
-         hover:bg-white/20 hover:scale-105 active:scale-95
-         transition-all duration-200">
+<main class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
 
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-       fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15 19l-7-7 7-7" />
-  </svg>
-</button>
+  <h1 class="text-4xl sm:text-5xl font-bold mb-3" style="color:var(--text)">FAQ</h1>
+  <p class="mb-12" style="color:var(--muted)">
+    <span class="uz">Ko'p so'raladigan savollar</span>
+    <span class="en">Frequently asked questions</span>
+  </p>
 
-<section class="max-w-4xl mx-auto px-6 py-20">
+  <div class="space-y-3">
 
-  <h1 class="text-5xl font-bold mb-12">
-    Frequently Asked 
-    <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-      Questions
-    </span>
-  </h1>
+    {% set faqs_uz = [
+      ("Internova nima?", "Internova talabalarni stajirovkalar va vakansiyalar bilan birlashtiruvchi platform. Kompaniyalar uchun esa iqtidorli yoshlarni topish imkoniyati."),
+      ("Kim foydalanishi mumkin?", "Talabalar, bitiruvchilar va stajyor qidiruvchi har qanday kompaniyalar."),
+      ("Internova bepulmi?", "Ha — talabalar uchun to'liq bepul. Kompaniyalar uchun kelajakda premium imkoniyatlar bo'lishi mumkin."),
+      ("Stajirovkaga qanday ariza topshiraman?", "Akkaunt yarating, vakansiyalarni ko'rib chiqing va bitta tugma bilan ariza topshiring."),
+      ("Arizalarimni kuzatish mumkinmi?", "Ha — shaxsiy kabinentingizdan barcha arizalaringiz holatini ko'rishingiz mumkin."),
+      ("Kompaniya qanday ro'yxatdan o'tadi?", "Kompaniya sifatida ro'yxatdan o'ting, profil to'ldiring va vakansiyalarni joylashtirishni boshlang.")
+    ] %}
 
-  <div class="space-y-5">
+    {% set faqs_en = [
+      ("What is Internova?", "Internova is a platform that connects students with internships and helps companies find young talent efficiently."),
+      ("Who can use Internova?", "Students, graduates, and companies looking for interns can all use Internova."),
+      ("Is Internova free?", "Yes — students can use it completely free. Companies may have premium features in the future."),
+      ("How do I apply for internships?", "Create an account, browse listings, and apply with a single click."),
+      ("Can I track my applications?", "Yes — your dashboard shows the status of every application you've submitted."),
+      ("How does a company sign up?", "Register as a company, fill in your profile, and start posting internship listings right away.")
+    ] %}
 
-    <!-- FAQ ITEM -->
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        What is Internova?
-        <span class="group-open:rotate-180 transition">⌄</span>
+    {% for q, a in faqs_uz %}
+    <details class="card p-5">
+      <summary class="flex justify-between items-center font-medium" style="color:var(--text)">
+        <span class="uz">{{ q }}</span>
+        <span class="faq-icon" style="color:var(--muted)">↓</span>
       </summary>
-      <p class="text-gray-300 mt-3">
-        Internova is a platform connecting students with internships and helping companies find young talent efficiently.
-      </p>
+      <p class="mt-3 text-sm leading-relaxed uz" style="color:var(--muted)">{{ a }}</p>
     </details>
+    {% endfor %}
 
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        Who can use Internova?
-        <span class="group-open:rotate-180 transition">⌄</span>
+    {% for q, a in faqs_en %}
+    <details class="card p-5">
+      <summary class="flex justify-between items-center font-medium" style="color:var(--text)">
+        <span class="en">{{ q }}</span>
+        <span class="faq-icon" style="color:var(--muted)">↓</span>
       </summary>
-      <p class="text-gray-300 mt-3">
-        Students, graduates, and companies looking for interns can all use Internova.
-      </p>
+      <p class="mt-3 text-sm leading-relaxed en" style="color:var(--muted)">{{ a }}</p>
     </details>
-
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        Is Internova free?
-        <span class="group-open:rotate-180 transition">⌄</span>
-      </summary>
-      <p class="text-gray-300 mt-3">
-        Yes — students can use it completely free. Companies may have premium features later.
-      </p>
-    </details>
-
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        How do I apply for internships?
-        <span class="group-open:rotate-180 transition">⌄</span>
-      </summary>
-      <p class="text-gray-300 mt-3">
-        Create an account, browse listings, and apply with a single click.
-      </p>
-    </details>
-
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        Can I track my applications?
-        <span class="group-open:rotate-180 transition">⌄</span>
-      </summary>
-      <p class="text-gray-300 mt-3">
-        Yes — your dashboard shows status updates like reviewing, shortlisted, or accepted.
-      </p>
-    </details>
-
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        How do companies select candidates?
-        <span class="group-open:rotate-180 transition">⌄</span>
-      </summary>
-      <p class="text-gray-300 mt-3">
-        Companies can filter candidates, review profiles, and shortlist the best matches.
-      </p>
-    </details>
-
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        Is my data secure?
-        <span class="group-open:rotate-180 transition">⌄</span>
-      </summary>
-      <p class="text-gray-300 mt-3">
-        Absolutely. We prioritize user privacy and use secure systems to protect your data.
-      </p>
-    </details>
-
-    <details class="group p-5 rounded-xl bg-white/10 border border-white/20 backdrop-blur">
-      <summary class="flex justify-between items-center cursor-pointer font-semibold text-lg">
-        Can I post internships as a company?
-        <span class="group-open:rotate-180 transition">⌄</span>
-      </summary>
-      <p class="text-gray-300 mt-3">
-        Yes — companies can create listings and manage applicants easily.
-      </p>
-    </details>
+    {% endfor %}
 
   </div>
 
-</section>
+  <div class="card p-6 mt-10 text-center">
+    <p class="mb-3" style="color:var(--muted)">
+      <span class="uz">Javob topa olmadingizmi?</span>
+      <span class="en">Couldn't find your answer?</span>
+    </p>
+    <a href="/contact" class="btn btn-primary">
+      <span class="uz">Biz bilan bog'laning</span><span class="en">Contact us</span>
+    </a>
+  </div>
 
+</main>
+
+<footer class="mt-8" style="border-top:1px solid var(--border)">
+  <div class="max-w-5xl mx-auto px-6 py-5 flex justify-between text-sm" style="color:var(--muted)">
+    <span>© 2026 Internova</span>
+    <div class="flex gap-4">
+      <a href="/privacy"><span class="uz">Maxfiylik</span><span class="en">Privacy</span></a>
+      <a href="/terms"><span class="uz">Shartlar</span><span class="en">Terms</span></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = next === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const next = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', next);
+    localStorage.setItem('lang', next);
+  }
+</script>
 </body>
 </html>

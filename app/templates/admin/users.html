@@ -1,303 +1,65 @@
-{% extends "admin/base.html" %} {% block content %}
+{% extends "admin/base.html" %}
+{% block content %}
 
-<section id="users" class="page fade-up">
-  <!-- HEADER -->
-  <div
-    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
-  >
-    <div>
-      <h1 class="text-3xl font-semibold">Foydalanuvchilar</h1>
-      <p class="text-gray-400 text-sm mt-2">
-        Barcha foydalanuvchilar ro‘yxati va admin boshqaruvi.
-      </p>
-    </div>
+<div class="space-y-6 fade-up">
+
+  <div>
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">Foydalanuvchilar</h1>
+    <p class="text-sm mt-1" style="color:var(--muted)">Barcha foydalanuvchilar ro'yxati va admin boshqaruvi.</p>
   </div>
 
-  <!-- TABLE CONTAINER -->
-  <div
-    class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl"
-  >
-    <table class="w-full text-sm">
-      <!-- TABLE HEADER -->
-      <thead class="border-b border-white/10 text-gray-400">
+  <div class="card overflow-x-auto">
+    <table class="table-std">
+      <thead>
         <tr>
-          <th class="text-left py-4 px-4">ID</th>
-          <th class="text-left py-4 px-4">Ism</th>
-          <th class="text-left py-4 px-4">Email</th>
-          <th class="text-left py-4 px-4">Rol</th>
-          <th class="text-left py-4 px-4">Holat</th>
-          <th class="text-left py-4 px-4">Amal</th>
+          <th>ID</th>
+          <th>Ism</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Holat</th>
+          <th>Amal</th>
         </tr>
       </thead>
-
-      <!-- TABLE BODY -->
       <tbody>
         {% for user in users %}
-        <tr
-          class="border-b border-white/5 hover:bg-white/5 transition duration-200"
-        >
-          <!-- ID -->
-          <td class="py-4 px-4 text-gray-300">#{{ user.id }}</td>
-
-          <!-- NAME -->
-          <td class="py-4 px-4 font-semibold text-white">{{ user.name }}</td>
-
-          <!-- EMAIL -->
-          <td class="py-4 px-4 text-gray-300">{{ user.email }}</td>
-
-          <!-- ROLE -->
-          <td class="py-4 px-4">
-            <span
-              class="px-3 py-1 rounded-full text-xs {% if user.role == 'admin' %} bg-purple-500/20 text-purple-300 {% else %} bg-blue-500/20 text-blue-300 {% endif %}"
-            >
+        <tr>
+          <td style="color:var(--muted)">#{{ user.id }}</td>
+          <td class="font-medium" style="color:var(--text)">{{ user.name }}</td>
+          <td style="color:var(--muted)">{{ user.email }}</td>
+          <td>
+            <span class="badge {% if user.role == 'admin' %}badge-info{% else %}badge-neutral{% endif %}">
               {{ user.role }}
             </span>
           </td>
-
-          <!-- STATUS -->
-          <td class="py-4 px-4">
+          <td>
             {% if user.banned %}
-            <span
-              class="px-3 py-1 rounded-full text-xs bg-red-500/20 text-red-400"
-            >
-              Bloklangan
-            </span>
+              <span class="badge badge-danger">Bloklangan</span>
             {% else %}
-            <span
-              class="px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-400"
-            >
-              Faol
-            </span>
+              <span class="badge badge-success">Faol</span>
             {% endif %}
           </td>
-
-          <!-- ACTIONS -->
-          <td class="py-4 px-4">
-            {% if user.role != "admin" %} {% if user.banned %}
-            <form
-              method="POST"
-              data-ajax
-              action="{{ url_for('admin.unban_user', user_id=user.id) }}"
-            >
-              <input
-                type="hidden"
-                name="csrf_token"
-                value="{{ csrf_token() }}"
-              />
-              <button
-                type="submit"
-                class="px-4 py-2 rounded-lg bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 transition"
-              >
-                Tiklash
-              </button>
-            </form>
+          <td>
+            {% if user.banned %}
+              <form method="POST" action="{{ url_for('admin.unban_user', user_id=user.id) }}" data-ajax>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-ghost text-xs">Tiklash</button>
+              </form>
             {% else %}
-            <form
-              method="POST"
-              data-ajax
-              action="{{ url_for('admin.ban_user', user_id=user.id) }}"
-            >
-              <input
-                type="hidden"
-                name="csrf_token"
-                value="{{ csrf_token() }}"
-              />
-              <button
-                type="submit"
-                class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition"
-              >
-                Bloklash
-              </button>
-            </form>
-            {% endif %} {% else %}
-            <span class="text-gray-500 text-sm"> Himoyalangan </span>
+              <form method="POST" action="{{ url_for('admin.ban_user', user_id=user.id) }}" data-ajax>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-danger text-xs">Bloklash</button>
+              </form>
             {% endif %}
           </td>
         </tr>
-
         {% else %}
-        <!-- EMPTY STATE -->
         <tr>
-          <td colspan="6" class="py-10 text-center text-gray-400">
-            Foydalanuvchilar topilmadi.
-          </td>
+          <td colspan="6" class="text-center py-8" style="color:var(--muted)">Foydalanuvchilar topilmadi.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <!-- WAITLIST SECTION -->
-  <div class="mt-12">
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h2 class="text-2xl font-semibold">Waitlist Foydalanuvchilar</h2>
-        <p class="text-gray-400 text-sm mt-1">
-          Waitlist'ga qo‘shilgan talabalar ro‘yxati.
-        </p>
-      </div>
-    </div>
-
-    <div
-      class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl"
-    >
-      <table class="w-full text-sm">
-        <thead class="border-b border-white/10 text-gray-400">
-          <tr>
-            <th class="text-left py-4 px-4">ID</th>
-            <th class="text-left py-4 px-4">Ism</th>
-            <th class="text-left py-4 px-4">Email</th>
-            <th class="text-left py-4 px-4">Telefon</th>
-            <th class="text-left py-4 px-4">Sana</th>
-            <th class="text-left py-4 px-4">Amal</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for user in waitlist_users %}
-          <tr
-            class="border-b border-white/5 hover:bg-white/5 transition duration-200"
-          >
-            <td class="py-4 px-4 text-gray-300">#{{ user.id }}</td>
-            <td class="py-4 px-4 font-semibold text-white">{{ user.name }}</td>
-            <td class="py-4 px-4 text-gray-300">{{ user.email }}</td>
-            <td class="py-4 px-4 text-gray-300">{{ user.phone or '-' }}</td>
-            <td class="py-4 px-4 text-gray-400 text-sm">
-              {{ user.created_at.strftime('%d.%m.%Y') if user.created_at else
-              '-' }}
-            </td>
-            <td class="py-4 px-4">
-              <button
-                type="button"
-                onclick="openModal('{{ user.id }}')"
-                class="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition"
-              >
-                View Info
-              </button>
-            </td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="6" class="py-10 text-center text-gray-400">
-              Waitlist foydalanuvchilar topilmadi.
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-<script>
-  function openModal(id) {
-    const modal = document.getElementById(`modal-${id}`);
-    modal.style.display = "block";
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeModal(id) {
-    const modal = document.getElementById(`modal-${id}`);
-    modal.style.display = "none";
-    document.body.style.overflow = "";
-  }
-
-  window.addEventListener("click", function (e) {
-    document.querySelectorAll("[id^='modal-']").forEach((modal) => {
-      if (e.target === modal) {
-        modal.style.display = "none";
-        document.body.style.overflow = "";
-      }
-    });
-  });
-</script>
-</section>
-
-<!-- MODALS -->
-{% for user in waitlist_users %}
-<div
-  id="modal-{{ user.id }}"
-  class="fixed inset-0 hidden z-[99999] bg-black/80 backdrop-blur-sm"
->
-  <div class="absolute inset-0 flex items-center justify-center p-6">
-    <div
-      class="relative w-full max-w-2xl rounded-[32px] border border-white/10 bg-[#111827] shadow-2xl overflow-hidden"
-    >
-      <div class="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-
-      <button
-        type="button"
-        onclick="closeModal('{{ user.id }}')"
-        class="absolute top-5 right-5 z-20 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition flex items-center justify-center text-xl"
-      >
-        &times;
-      </button>
-
-      <div class="p-8">
-        <div class="flex items-center gap-4 mb-8">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center text-2xl font-bold text-white">
-            {{ user.name[0] }}
-          </div>
-
-          <div>
-            <h2 class="text-2xl font-semibold text-white">
-              {{ user.name }}
-            </h2>
-            <p class="text-sm text-gray-400 mt-1">
-              Waitlist foydalanuvchi ma'lumotlari
-            </p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
-            <div class="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Email
-            </div>
-            <div class="text-white break-all text-sm">
-              {{ user.email }}
-            </div>
-          </div>
-
-          <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
-            <div class="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Telefon
-            </div>
-            <div class="text-white text-sm">
-              {{ user.phone or 'Kiritilmagan' }}
-            </div>
-          </div>
-
-          <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
-            <div class="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Telegram
-            </div>
-            <div class="text-white text-sm">
-              {{ user.telegram or 'Kiritilmagan' }}
-            </div>
-          </div>
-
-          <div class="rounded-2xl bg-white/5 border border-white/10 p-5">
-            <div class="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Maktab
-            </div>
-            <div class="text-white text-sm">
-              {{ user.school or 'Kiritilmagan' }}
-            </div>
-          </div>
-
-          <div class="rounded-2xl bg-white/5 border border-white/10 p-5 md:col-span-2">
-            <div class="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Qo‘shilgan sana
-            </div>
-            <div class="text-white text-sm">
-              {{ user.created_at.strftime('%d.%m.%Y %H:%M') if user.created_at else '-' }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
-{% endfor %}
-
 {% endblock %}

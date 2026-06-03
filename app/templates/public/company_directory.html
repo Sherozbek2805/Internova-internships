@@ -1,85 +1,66 @@
 {% extends "public/base.html" %}
-
 {% block content %}
 
-<section class="max-w-7xl mx-auto px-6 py-16">
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16">
 
-  <!-- HEADER -->
-  <div class="text-center mb-14">
-
-    <h1 class="text-5xl font-bold text-white">
-      Companies
+  <div class="text-center mb-12">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-3" style="color:var(--text)">
+      <span class="uz">Kompaniyalar</span><span class="en">Companies</span>
     </h1>
-
-    <p class="text-gray-400 mt-4 text-lg">
-      Find companies and access internship applicant portals.
+    <p style="color:var(--muted)">
+      <span class="uz">Kompaniyalarni toping va portallarga kiring.</span>
+      <span class="en">Browse companies and access their portals.</span>
     </p>
-
-  </div>
-
-  <!-- GRID -->
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-    {% for company in companies %}
-
-    <div class="rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl p-8 hover:bg-white/10 transition">
-
-      <!-- LOGO -->
-      {% if company.logo_url %}
-
-      <img
-        src="{{ company.logo_url }}"
-        class="w-16 h-16 rounded-2xl object-cover mb-5"
-      >
-
-      {% endif %}
-
-      <!-- NAME -->
-      <h2 class="text-2xl font-semibold text-white">
-        {{ company.name }}
-      </h2>
-
-      <!-- INDUSTRY -->
-      <p class="text-blue-400 text-sm mt-2">
-        {{ company.industry or "Company" }}
-      </p>
-
-      <!-- DESCRIPTION -->
-      <p class="text-gray-400 text-sm mt-4 line-clamp-4">
-        {{ company.description or "No description available." }}
-      </p>
-
-      <!-- WEBSITE -->
-      {% if company.website %}
-
-      <a
-        href="{{ company.website }}"
-        target="_blank"
-        class="inline-block mt-4 text-blue-400 hover:underline text-sm"
-      >
-        Visit Website
-      </a>
-
-      {% endif %}
-
-      <!-- BUTTON -->
-      <div class="mt-8">
-
-        <a
-          href="/companies/{{ company.id }}"
-          class="inline-flex items-center justify-center w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:scale-[1.02] transition"
-        >
-          Open Portal
-        </a>
-
-      </div>
-
+    <div class="flex justify-center gap-2 mt-4">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
     </div>
-
-    {% endfor %}
-
   </div>
 
-</section>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for company in companies %}
+    <div class="card p-6 flex flex-col">
 
+      {% if company.logo_url %}
+        <img src="{{ company.logo_url }}" class="w-14 h-14 rounded-xl object-cover mb-4">
+      {% else %}
+        <div class="avatar w-14 h-14 text-xl font-bold mb-4" style="background:var(--surface3)">
+          {{ company.name[0]|upper }}
+        </div>
+      {% endif %}
+
+      <h2 class="font-semibold text-base mb-1" style="color:var(--text)">{{ company.name }}</h2>
+      <p class="text-xs mb-3" style="color:var(--muted)">{{ company.industry or 'Company' }}</p>
+      <p class="text-sm mb-4 leading-relaxed line-clamp-3 flex-1" style="color:var(--muted)">
+        {{ company.description or 'No description available.' }}
+      </p>
+
+      {% if company.website %}
+        <a href="{{ company.website }}" target="_blank" class="text-xs mb-3" style="color:var(--muted);text-decoration:underline">
+          <span class="uz">Vebsayt</span><span class="en">Website</span> →
+        </a>
+      {% endif %}
+
+      <a href="/companies/{{ company.id }}" class="btn btn-primary w-full text-center text-sm mt-auto">
+        <span class="uz">Portalga kirish</span><span class="en">Open Portal</span>
+      </a>
+    </div>
+    {% else %}
+    <div class="col-span-full card p-10 text-center" style="color:var(--muted)">
+      <span class="uz">Kompaniyalar topilmadi.</span><span class="en">No companies found.</span>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script>
+  (function(){
+    const t=localStorage.getItem('theme')||'dark';
+    document.documentElement.setAttribute('data-theme',t);
+    document.querySelectorAll('[data-theme-icon]').forEach(el=>el.textContent=t==='dark'?'☀️':'🌙');
+  })();
+  function toggleTheme(){const n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('theme',n);document.querySelectorAll('[data-theme-icon]').forEach(el=>el.textContent=n==='dark'?'☀️':'🌙');}
+  function toggleLang(){const n=document.documentElement.getAttribute('data-lang')==='uz'?'en':'uz';document.documentElement.setAttribute('data-lang',n);localStorage.setItem('lang',n);}
+</script>
 {% endblock %}

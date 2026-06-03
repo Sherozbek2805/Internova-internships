@@ -1,176 +1,82 @@
-{% extends "admin/base.html" %} {% block content %}
+{% extends "admin/base.html" %}
+{% block content %}
 
-<section id="companies" class="page fade-up">
-  <!-- HEADER -->
-  <div
-    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
-  >
-    <div>
-      <h1 class="text-3xl font-semibold">Kompaniyalar</h1>
-      <p class="text-gray-400 text-sm mt-2">
-        Platformadagi barcha kompaniyalar ro‘yxati.
-      </p>
-    </div>
+<div class="space-y-6 fade-up">
+
+  <div>
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">Kompaniyalar</h1>
+    <p class="text-sm mt-1" style="color:var(--muted)">Platformadagi barcha kompaniyalar ro'yxati.</p>
   </div>
 
-  <!-- COMPANY LIST -->
-  <div class="grid gap-6">
+  <div class="space-y-4">
     {% for c in companies %}
-    <div
-      class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 transition hover:bg-white/10"
-    >
-      <div
-        class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
-      >
-        <!-- LEFT INFO -->
-        <div>
-          <h2 class="text-xl font-semibold text-white">{{ c.name }}</h2>
-          <form
-            method="POST"
-            action="{{ url_for('admin.generate_company_code', company_id=c.id) }}"
-            data-ajax
-          >
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="card p-6">
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
 
-            <button
-              type="submit"
-              class="mt-3 px-4 py-2 rounded-xl bg-blue-500/20 border border-blue-500/30 text-blue-300 hover:bg-blue-500/30 transition"
-            >
-              Generate New Code
-            </button>
-          </form>
+        <!-- Left info -->
+        <div class="flex-1 min-w-0">
+          <h2 class="font-semibold text-lg mb-2" style="color:var(--text)">{{ c.name }}</h2>
 
-          {% if c.access_code %}
-
-          <div class="mt-3">
-            <p class="text-sm text-green-400 mb-2">Access Code</p>
-
-            <div
-              class="flex items-center gap-2 bg-black/30 border border-white/10 rounded-2xl p-2"
-            >
-              <!-- CODE -->
-              <code
-                id="code-{{ c.id }}"
-                class="flex-1 font-mono text-green-300 text-sm break-all"
-              >
-                {{ c.access_code }}
-              </code>
-
-              <!-- COPY BUTTON -->
-              <button
-                type="button"
-                onclick="copyCode('{{ c.id }}')"
-                class="px-3 py-2 rounded-xl bg-blue-500/20 border border-blue-500/30 text-blue-300 hover:bg-blue-500/30 transition text-sm"
-              >
-                Copy
-              </button>
-            </div>
+          <div class="flex flex-wrap gap-3 text-sm mb-3" style="color:var(--muted)">
+            <span>📧 {{ c.owner_email or '—' }}</span>
+            <span>📞 {{ c.phone1 or '—' }}</span>
+            <span>👤 {{ c.owner_name or '—' }}</span>
+            {% if c.website %}
+              <a href="{{ c.website }}" target="_blank" style="color:var(--text);text-decoration:underline">🌐 {{ c.website }}</a>
+            {% endif %}
           </div>
 
-          {% endif %}
-
-          <p class="text-sm text-gray-400 mt-2">
-            Email: {{ c.owner_email or '—' }}
-          </p>
-
-          <p class="text-sm text-gray-400">Telefon: {{ c.phone1 or '—' }}</p>
-
-          <p class="text-sm text-gray-400">
-            Website: {% if c.website %}
-            <a
-              href="{{ c.website }}"
-              target="_blank"
-              class="text-blue-400 hover:underline"
-            >
-              {{ c.website }}
-            </a>
-            {% else %} — {% endif %}
-          </p>
-
-          <p class="text-sm text-gray-400">Egasi: {{ c.owner_name or '—' }}</p>
-
           {% if c.description %}
-          <p class="text-sm text-gray-400 mt-3">{{ c.description }}</p>
+            <p class="text-sm" style="color:var(--muted)">{{ c.description }}</p>
           {% endif %}
+
+          <!-- Access code -->
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <form method="POST" action="{{ url_for('admin.generate_company_code', company_id=c.id) }}" data-ajax>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-ghost text-xs">Generate Code</button>
+            </form>
+
+            {% if c.access_code %}
+              <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-mono" style="background:var(--surface2);border:1px solid var(--border)">
+                <code id="code-{{ c.id }}" style="color:#86efac">{{ c.access_code }}</code>
+                <button type="button" onclick="copyCode('{{ c.id }}')" class="btn btn-ghost text-xs" style="padding:0.2rem 0.5rem">Copy</button>
+              </div>
+            {% endif %}
+          </div>
         </div>
-        <!-- RIGHT STATUS / ACTION -->
-        <div class="flex flex-col items-start lg:items-end gap-3">
+
+        <!-- Right: status + action -->
+        <div class="flex flex-row lg:flex-col items-center lg:items-end gap-3 flex-shrink-0">
           {% if c.verified %}
-
-          <!-- STATUS -->
-          <span
-            class="px-3 py-1 rounded-full text-sm bg-green-500/10 border border-green-500/20 text-green-300"
-          >
-            Tasdiqlangan
-          </span>
-
-          <!-- STOP (UNVERIFY) -->
-          <form
-            method="POST"
-            data-ajax
-            action="{{ url_for('admin.unverify_company', company_id=c.id) }}"
-          >
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-            <button
-              type="submit"
-              class="px-4 py-2 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 transition"
-            >
-              To‘xtatish
-            </button>
-          </form>
-
+            <span class="badge badge-success" data-status>Tasdiqlangan</span>
+            <form method="POST" action="{{ url_for('admin.unverify_company', company_id=c.id) }}" data-ajax>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-danger text-xs">To'xtatish</button>
+            </form>
           {% else %}
-          <!-- STATUS -->
-          <span
-            class="px-3 py-1 rounded-full text-sm bg-yellow-500/10 border border-yellow-500/20 text-yellow-300"
-          >
-            Kutilmoqda
-          </span>
-
-          <!-- VERIFY -->
-          <form
-            method="POST"
-            data-ajax
-            action="{{ url_for('admin.verify_company', company_id=c.id) }}"
-          >
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-            <button
-              type="submit"
-              class="px-4 py-2 rounded-lg bg-green-500/20 border border-green-500/30 text-green-300 hover:bg-green-500/30 transition"
-            >
-              Tasdiqlash
-            </button>
-          </form>
-
+            <span class="badge badge-warning" data-status>Kutilmoqda</span>
+            <form method="POST" action="{{ url_for('admin.verify_company', company_id=c.id) }}" data-ajax>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-ghost text-xs" style="color:#86efac;border-color:rgba(34,197,94,0.3)">Tasdiqlash</button>
+            </form>
           {% endif %}
         </div>
+
       </div>
     </div>
-
     {% else %}
-    <!-- EMPTY STATE -->
-    <div
-      class="rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-gray-400"
-    >
-      Kompaniyalar topilmadi.
-    </div>
+    <div class="card p-10 text-center" style="color:var(--muted)">Kompaniyalar topilmadi.</div>
     {% endfor %}
   </div>
-</section>
+
+</div>
 
 <script>
-
 function copyCode(id) {
-
-  const code = document.getElementById(
-    "code-" + id
-  ).innerText;
-
+  const code = document.getElementById('code-' + id).innerText;
   navigator.clipboard.writeText(code);
-
-  showToast("Code copied ✅");
+  showToast('Code copied ✓');
 }
-
 </script>
-
 {% endblock %}

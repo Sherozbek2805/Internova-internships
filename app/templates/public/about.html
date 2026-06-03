@@ -1,118 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About - Internova</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>About — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
 </head>
+<body>
 
-<body class="text-white bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
-
-<button onclick="window.history.back()"
-  class="fixed top-6 left-6 z-50 w-11 h-11 flex items-center justify-center
-         rounded-full bg-white/10 backdrop-blur-md border border-white/20
-         text-white shadow-lg
-         hover:bg-white/20 hover:scale-105 active:scale-95
-         transition-all duration-200">
-
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-       fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15 19l-7-7 7-7" />
-  </svg>
-</button>
-
-<section class="max-w-6xl mx-auto px-6 py-20">
-
-  <!-- Title -->
-  <h1 class="text-5xl font-bold mb-6">
-    About 
-    <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-      Internova
-    </span>
-  </h1>
-
-  <p class="text-gray-300 text-lg max-w-3xl mb-16">
-    Internova is a next-generation internship platform built to connect ambitious students with real-world opportunities. 
-    We simplify hiring for companies while empowering students to gain experience, grow skills, and launch their careers.
-  </p>
-
-  <!-- Mission / Vision -->
-  <div class="grid md:grid-cols-3 gap-6 mb-20">
-
-    <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur">
-      <h3 class="text-xl font-semibold mb-3">🎯 Mission</h3>
-      <p class="text-gray-300">
-        Make internships accessible, transparent, and meaningful for every student.
-      </p>
+<!-- Minimal nav -->
+<header class="site-header">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/static/logo.png" alt="Internova" class="w-7 h-7 object-contain">
+      <span class="font-semibold text-sm" style="color:var(--text)">Internova</span>
+    </a>
+    <div class="flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <button onclick="window.history.back()" class="btn btn-ghost text-xs">← <span class="uz">Orqaga</span><span class="en">Back</span></button>
     </div>
-
-    <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur">
-      <h3 class="text-xl font-semibold mb-3">🚀 Vision</h3>
-      <p class="text-gray-300">
-        A global ecosystem where talent meets opportunity without barriers.
-      </p>
-    </div>
-
-    <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur">
-      <h3 class="text-xl font-semibold mb-3">💡 Why Us</h3>
-      <p class="text-gray-300">
-        Real-time dashboards, smart filtering, and seamless UX for both students and companies.
-      </p>
-    </div>
-
   </div>
+</header>
 
-  <!-- STORY -->
-  <div class="mb-20">
-    <h2 class="text-3xl font-bold mb-4">Our Story</h2>
-    <p class="text-gray-300 max-w-3xl">
-      Internova started with a simple idea: students struggle to find real opportunities, and companies struggle to find the right talent. 
-      We built Internova to bridge that gap — using technology to make hiring smarter and more human.
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+
+  <div class="mb-16">
+    <h1 class="text-4xl sm:text-5xl font-bold mb-4" style="color:var(--text)">
+      <span class="uz">Internova haqida</span>
+      <span class="en">About Internova</span>
+    </h1>
+    <p class="text-lg max-w-3xl" style="color:var(--muted)">
+      <span class="uz">Internova — maqsadli yoshlarni yangi imkoniyatlar bilan birlashtiradigan yangi avlod platformasi. Bizning maqsadimiz har bir talaba uchun amaliyotlarni oson, shaffof va mazmunli qilish.</span>
+      <span class="en">Internova is a next-generation platform connecting ambitious students with real opportunities. Our mission is to make internships accessible, transparent, and meaningful for every student.</span>
     </p>
   </div>
 
-  <!-- TEAM SECTION -->
-  <div>
-    <h2 class="text-3xl font-bold mb-10">Meet Our Team</h2>
-
-    <div class="grid md:grid-cols-3 gap-8">
-
-      <!-- Member -->
-      <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur text-center">
-        <img src="https://via.placeholder.com/120" class="w-24 h-24 mx-auto rounded-full mb-4">
-        <h3 class="text-xl font-semibold">Your Name</h3>
-        <p class="text-purple-300 text-sm mb-2">Founder & CEO</p>
-        <p class="text-gray-300 text-sm">
-          Passionate about AI, education, and building platforms that impact millions.
-        </p>
-      </div>
-
-      <!-- Member -->
-      <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur text-center">
-        <img src="https://via.placeholder.com/120" class="w-24 h-24 mx-auto rounded-full mb-4">
-        <h3 class="text-xl font-semibold">Team Member</h3>
-        <p class="text-purple-300 text-sm mb-2">Backend Engineer</p>
-        <p class="text-gray-300 text-sm">
-          Builds scalable systems and ensures smooth performance.
-        </p>
-      </div>
-
-      <!-- Member -->
-      <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur text-center">
-        <img src="https://via.placeholder.com/120" class="w-24 h-24 mx-auto rounded-full mb-4">
-        <h3 class="text-xl font-semibold">Team Member</h3>
-        <p class="text-purple-300 text-sm mb-2">Frontend Developer</p>
-        <p class="text-gray-300 text-sm">
-          Designs beautiful and intuitive user experiences.
-        </p>
-      </div>
-
+  <!-- Mission / Vision / Why -->
+  <div class="grid sm:grid-cols-3 gap-4 mb-16">
+    <div class="card p-6">
+      <div class="text-2xl mb-3">🎯</div>
+      <h3 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">Missiya</span><span class="en">Mission</span>
+      </h3>
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Vakansiya va stajirovkalar topish jarayonini shaffof, oson va mazmunli qilish.</span>
+        <span class="en">Make the process of finding internships and jobs transparent, easy, and meaningful.</span>
+      </p>
+    </div>
+    <div class="card p-6">
+      <div class="text-2xl mb-3">🚀</div>
+      <h3 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">Vizyon</span><span class="en">Vision</span>
+      </h3>
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Iqtidorli yoshlar imkoniyatlarni qiyinchiliksiz topadigan ekotizim yaratish.</span>
+        <span class="en">Build an ecosystem where talented youth can find opportunities without barriers.</span>
+      </p>
+    </div>
+    <div class="card p-6">
+      <div class="text-2xl mb-3">💡</div>
+      <h3 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">Nima uchun biz?</span><span class="en">Why Us?</span>
+      </h3>
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Sifatli shaxsiy kabinetlar, aqlli filtrlash va talabalar uchun tushunarli dizayn.</span>
+        <span class="en">Quality dashboards, smart filtering, and a design built around students and companies.</span>
+      </p>
     </div>
   </div>
 
-</section>
+  <!-- Stats -->
+  <div class="card p-8 grid grid-cols-3 gap-6 text-center mb-16">
+    <div>
+      <p class="text-3xl font-bold" style="color:var(--text)">50+</p>
+      <p class="text-sm mt-1" style="color:var(--muted)"><span class="uz">Kompaniya</span><span class="en">Companies</span></p>
+    </div>
+    <div>
+      <p class="text-3xl font-bold" style="color:var(--text)">500+</p>
+      <p class="text-sm mt-1" style="color:var(--muted)"><span class="uz">Talaba</span><span class="en">Students</span></p>
+    </div>
+    <div>
+      <p class="text-3xl font-bold" style="color:var(--text)">200+</p>
+      <p class="text-sm mt-1" style="color:var(--muted)"><span class="uz">Vakansiya</span><span class="en">Listings</span></p>
+    </div>
+  </div>
 
+  <!-- CTA -->
+  <div class="text-center">
+    <a href="/signup" class="btn btn-primary px-8 py-3 text-base">
+      <span class="uz">Boshlash</span><span class="en">Get Started</span>
+    </a>
+  </div>
+
+</main>
+
+<footer class="mt-8" style="border-top:1px solid var(--border)">
+  <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between text-sm" style="color:var(--muted)">
+    <span>© 2026 Internova</span>
+    <div class="flex gap-4">
+      <a href="/privacy"><span class="uz">Maxfiylik</span><span class="en">Privacy</span></a>
+      <a href="/terms"><span class="uz">Shartlar</span><span class="en">Terms</span></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = next === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const next = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', next);
+    localStorage.setItem('lang', next);
+  }
+</script>
 </body>
 </html>

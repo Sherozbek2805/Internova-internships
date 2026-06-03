@@ -1,70 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact - Internova</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Contact — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
 </head>
+<body>
 
-<body class="text-white bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81]">
-
-<button onclick="window.history.back()"
-  class="fixed top-6 left-6 z-50 w-11 h-11 flex items-center justify-center
-         rounded-full bg-white/10 backdrop-blur-md border border-white/20
-         text-white shadow-lg
-         hover:bg-white/20 hover:scale-105 active:scale-95
-         transition-all duration-200">
-
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-       fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15 19l-7-7 7-7" />
-  </svg>
-</button>
-
-<section class="max-w-6xl mx-auto px-6 py-20">
-
-  <h1 class="text-5xl font-bold mb-6">
-    Get in 
-    <span class="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-      Touch
-    </span>
-  </h1>
-
-  <p class="text-gray-300 mb-12 max-w-2xl">
-    Have questions, feedback, or partnership ideas? We’d love to hear from you.
-  </p>
-
-  <div class="grid md:grid-cols-2 gap-10">
-
-    <!-- Info -->
-    <div class="space-y-6">
-
-      <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur">
-        <h3 class="text-xl font-semibold mb-2">📍 Location</h3>
-        <p class="text-gray-300">Tashkent, Uzbekistan</p>
-      </div>
-
-      <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur">
-        <h3 class="text-xl font-semibold mb-2">📧 Email</h3>
-        <p class="text-gray-300">support@internova.uz</p>
-      </div>
-
-      <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur">
-        <h3 class="text-xl font-semibold mb-2">🤝 Partnerships</h3>
-        <p class="text-gray-300">partners@internova.uz</p>
-      </div>
-      <div class="p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur">
-        <h3 class="text-xl font-semibold mb-2">📞 Telefon</h3>
-        <p class="text-gray-300">+998 71 234 56 78</p>
-      </div>
-
+<header class="site-header">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/static/logo.png" alt="Internova" class="w-7 h-7 object-contain">
+      <span class="font-semibold text-sm" style="color:var(--text)">Internova</span>
+    </a>
+    <div class="flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <button onclick="window.history.back()" class="btn btn-ghost text-xs">← <span class="uz">Orqaga</span><span class="en">Back</span></button>
     </div>
+  </div>
+</header>
 
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+
+  <div class="mb-12">
+    <h1 class="text-4xl sm:text-5xl font-bold mb-4" style="color:var(--text)">
+      <span class="uz">Aloqaga chiqish</span>
+      <span class="en">Contact Us</span>
+    </h1>
+    <p class="text-lg" style="color:var(--muted)">
+      <span class="uz">Savol, fikr yoki hamkorlik takliflaringiz bormi? Iltimos, biz bilan bog'laning.</span>
+      <span class="en">Have a question, feedback, or partnership idea? We'd love to hear from you.</span>
+    </p>
   </div>
 
-</section>
+  <div class="grid md:grid-cols-2 gap-8">
 
+    <!-- Info cards -->
+    <div class="space-y-4">
+      <div class="card p-6">
+        <div class="text-xl mb-2">📍</div>
+        <h3 class="font-semibold mb-1" style="color:var(--text)"><span class="uz">Manzil</span><span class="en">Address</span></h3>
+        <p class="text-sm" style="color:var(--muted)">Xiva, Uzbekistan</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-xl mb-2">📧</div>
+        <h3 class="font-semibold mb-1" style="color:var(--text)">Email</h3>
+        <p class="text-sm" style="color:var(--muted)">hello@internova.uz</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-xl mb-2">💬</div>
+        <h3 class="font-semibold mb-1" style="color:var(--text)">Telegram</h3>
+        <p class="text-sm" style="color:var(--muted)">@internova_uz</p>
+      </div>
+    </div>
+
+    <!-- Contact form -->
+    <div class="card p-6 sm:p-8">
+      <h2 class="font-semibold mb-5" style="color:var(--text)">
+        <span class="uz">Xabar yuborish</span><span class="en">Send a message</span>
+      </h2>
+      <form class="space-y-4" id="contactForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Ismingiz</span><span class="en">Your name</span>
+          </label>
+          <input name="name" class="input" placeholder="John Doe">
+        </div>
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">Email</label>
+          <input name="email" type="email" class="input" placeholder="you@example.com">
+        </div>
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Xabar</span><span class="en">Message</span>
+          </label>
+          <textarea name="message" rows="5" class="input" placeholder="..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-full py-3">
+          <span class="uz">Yuborish</span><span class="en">Send</span>
+        </button>
+        <p id="contactMsg" class="text-xs text-center" style="color:var(--muted)"></p>
+      </form>
+    </div>
+  </div>
+
+</main>
+
+<footer class="mt-8" style="border-top:1px solid var(--border)">
+  <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between text-sm" style="color:var(--muted)">
+    <span>© 2026 Internova</span>
+    <div class="flex gap-4">
+      <a href="/privacy"><span class="uz">Maxfiylik</span><span class="en">Privacy</span></a>
+      <a href="/terms"><span class="uz">Shartlar</span><span class="en">Terms</span></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = next === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const next = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', next);
+    localStorage.setItem('lang', next);
+  }
+  document.getElementById('contactForm')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const msg = document.getElementById('contactMsg');
+    msg.textContent = 'Message sent! We\'ll get back to you soon.';
+    e.target.reset();
+  });
+</script>
 </body>
 </html>

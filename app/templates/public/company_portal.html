@@ -1,57 +1,82 @@
-{% extends "public/base.html" %} {% block content %}
+{% extends "public/base.html" %}
+{% block content %}
 
-<section class="max-w-5xl mx-auto px-6 py-16">
-  <!-- COMPANY -->
+<div class="w-full max-w-4xl mx-auto px-4 sm:px-6 py-16">
+
+  <div class="flex items-center gap-2 justify-end mb-6">
+    <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+    <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+    <a href="/companies" class="btn btn-ghost text-xs">← <span class="uz">Orqaga</span><span class="en">Back</span></a>
+  </div>
+
+  <!-- Company header -->
   <div class="mb-10">
-    <h1 class="text-5xl font-bold text-white">{{ company.name }}</h1>
-
-    <p class="text-blue-400 mt-3">{{ company.industry or "Company" }}</p>
-
-    <p class="text-gray-400 mt-6">{{ company.description }}</p>
-  </div>
-
-  <!-- INTERNSHIPS -->
-  <div class="space-y-6">
-    {% for internship in internships %}
-
-    <div class="rounded-3xl bg-white/5 border border-white/10 p-6">
-      <h2 class="text-2xl font-semibold text-white">{{ internship.title }}</h2>
-
-      <p class="text-gray-400 mt-3">{{ internship.description }}</p>
+    <div class="flex items-center gap-4 mb-4">
+      {% if company.logo_url %}
+        <img src="{{ company.logo_url }}" class="w-16 h-16 rounded-xl object-cover">
+      {% else %}
+        <div class="avatar w-16 h-16 text-2xl font-bold" style="background:var(--surface3)">
+          {{ company.name[0]|upper }}
+        </div>
+      {% endif %}
+      <div>
+        <h1 class="text-3xl font-bold" style="color:var(--text)">{{ company.name }}</h1>
+        <p class="mt-1 text-sm" style="color:var(--muted)">{{ company.industry or 'Company' }}</p>
+      </div>
     </div>
-
-    {% endfor %}
+    {% if company.description %}
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">{{ company.description }}</p>
+    {% endif %}
   </div>
 
-  <!-- ACCESS -->
-  <div class="mt-12 rounded-3xl bg-white/5 border border-white/10 p-8">
-    <h2 class="text-2xl font-semibold text-white mb-4">Company Access</h2>
+  <!-- Internships -->
+  {% if internships %}
+  <div class="mb-10">
+    <h2 class="font-semibold mb-4" style="color:var(--text)">
+      <span class="uz">Vakansiyalar</span><span class="en">Internships</span>
+    </h2>
+    <div class="space-y-4">
+      {% for internship in internships %}
+      <div class="card p-5">
+        <h3 class="font-semibold mb-2" style="color:var(--text)">{{ internship.title }}</h3>
+        <p class="text-sm" style="color:var(--muted)">{{ internship.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
-    <p class="text-gray-400 mb-6">Enter your access code to view applicants.</p>
-
-    <form
-      method="POST"
-      action="/companies/{{ company.id }}/access"
-      class="flex gap-4"
-    >
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-      <input
-        type="text"
-        name="access_code"
-        placeholder="Enter access code"
-        required
-        class="flex-1 px-4 py-3 rounded-2xl bg-white/5 border border-white/10"
-      />
-
-      <button
-        type="submit"
-        class="px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 text-white"
-      >
-        Access
+  <!-- Access form -->
+  <div class="card p-6 sm:p-8">
+    <h2 class="font-semibold mb-2" style="color:var(--text)">
+      <span class="uz">Kompaniyalar uchun kirish</span>
+      <span class="en">Company Access</span>
+    </h2>
+    <p class="text-sm mb-5" style="color:var(--muted)">
+      <span class="uz">Kandidatlarni ko'rish uchun kirish kodini kiriting.</span>
+      <span class="en">Enter your access code to view candidates.</span>
+    </p>
+    <form method="POST" action="/companies/{{ company.id }}/access" class="flex gap-3">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="text" name="access_code" required class="input flex-1"
+        placeholder="{{ 'Kirish kodi' if request.accept_languages.best_match(['uz','en'])=='uz' else 'Access code' }}">
+      <button type="submit" class="btn btn-primary">
+        <span class="uz">Kirish</span><span class="en">Enter</span>
       </button>
     </form>
   </div>
-</section>
 
+</div>
+
+<script>
+  (function(){
+    const t=localStorage.getItem('theme')||'dark';
+    const l=localStorage.getItem('lang')||'uz';
+    document.documentElement.setAttribute('data-theme',t);
+    document.documentElement.setAttribute('data-lang',l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el=>el.textContent=t==='dark'?'☀️':'🌙');
+  })();
+  function toggleTheme(){const n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('theme',n);document.querySelectorAll('[data-theme-icon]').forEach(el=>el.textContent=n==='dark'?'☀️':'🌙');}
+  function toggleLang(){const n=document.documentElement.getAttribute('data-lang')==='uz'?'en':'uz';document.documentElement.setAttribute('data-lang',n);localStorage.setItem('lang',n);}
+</script>
 {% endblock %}

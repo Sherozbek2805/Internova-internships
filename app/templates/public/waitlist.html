@@ -1,394 +1,188 @@
-<!doctype html>
-<html lang="uz">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Internova Waitlist</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark" data-lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Waitlist — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
+</head>
+<body>
 
-    <style>
-      @keyframes float {
-        0% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-12px);
-        }
-        100% {
-          transform: translateY(0px);
-        }
-      }
+<header class="site-header">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
+      <span class="font-semibold" style="color:var(--text)">Internova</span>
+    </a>
+    <div class="flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+    </div>
+  </div>
+</header>
 
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
 
-      .animate-float {
-        animation: float 6s ease-in-out infinite;
-      }
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-      .fade-up {
-        animation: fadeUp 0.8s ease forwards;
-      }
+  <!-- Left copy -->
+  <div class="fade-up">
+    <span class="badge badge-neutral text-xs mb-6 inline-block">
+      🚀 <span class="uz">Talabalar uchun qisqa ro'yxat</span><span class="en">Student early access</span>
+    </span>
 
-      .glass-card {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(18px);
-      }
+    <h1 class="text-4xl sm:text-5xl font-bold leading-tight mb-5" style="color:var(--text)">
+      <span class="uz">Waitlist'ga qo'shiling va <span style="color:var(--muted)">birinchilardan bo'ling.</span></span>
+      <span class="en">Join the waitlist and <span style="color:var(--muted)">be first in line.</span></span>
+    </h1>
 
-      .glow:hover {
-        box-shadow: 0 0 30px rgba(99, 102, 241, 0.45);
-      }
+    <p class="text-lg mb-8" style="color:var(--muted)">
+      <span class="uz">Waitlist'ga qo'shilgan talabalar birinchi bo'lib internshiplar, ish o'rinlari va maxsus imkoniyatlarga ega bo'lishadi.</span>
+      <span class="en">Students on the waitlist get first access to internships, job openings, and exclusive opportunities.</span>
+    </p>
 
-      input:focus,
-      select:focus,
-      textarea:focus {
-        outline: none;
-        border-color: rgba(96, 165, 250, 0.8);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-      }
-    </style>
-  </head>
+    <div class="grid grid-cols-3 gap-4">
+      {% for num, uz, en in [('500+','Ro\'yxatdan o\'tgan','Registered'), ('50+','Kompaniya','Companies'), ('200+','Vakansiya','Listings')] %}
+      <div class="card p-4 text-center">
+        <p class="text-2xl font-bold" style="color:var(--text)">{{ num }}</p>
+        <p class="text-xs mt-1" style="color:var(--muted)"><span class="uz">{{ uz }}</span><span class="en">{{ en }}</span></p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
-  <body
-    class="bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] min-h-screen text-white overflow-x-hidden"
-  >
-    <!-- Background Blur Circles -->
-    <div
-      class="absolute top-0 left-0 w-72 h-72 bg-purple-500/20 blur-3xl rounded-full"
-    ></div>
-    <div
-      class="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/20 blur-3xl rounded-full"
-    ></div>
+  <!-- Right form -->
+  <div class="card p-6 sm:p-8 fade-up">
+    <h2 class="font-semibold text-lg mb-1" style="color:var(--text)">
+      <span class="uz">Ro'yxatdan o'tish</span><span class="en">Join the Waitlist</span>
+    </h2>
+    <p class="text-sm mb-6" style="color:var(--muted)">
+      <span class="uz">Ma'lumotlaringizni kiriting — biz siz bilan bog'lanamiz.</span>
+      <span class="en">Fill in your details — we'll reach out when you're up.</span>
+    </p>
 
-    <!-- Navbar -->
-    <header
-      class="sticky top-0 z-30 backdrop-blur-xl bg-white/5 border-b border-white/10"
-    >
-      <div
-        class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
-      >
-        <div class="flex items-center gap-3">
-          <img
-            src="/static/logo.png"
-            class="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]"
-            alt="Internova"
-          />
-          <span class="font-semibold text-lg tracking-wide">Internova</span>
+    <div id="waitlist-success" class="hidden badge-success text-sm px-4 py-3 rounded-lg mb-4" style="border:1px solid rgba(34,197,94,0.3)">
+      <span class="uz">✓ Muvaffaqiyatli ro'yxatga olinganingiz!</span>
+      <span class="en">✓ You're on the list! We'll be in touch.</span>
+    </div>
+
+    <form id="waitlistForm" class="space-y-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <!-- Role -->
+      <div class="flex gap-1 p-1 rounded-lg" style="background:var(--surface2)">
+        <button type="button" id="roleStudent" class="flex-1 py-2 rounded-md text-sm font-medium transition-all" onclick="setWaitlistRole('student')">
+          <span class="uz">Talaba</span><span class="en">Student</span>
+        </button>
+        <button type="button" id="roleCompany" class="flex-1 py-2 rounded-md text-sm font-medium transition-all" onclick="setWaitlistRole('company')">
+          <span class="uz">Kompaniya</span><span class="en">Company</span>
+        </button>
+      </div>
+      <input type="hidden" name="role" id="waitlistRole" value="student">
+
+      <input name="name" class="input" placeholder="Full name" required>
+      <input name="email" type="email" class="input" placeholder="Email" required>
+      <input name="school_or_company" class="input" placeholder="School / Company name">
+
+      <div id="studentExtras" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <select name="grade" class="input">
+            <option value=""><span class="uz">Sinf / Kurs</span><span class="en">Grade / Year</span></option>
+            {% for g in ['9','10','11','12','1-kurs','2-kurs','3-kurs','4-kurs','Bitiruvchi'] %}
+            <option value="{{ g }}">{{ g }}</option>
+            {% endfor %}
+          </select>
+          <select name="field" class="input">
+            <option value=""><span class="uz">Yo'nalish</span><span class="en">Field</span></option>
+            {% for f in ['IT & Engineering','Media & Marketing','Finance & Business','Health','Other'] %}
+            <option value="{{ f }}">{{ f }}</option>
+            {% endfor %}
+          </select>
         </div>
-      </div>
-    </header>
-
-    <!-- Hero -->
-    <section
-      class="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-20 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center"
-    >
-      <div class="fade-up">
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-sm mb-6"
-        >
-          🚀 Talabalar uchun qisqa ro'yxat
-        </div>
-
-        <h1
-          class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6"
-        >
-          Waitlist'ga qo‘shiling va
-          <span
-            class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
-          >
-            birinchilardan bo‘lib
-          </span>
-          imkoniyatlarga ega bo‘ling.
-        </h1>
-
-        <p
-          class="text-gray-400 text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
-        >
-          Internova hali ishga tushmagan bo‘lsa ham, siz hozirdan ro‘yxatdan
-          o‘tishingiz mumkin. Waitlist'ga qo‘shilgan talabalar birinchi bo‘lib
-          internshiplar, ish o‘rinlari va maxsus imkoniyatlarga ega bo‘lishadi.
-        </p>
+        <select name="goals" class="input">
+          <option value=""><span class="uz">Maqsadingiz</span><span class="en">Your goal</span></option>
+          <option value="internship"><span class="uz">Stajirovka topish</span><span class="en">Find an internship</span></option>
+          <option value="job"><span class="uz">Ish topish</span><span class="en">Find a job</span></option>
+          <option value="both">Both</option>
+        </select>
       </div>
 
-      <div class="flex justify-center animate-float w-full">
-        <div
-          class="glass-card rounded-[2rem] p-5 sm:p-8 w-full max-w-xl shadow-2xl shadow-purple-500/10"
-        >
-          <div class="mb-8">
-            <h2 class="text-xl sm:text-2xl font-semibold mb-2">
-              Waitlist Form
-            </h2>
-            <p class="text-gray-400 text-sm">
-              Ma'lumotlaringizni kiriting va biz sizga platforma ochilganda
-              xabar beramiz.
-            </p>
-          </div>
+      <button type="submit" class="btn btn-primary w-full py-3">
+        <span class="uz">Ro'yxatga qo'shilish</span><span class="en">Join Waitlist</span>
+      </button>
+    </form>
+  </div>
 
-          <form id="waitlistForm" class="space-y-5" novalidate>
-            <div>
-              <label class="text-sm text-gray-300">Ism-familya</label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                placeholder="Sherzodbek Rasulov"
-                class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
-              />
-            </div>
+</main>
 
-            <div>
-              <label class="text-sm text-gray-300">Email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                placeholder="you@example.com"
-                class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
-              />
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="text-sm text-gray-300">Telefon raqam</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="text"
-                  placeholder="+998 90 123 45 67"
-                  required
-                  class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
-                />
-              </div>
+<footer style="border-top:1px solid var(--border)">
+  <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between text-sm" style="color:var(--muted)">
+    <span>© 2026 Internova</span>
+    <a href="/">← <span class="uz">Asosiy sahifa</span><span class="en">Home</span></a>
+  </div>
+</footer>
 
-              <div>
-                <label class="text-sm text-gray-300">Telegram</label>
-                <input
-                  id="telegram"
-                  name="telegram"
-                  type="text"
-                  placeholder="@username"
-                  required
-                  class="mt-2 w-full rounded-2xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 transition"
-                />
-              </div>
-            </div>
 
-            <div id="message"></div>
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('theme', n);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = n === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const n = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', n);
+    localStorage.setItem('lang', n);
+  }
 
-            <button
-              id="submitBtn"
-              type="submit"
-              class="w-full py-3 sm:py-4 text-sm sm:text-base rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-semibold shadow-xl shadow-purple-500/20 hover:scale-[1.02] hover:shadow-purple-500/40 active:scale-[0.98] transition-all glow"
-            >
-              Waitlist'ga qo‘shilish
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Benefits -->
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 sm:pb-24">
-      <div class="text-center mb-14">
-        <h2 class="text-3xl sm:text-4xl font-bold mb-4">
-          Nega hozirdan qo‘shilish kerak?
-        </h2>
-        <p class="text-gray-400 max-w-2xl mx-auto">
-          Waitlist'dagi foydalanuvchilar platforma ochilganda boshqalardan oldin
-          imkoniyatlarga ega bo‘lishadi.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div
-          class="glass-card rounded-3xl p-8 hover:-translate-y-2 transition duration-300"
-        >
-          <div class="text-4xl mb-4">⚡</div>
-          <h3 class="text-xl font-semibold mb-3">Early Access</h3>
-          <p class="text-gray-400 text-sm leading-relaxed">
-            Platforma ochilishi bilan internship va ish o‘rinlarini birinchi
-            bo‘lib ko‘rasiz.
-          </p>
-        </div>
-
-        <div
-          class="glass-card rounded-3xl p-8 hover:-translate-y-2 transition duration-300"
-        >
-          <div class="text-4xl mb-4">🎯</div>
-          <h3 class="text-xl font-semibold mb-3">Mos Tavsiyalar</h3>
-          <p class="text-gray-400 text-sm leading-relaxed">
-            Sizning qiziqishlaringiz va sohangiz asosida tavsiyalar beriladi.
-          </p>
-        </div>
-
-        <div
-          class="glass-card rounded-3xl p-8 hover:-translate-y-2 transition duration-300"
-        >
-          <div class="text-4xl mb-4">🏆</div>
-          <h3 class="text-xl font-semibold mb-3">Maxsus Imkoniyatlar</h3>
-          <p class="text-gray-400 text-sm leading-relaxed">
-            Waitlist foydalanuvchilari uchun maxsus grantlar, eventlar va
-            internship imkoniyatlari bo‘ladi.
-          </p>
-        </div>
-      </div>
-    </section>
-    <footer class="border-t border-white/10 bg-black/10 backdrop-blur-xl mt-12">
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
-      >
-        <div class="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-          © 2026 Internova. Barcha huquqlar himoyalangan.
-        </div>
-
-        <div class="flex items-center gap-5 text-xs sm:text-sm">
-
-          <a
-            href="/faq"
-            class="text-gray-500 hover:text-white transition duration-200"
-          >
-            FAQ
-          </a>
-
-          <a
-            href="/privacy"
-            class="text-gray-500 hover:text-white transition duration-200"
-          >
-            Privacy
-          </a>
-        </div>
-      </div>
-    </footer>
-  </body>
-  <script>
-    const csrfToken = document.querySelector(
-      'meta[name="csrf-token"]',
-    )?.content;
-    const form = document.getElementById("waitlistForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const message = document.getElementById("message");
-
-    function normalizePhone(phone) {
-      return phone.replace(/\s+/g, "");
-    }
-
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function isValidTelegram(username) {
-      return /^@?[a-zA-Z0-9_]{5,}$/.test(username);
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Yuborilmoqda...";
-
-      const payload = {
-        name: document.getElementById("name").value.trim(),
-        email: document.getElementById("email").value.trim().toLowerCase(),
-        phone: normalizePhone(document.getElementById("phone").value.trim()),
-        telegram: document.getElementById("telegram").value.trim(),
-      };
-
-      if (!payload.name || !payload.email) {
-        message.innerHTML = `
-      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
-        Ism va email kiritilmagan.
-      </div>
-    `;
-
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Waitlist'ga qo‘shilish";
-        return;
-      }
-
-      if (!isValidEmail(payload.email)) {
-        message.innerHTML = `
-      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
-        Email noto‘g‘ri.
-      </div>
-    `;
-
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Waitlist'ga qo‘shilish";
-        return;
-      }
-
-      if (payload.phone && !/^\+?\d{9,15}$/.test(payload.phone)) {
-        message.innerHTML = `
-      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
-        Telefon raqam noto‘g‘ri.
-      </div>
-    `;
-
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Waitlist'ga qo‘shilish";
-        return;
-      }
-
-      if (payload.telegram && !isValidTelegram(payload.telegram)) {
-        message.innerHTML = `
-      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
-        Telegram foydalanuvchi nomi noto‘g‘ri.
-      </div>
-    `;
-
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Waitlist'ga qo‘shilish";
-        return;
-      }
-
-      try {
-        const response = await fetch("/waitlist", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          message.innerHTML = `
-        <div class="rounded-xl bg-green-500/10 border border-green-500/30 p-4 text-green-300">
-          Siz muvaffaqiyatli waitlist'ga qo‘shildingiz.
-        </div>
-      `;
-
-          form.reset();
-        } else {
-          message.innerHTML = `
-        <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
-          ${result.message}
-        </div>
-      `;
-        }
-      } catch (error) {
-        message.innerHTML = `
-      <div class="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-red-300">
-        Server xatosi. Keyinroq urinib ko‘ring.
-      </div>
-    `;
-      }
-
-      submitBtn.disabled = false;
-      submitBtn.innerText = "Waitlist'ga qo‘shilish";
+  function setWaitlistRole(role) {
+    document.getElementById('waitlistRole').value = role;
+    const sBtn = document.getElementById('roleStudent');
+    const cBtn = document.getElementById('roleCompany');
+    const isStudent = role === 'student';
+    [sBtn, cBtn].forEach((b, i) => {
+      const active = (i === 0) === isStudent;
+      b.style.background = active ? 'var(--surface)' : 'transparent';
+      b.style.color = active ? 'var(--text)' : 'var(--muted)';
+      b.style.border = active ? '1px solid var(--border)' : 'none';
     });
-  </script>
+    document.getElementById('studentExtras').style.display = isStudent ? 'block' : 'none';
+  }
+  setWaitlistRole('student');
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+  document.getElementById('waitlistForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = '...';
+    try {
+      const res = await fetch('/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
+      });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('waitlist-success').classList.remove('hidden');
+        e.target.reset();
+        setWaitlistRole('student');
+      }
+    } catch {}
+    btn.disabled = false;
+    btn.innerHTML = '<span class="uz">Ro\'yxatga qo\'shilish</span><span class="en">Join Waitlist</span>';
+  });
+</script>
+</body>
 </html>

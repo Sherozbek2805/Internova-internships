@@ -1,153 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Internova – Discover Internships</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Internships — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
+  <style>
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+  </style>
 </head>
-
-
-<body class="bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] text-gray-200 min-h-screen">
+<body>
 
 <!-- NAVBAR -->
-
-<!-- NAVBAR -->
-
-<header class="sticky top-0 z-30 backdrop-blur-xl bg-white/5 border-b border-white/10">
-
-  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-
-    <!-- LOGO -->
-    <div class="flex items-center gap-3 group cursor-pointer">
-      <img src="/static/logo.png"
-           alt="Internova Logo"
-           class="w-9 h-9 object-contain
-                  drop-shadow-[0_0_12px_rgba(139,92,246,0.7)]
-                  group-hover:scale-110 transition duration-300">
-
-      <span class="font-semibold text-white text-lg tracking-wide
-                   group-hover:text-purple-300 transition">
-        Internova
-      </span>
-    </div>
-
-    <!-- NAV LINKS -->
-    <nav class="hidden md:flex items-center gap-8 text-sm text-gray-300 ml-12">
-
-      <a href="/companies"
-         class="relative hover:text-white transition duration-200 group">
-
-        Kompaniya uchun
-
-        <!-- underline animation -->
-        <span class="absolute left-0 -bottom-1 w-0 h-[2px]
-                     bg-gradient-to-r from-blue-500 to-purple-500
-                     transition-all duration-300 group-hover:w-full">
-        </span>
-      </a>
-
-      <a href="/login"
-         class="relative hover:text-white transition duration-200 group">
-
-        Kirish
-
-        <span class="absolute left-0 -bottom-1 w-0 h-[2px]
-                     bg-gradient-to-r from-blue-500 to-purple-500
-                     transition-all duration-300 group-hover:w-full">
-        </span>
-      </a>
-
-    </nav>
-
-    <!-- CTA BUTTON -->
-    <a href="/signup"
-       class="relative px-5 py-2.5 rounded-xl text-sm font-medium text-white
-              bg-gradient-to-r from-blue-500 to-purple-500
-              shadow-lg shadow-purple-500/20
-              hover:scale-105 hover:shadow-purple-500/40
-              active:scale-95
-              transition-all duration-200 overflow-hidden">
-
-      <!-- glow effect -->
-      <span class="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition"></span>
-
-      <span class="relative z-10">
-        Ro'yxatdan o'tish
-      </span>
+<header class="site-header">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
+      <span class="font-semibold" style="color:var(--text)">Internova</span>
     </a>
 
+    <nav class="hidden md:flex gap-1">
+      <a href="/companies" class="nav-link"><span class="uz">Kompaniya uchun</span><span class="en">For Companies</span></a>
+      <a href="/login" class="nav-link"><span class="uz">Kirish</span><span class="en">Log In</span></a>
+    </nav>
+
+    <div class="hidden md:flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <a href="/signup" class="btn btn-primary text-sm">
+        <span class="uz">Ro'yxatdan o'tish</span><span class="en">Sign Up</span>
+      </a>
+    </div>
+
+    <button id="hamburger-btn" class="md:hidden p-2 nav-link">
+      <svg id="icon-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
   </div>
 
+  <div id="mobile-menu" class="md:hidden flex-col gap-1 px-4 pb-4" style="border-top:1px solid var(--border);background:var(--bg)">
+    <a href="/login" class="nav-link block"><span class="uz">Kirish</span><span class="en">Log In</span></a>
+    <div class="flex gap-2 pt-1">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <a href="/signup" class="btn btn-primary flex-1 text-center text-sm">
+        <span class="uz">Ro'yxatdan o'tish</span><span class="en">Sign Up</span>
+      </a>
+    </div>
+  </div>
 </header>
 
 
-
-<!-- PAGE CONTENT -->
-
-<section class="max-w-4xl mx-auto px-6 py-20">
-
-<h1 class="text-4xl font-semibold mb-2">
-Ish qidirish
-</h1>
-
-<p class="text-gray-400 mb-10">
-Amaliyotlar va dasturlar
-</p>
-
-<!-- LIVE INTERNSHIPS FROM DATABASE -->
-<div class="mt-10 space-y-6">
-
-{% for internship in internships %}
-  <div class="flex items-center justify-between p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition">
-    <div class="flex items-center gap-5">
-      <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-gray-300">
-        📄
-      </div>
-      <div>
-        <h3 class="text-lg font-semibold">
-          {{ internship.title }}
-        </h3>
-        <p class="text-gray-400 text-sm">
-          {{ internship.company_name or "Company" }}
-        </p>
-        <div class="flex items-center gap-3 text-xs text-gray-400 mt-2">
-          <span>📍 {{ internship.location or "Remote" }}</span>
-          {% if internship.paid %}
-          <span class="px-2 py-1 rounded bg-white/10">
-            Paid
-          </span>
-          {% endif %}
-          {% if internship.deadline %}
-          <span class="px-2 py-1 rounded bg-white/10">
-            {{ internship.deadline }}
-          </span>
-          {% endif %}
-        </div>
-      </div>
+<!-- HEADER -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl sm:text-4xl font-bold" style="color:var(--text)">
+        <span class="uz">Stajirovkalar</span><span class="en">Internships</span>
+      </h1>
+      <p class="mt-2 text-sm" style="color:var(--muted)">
+        <span class="uz">Mavjud barcha stajirovka va vakansiyalar.</span>
+        <span class="en">Browse all available internships and openings.</span>
+      </p>
     </div>
-    <a
-      href="/apply?internship_id={{ internship.id }}"
-      class="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:opacity-90 transition">
-      Ariza Topshirish
+    <a href="/signup" class="btn btn-primary text-sm flex-shrink-0">
+      <span class="uz">Ariza topshirish uchun ro'yxatdan o'ting</span>
+      <span class="en">Sign up to apply</span>
     </a>
   </div>
-{% else %}
-  <p class="text-gray-400 text-sm">
-      Hech qanday bosh amailyot dasturlari yoki ish o'rni yo'q
-  </p>
-{% endfor %}
 
-</div>
+  <!-- Internship grid -->
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% if internships %}
+      {% for job in internships %}
+      <div class="card p-5 flex flex-col">
 
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <div>
+            <h3 class="font-semibold text-sm" style="color:var(--text)">{{ job.title }}</h3>
+            <p class="text-xs mt-0.5" style="color:var(--muted)">{{ job.company or job.company_name or '—' }}</p>
+          </div>
+          <div class="avatar w-9 h-9 text-xs flex-shrink-0" style="background:var(--surface3)">
+            {{ (job.company or job.company_name or 'C')[0]|upper }}
+          </div>
+        </div>
+
+        {% if job.description %}
+          <p class="text-xs mb-4 leading-relaxed line-clamp-3 flex-1" style="color:var(--muted)">{{ job.description }}</p>
+        {% endif %}
+
+        <div class="flex flex-wrap gap-1.5 mb-4">
+          {% if job.location %}
+            <span class="badge badge-neutral text-xs">📍 {{ job.location }}</span>
+          {% endif %}
+          {% if job.type or job.internship_type %}
+            <span class="badge badge-neutral text-xs">{{ job.type or job.internship_type }}</span>
+          {% endif %}
+          {% if job.stipend %}
+            <span class="badge badge-neutral text-xs">{{ job.stipend }}</span>
+          {% endif %}
+          {% if job.deadline %}
+            <span class="badge badge-neutral text-xs">
+              <span class="uz">Muddati:</span><span class="en">Deadline:</span> {{ job.deadline }}
+            </span>
+          {% endif %}
+        </div>
+
+        <a href="/signup" class="btn btn-primary w-full text-sm mt-auto">
+          <span class="uz">Ariza topshirish</span><span class="en">Apply Now</span>
+        </a>
+
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-span-full card p-12 text-center" style="color:var(--muted)">
+        <p class="text-4xl mb-4">📋</p>
+        <p class="uz">Hozircha stajirovkalar mavjud emas.</p>
+        <p class="en">No internships available yet. Check back soon.</p>
+      </div>
+    {% endif %}
+  </div>
 </section>
 
 
+<!-- CTA -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-12 pb-20">
+  <div class="card p-8 sm:p-12 text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-3" style="color:var(--text)">
+      <span class="uz">Ariza topshirish uchun ro'yxatdan o'ting</span>
+      <span class="en">Sign up to start applying</span>
+    </h2>
+    <p class="mb-6" style="color:var(--muted)">
+      <span class="uz">Bepul hisob yarating va bir zumda ariza topshiring.</span>
+      <span class="en">Create a free account and apply to any internship in seconds.</span>
+    </p>
+    <a href="/signup" class="btn btn-primary px-8 py-3 text-base">
+      <span class="uz">Boshlash</span><span class="en">Get Started</span>
+    </a>
+  </div>
+</section>
 
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid var(--border)">
+  <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between text-sm" style="color:var(--muted)">
+    <span>© 2026 Internova</span>
+    <div class="flex gap-4">
+      <a href="/about"><span class="uz">Biz haqimizda</span><span class="en">About</span></a>
+      <a href="/contact"><span class="uz">Bog'lanish</span><span class="en">Contact</span></a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('theme', n);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = n === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const n = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', n);
+    localStorage.setItem('lang', n);
+  }
+  const btn = document.getElementById('hamburger-btn');
+  const menu = document.getElementById('mobile-menu');
+  const iOpen = document.getElementById('icon-open');
+  const iClose = document.getElementById('icon-close');
+  btn?.addEventListener('click', () => {
+    menu.classList.toggle('open');
+    iOpen.classList.toggle('hidden');
+    iClose.classList.toggle('hidden');
+  });
+</script>
 </body>
 </html>

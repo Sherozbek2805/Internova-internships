@@ -1,392 +1,250 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="uz" data-theme="dark" data-lang="uz">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Internova – Kompaniyalar uchun</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-
-/* floating */
-@keyframes float{
-0%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
-100%{transform:translateY(0)}
-}
-
-.float{
-animation:float 6s ease-in-out infinite;
-}
-
-/* fade up */
-
-@keyframes fadeUp{
-from{opacity:0; transform:translateY(30px)}
-to{opacity:1; transform:translateY(0)}
-}
-
-.fade-up{
-animation:fadeUp .9s ease forwards;
-}
-
-/* card hover */
-
-.card{
-transition:all .35s ease;
-}
-
-.card:hover{
-transform:translateY(-10px) scale(1.02);
-box-shadow:0 15px 40px rgba(0,0,0,.45);
-}
-
-/* glowing button */
-
-.glow:hover{
-box-shadow:0 0 25px rgba(99,102,241,.6);
-}
-
-/* bar animation */
-
-@keyframes grow{
-from{height:0}
-}
-
-.bar{
-animation:grow 1.4s ease forwards;
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Kompaniyalar uchun — Internova</title>
+  <link rel="stylesheet" href="/static/internova.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
+  <style>
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+  </style>
 </head>
-
-
-<body class="bg-gradient-to-br from-[#0b1020] via-[#0f1b3d] to-[#0b1020] text-gray-200 min-h-screen selection:bg-blue-500/40">
-
+<body>
 
 <!-- NAVBAR -->
-
-<header class="sticky top-0 z-30 backdrop-blur-xl bg-white/5 border-b border-white/10">
-
-<div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-
-<div class="flex items-center gap-3 fade-up">
-
-<img src="/static/logo.png" 
-     alt="Internova Logo" 
-     class="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]">
-
-<span class="font-semibold text-white text-lg tracking-wide">
-Internova
-</span>
-
-</div>
-
-
-    <nav class="hidden md:flex items-center gap-8 text-sm text-gray-300 ml-12">
-
-      <a href="/companies"
-         class="relative hover:text-white transition duration-200 group">
-
-        Kompaniya uchun
-
-        <!-- underline animation -->
-        <span class="absolute left-0 -bottom-1 w-0 h-[2px]
-                     bg-gradient-to-r from-blue-500 to-purple-500
-                     transition-all duration-300 group-hover:w-full">
-        </span>
-      </a>
-
-      <a href="/login"
-         class="relative hover:text-white transition duration-200 group">
-
-        Kirish
-
-        <span class="absolute left-0 -bottom-1 w-0 h-[2px]
-                     bg-gradient-to-r from-blue-500 to-purple-500
-                     transition-all duration-300 group-hover:w-full">
-        </span>
-      </a>
-
-    </nav>
-
-    <a href="/signup"
-       class="relative px-5 py-2.5 rounded-xl text-sm font-medium text-white
-              bg-gradient-to-r from-blue-500 to-purple-500
-              shadow-lg shadow-purple-500/20
-              hover:scale-105 hover:shadow-purple-500/40
-              active:scale-95
-              transition-all duration-200 overflow-hidden">
-
-      <!-- glow effect -->
-      <span class="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition"></span>
-
-      <span class="relative z-10">
-        Ro'yxatdan o'tish
-      </span>
+<header class="site-header">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
+      <span class="font-semibold" style="color:var(--text)">Internova</span>
     </a>
 
-</div>
+    <nav class="hidden md:flex gap-1">
+      <a href="/companies" class="nav-link">
+        <span class="uz">Kompaniya uchun</span><span class="en">For Companies</span>
+      </a>
+      <a href="/login" class="nav-link">
+        <span class="uz">Kirish</span><span class="en">Log In</span>
+      </a>
+    </nav>
 
-</div>
+    <div class="hidden md:flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <a href="/signup?role=company" class="btn btn-primary text-sm">
+        <span class="uz">Ro'yxatdan o'tish</span><span class="en">Sign Up</span>
+      </a>
+    </div>
 
+    <button id="hamburger-btn" class="md:hidden p-2 nav-link">
+      <svg id="icon-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="md:hidden flex-col gap-1 px-4 pb-4" style="border-top:1px solid var(--border);background:var(--bg)">
+    <a href="/login" class="nav-link block"><span class="uz">Kirish</span><span class="en">Log In</span></a>
+    <div class="flex gap-2 pt-1">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+      <a href="/signup?role=company" class="btn btn-primary flex-1 text-center text-sm">
+        <span class="uz">Ro'yxatdan o'tish</span><span class="en">Sign Up</span>
+      </a>
+    </div>
+  </div>
 </header>
 
 
-
 <!-- HERO -->
-
-<section class="max-w-7xl mx-auto px-6 py-24 text-center fade-up">
-
-<h1 class="text-4xl font-semibold mb-3">
-
-Faqat
-<span class="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-[length:200%] animate-pulse bg-clip-text text-transparent">
-Kompaniyalar uchun
-</span>
-
-</h1>
-
-<p class="text-gray-400 mb-8">
-O'zingizning kompaniyangiz uchun eng yaxshi talantlarni toping va ularni erta bosqichda rivojlantiring. Internova bilan kelajakdagi ishchilarni bugundan kashf eting.
-</p>
-
-<a href="/directory/companies"
-class="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl hover:scale-105 transition glow">
-Kompaniyalarni Ko'rish
-</a>
-
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28 text-center fade-up">
+  <p class="text-xs tracking-widest uppercase mb-4" style="color:var(--muted)">
+    <span class="uz">Kompaniyalar uchun</span><span class="en">For Companies</span>
+  </p>
+  <h1 class="text-4xl sm:text-5xl font-bold mb-5" style="color:var(--text)">
+    <span class="uz">Eng iqtidorli yoshlarni<br><span style="color:var(--muted)">bugundan toping.</span></span>
+    <span class="en">Find your best young talent<br><span style="color:var(--muted)">before anyone else does.</span></span>
+  </h1>
+  <p class="text-lg mb-8 max-w-2xl mx-auto" style="color:var(--muted)">
+    <span class="uz">Internova bilan kompaniyangiz uchun eng yaxshi talantlarni toping va ularni erta bosqichda rivojlantiring.</span>
+    <span class="en">Use Internova to find top student talent and build your pipeline before they graduate.</span>
+  </p>
+  <div class="flex justify-center gap-3 flex-wrap">
+    <a href="/signup?role=company" class="btn btn-primary px-7 py-3 text-base">
+      <span class="uz">Kompaniya sifatida boshlash</span><span class="en">Get Started</span>
+    </a>
+    <a href="/directory/companies" class="btn btn-ghost px-7 py-3 text-base">
+      <span class="uz">Kompaniyalarni ko'rish</span><span class="en">Browse Companies</span>
+    </a>
+  </div>
 </section>
-
 
 
 <!-- TALENT PIPELINE -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
 
-<section class="max-w-7xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
+  <div>
+    <h2 class="text-3xl sm:text-4xl font-bold mb-5" style="color:var(--text)">
+      <span class="uz">O'z ishchi kuchingizni yarating.</span>
+      <span class="en">Build your talent pipeline.</span>
+    </h2>
+    <p class="mb-6" style="color:var(--muted)">
+      <span class="uz">Eng iqtidorli talabalarni toping, ularni erta bosqichda rivojlantiring.</span>
+      <span class="en">Identify driven students early, develop them, and convert them into full-time hires.</span>
+    </p>
+    <ul class="space-y-3 text-sm mb-8">
+      {% for uz, en in [
+        ('Tasdiqlanagan talabalar profillariga kirish', 'Access verified student profiles'),
+        ('Mahorat orqali saralab olish', 'Filter candidates by skills and background'),
+        ('Ishga olish xarajatlarini kamaytirish', 'Reduce hiring costs significantly'),
+        ('Yoshlar brendi mavjudligini kuchaytirish', 'Build your employer brand among students')
+      ] %}
+      <li class="flex items-start gap-2">
+        <span style="color:#86efac">✓</span>
+        <span style="color:var(--muted)"><span class="uz">{{ uz }}</span><span class="en">{{ en }}</span></span>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="/signup?role=company" class="btn btn-primary">
+      <span class="uz">Kompaniya akkountini yaratish</span><span class="en">Create Company Account</span>
+    </a>
+  </div>
 
-
-<div class="fade-up">
-
-<h2 class="text-5xl font-bold mb-6 leading-tight">
-
-O'z ishchi kuchingizni yarating
-
-<span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-Hoziroq.
-</span>
-
-</h2>
-
-<p class="text-gray-400 mb-8 text-lg">
-
-Eng iqtidorli talabalarni toping, ularni erta bosqichda rivojlantiring va kelajakdagi ishchilarni bugundan kashf eting.
-
-</p>
-
-
-<ul class="space-y-4 text-gray-300">
-
-<li class="flex items-center gap-3">
-<span class="text-green-400">✔</span>
-Tasdiqlanagan talabalar profillariga kirish
-</li>
-
-<li class="flex items-center gap-3">
-<span class="text-green-400">✔</span>
-Mahorat va Ko'nikmalar orqali saralab olish
-</li>
-
-<li class="flex items-center gap-3">
-<span class="text-green-400">✔</span>
-Ishga olish harajatlarini kamaytirish
-</li>
-
-<li class="flex items-center gap-3">
-<span class="text-green-400">✔</span>
-Yoshlar brendi mavjudligini kuchaytirish
-</li>
-
-</ul>
-
-<br><br>
-
-<a href="/signup?role=company"
-class="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl hover:scale-105 transition glow">
-
-Kompaniya akkountini yaratish
-
-</a>
-
-</div>
-
-
-
-<!-- DASHBOARD MOCKUP -->
-
-<div class="relative float">
-
-<div class="absolute inset-0 blur-3xl bg-blue-500/20 rounded-3xl"></div>
-
-<div class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl card">
-
-<div class="flex gap-2 mb-6">
-
-<div class="w-3 h-3 rounded-full bg-red-400"></div>
-<div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-<div class="w-3 h-3 rounded-full bg-green-400"></div>
-
-</div>
-
-<div class="space-y-4">
-
-<div class="h-6 bg-white/10 rounded"></div>
-
-<div class="grid grid-cols-4 gap-4">
-
-<div class="h-20 bg-white/10 rounded"></div>
-<div class="h-20 bg-white/10 rounded"></div>
-<div class="h-20 bg-white/10 rounded"></div>
-<div class="h-20 bg-white/10 rounded"></div>
-
-</div>
-
-<div class="flex gap-4 mt-6">
-
-<div class="h-10 w-32 bg-blue-500/40 rounded"></div>
-<div class="h-10 w-32 bg-white/10 rounded"></div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+  <!-- Dashboard mockup -->
+  <div class="card p-6 sm:p-8">
+    <div class="flex gap-2 mb-5">
+      <div class="w-3 h-3 rounded-full" style="background:var(--surface3)"></div>
+      <div class="w-3 h-3 rounded-full" style="background:var(--surface3)"></div>
+      <div class="w-3 h-3 rounded-full" style="background:var(--surface3)"></div>
+    </div>
+    <div class="space-y-3">
+      <div class="h-5 rounded" style="background:var(--surface2)"></div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="h-16 rounded" style="background:var(--surface2)"></div>
+        <div class="h-16 rounded" style="background:var(--surface2)"></div>
+        <div class="h-16 rounded" style="background:var(--surface2)"></div>
+        <div class="h-16 rounded" style="background:var(--surface2)"></div>
+      </div>
+      <div class="flex gap-3 mt-4">
+        <div class="h-9 flex-1 rounded" style="background:var(--surface3)"></div>
+        <div class="h-9 flex-1 rounded" style="background:var(--surface2)"></div>
+      </div>
+      <div class="space-y-2 mt-2">
+        <div class="h-10 rounded" style="background:var(--surface2)"></div>
+        <div class="h-10 rounded" style="background:var(--surface2)"></div>
+        <div class="h-10 rounded" style="background:var(--surface2)"></div>
+      </div>
+    </div>
+  </div>
 
 </section>
-
 
 
 <!-- FEATURES -->
-
-<section class="max-w-7xl mx-auto px-6 py-24">
-
-<h2 class="text-4xl font-semibold text-center mb-16">
-
-Ishonchli vositalar bilan
-<span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-Ishga olishni kuchaytiring
-</span>
-
-</h2>
-
-
-<div class="grid md:grid-cols-3 gap-8">
-
-<div class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl card">
-<div class="text-3xl mb-4">📊</div>
-<h3 class="text-xl font-semibold mb-3">Kuchli Monitoring & Analitika</h3>
-<p class="text-gray-400 text-sm">Amaliyot natijalarini kuzatish.</p>
-</div>
-
-<div class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl card">
-<div class="text-3xl mb-4">🧑‍💻</div>
-<h3 class="text-xl font-semibold mb-3">Arizani ko'rib chiqish</h3>
-<p class="text-gray-400 text-sm">Nomzodlarni saralab olish.</p>
-</div>
-
-<div class="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl card">
-<div class="text-3xl mb-4">⚡</div>
-<h3 class="text-xl font-semibold mb-3">Ishga qabul qilishni tezlashtiring</h3>
-<p class="text-gray-400 text-sm">Jarayonni tezlashtirish.</p>
-</div>
-
-</div>
-
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+  <h2 class="text-2xl sm:text-3xl font-semibold text-center mb-3" style="color:var(--text)">
+    <span class="uz">Ishonchli vositalar bilan ishga olishni kuchaytiring</span>
+    <span class="en">Powerful tools to streamline hiring</span>
+  </h2>
+  <p class="text-center mb-12" style="color:var(--muted)">
+    <span class="uz">Barcha zarur vositalar bir joyda.</span>
+    <span class="en">Everything you need in one place.</span>
+  </p>
+  <div class="grid sm:grid-cols-3 gap-5">
+    <div class="card p-6">
+      <div class="text-2xl mb-3">📊</div>
+      <h3 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">Monitoring &amp; Analitika</span><span class="en">Analytics &amp; Monitoring</span>
+      </h3>
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Amaliyot natijalarini real vaqtda kuzatib boring.</span>
+        <span class="en">Track internship performance and application metrics in real time.</span>
+      </p>
+    </div>
+    <div class="card p-6">
+      <div class="text-2xl mb-3">🔍</div>
+      <h3 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">Ariza ko'rib chiqish</span><span class="en">Candidate Review</span>
+      </h3>
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Nomzodlarni ko'nikmalar, GPA va tajriba bo'yicha saralab oling.</span>
+        <span class="en">Filter and evaluate applicants by skills, GPA, and experience.</span>
+      </p>
+    </div>
+    <div class="card p-6">
+      <div class="text-2xl mb-3">⚡</div>
+      <h3 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">Tezkor ishga qabul</span><span class="en">Fast Hiring</span>
+      </h3>
+      <p class="text-sm" style="color:var(--muted)">
+        <span class="uz">Vakansiyalarni daqiqalar ichida joylang va arizalarni shu zahoti qabul qiling.</span>
+        <span class="en">Post internships in minutes and receive applications instantly.</span>
+      </p>
+    </div>
+  </div>
 </section>
 
 
-
-<!-- ANALYTICS MOCK -->
-
-<section class="max-w-7xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
-
-
-<div>
-
-<h2 class="text-5xl font-bold mb-6 leading-tight">
-
-Ishga olishni nazorat qiling
-<span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-Analitika
-</span>
-
-</h2>
-
-<p class="text-gray-400 mb-8 text-lg">
-Arizalar va konversiya ko'rsatkichlarini real vaqtda kuzating.
-</p>
-
-</div>
-
-
-<div class="p-10 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-xl">
-
-<div class="flex items-end justify-between h-40 gap-4">
-
-<div class="w-full bg-gradient-to-t from-blue-500 to-purple-500 rounded bar" style="height:20%"></div>
-<div class="w-full bg-gradient-to-t from-blue-500 to-purple-500 rounded bar" style="height:40%"></div>
-<div class="w-full bg-gradient-to-t from-blue-500 to-purple-500 rounded bar" style="height:30%"></div>
-<div class="w-full bg-gradient-to-t from-blue-500 to-purple-500 rounded bar" style="height:50%"></div>
-<div class="w-full bg-gradient-to-t from-blue-500 to-purple-500 rounded bar" style="height:35%"></div>
-
-</div>
-
-</div>
-
-
+<!-- CTA BOTTOM -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 pb-24 text-center">
+  <div class="card p-10 sm:p-14">
+    <h2 class="text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text)">
+      <span class="uz">Bugun boshlang.</span><span class="en">Start today.</span>
+    </h2>
+    <p class="mb-8" style="color:var(--muted)">
+      <span class="uz">Kelajakdagi ishchilaringizni hozirdan toping.</span>
+      <span class="en">Find your future hires before they graduate.</span>
+    </p>
+    <a href="/signup?role=company" class="btn btn-primary px-8 py-3 text-base">
+      <span class="uz">Bepul boshlash</span><span class="en">Get Started Free</span>
+    </a>
+  </div>
 </section>
 
 
-
-<footer class="border-t border-white/10 bg-[#0b1020]">
-
-<div class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between text-sm text-gray-400">
-
-<div class="flex items-center gap-2">
-
-<div class="w-6 h-6 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
-▢
-</div>
-
-<span class="text-gray-300 font-medium">
-Internova
-</span>
-
-</div>
-
-
-<div class="flex items-center gap-6">
-
-<a href="#" class="hover:text-white transition">
-Qoidalar
-</a>
-
-<a href="#" class="hover:text-white transition">
-Xavfsizlik
-</a>
-
-</div>
-
-</div>
-
+<!-- FOOTER -->
+<footer style="border-top:1px solid var(--border)">
+  <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between text-sm" style="color:var(--muted)">
+    <span>© 2026 Internova</span>
+    <div class="flex gap-4">
+      <a href="/privacy"><span class="uz">Maxfiylik</span><span class="en">Privacy</span></a>
+      <a href="/terms"><span class="uz">Shartlar</span><span class="en">Terms</span></a>
+    </div>
+  </div>
 </footer>
 
+
+<script>
+  (function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
+  })();
+  function toggleTheme() {
+    const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('theme', n);
+    document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = n === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const n = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', n);
+    localStorage.setItem('lang', n);
+  }
+  const btn = document.getElementById('hamburger-btn');
+  const menu = document.getElementById('mobile-menu');
+  const iOpen = document.getElementById('icon-open');
+  const iClose = document.getElementById('icon-close');
+  btn?.addEventListener('click', () => {
+    menu.classList.toggle('open');
+    iOpen.classList.toggle('hidden');
+    iClose.classList.toggle('hidden');
+  });
+</script>
 </body>
 </html>

@@ -1,246 +1,97 @@
 {% extends "admin/base.html" %}
-
-{% block title %}Create Internship{% endblock %}
+{% block title %}Create{% endblock %}
 
 {% block content %}
+<div class="space-y-8 fade-up max-w-3xl">
 
-<section id="create_internship" class="page fade-up">
-<div class="max-w-4xl mx-auto">
-
-  <h1 class="text-3xl font-bold mb-8">
-    Create Company
-  </h1>
-
-  <div class="bg-white/5 border border-white/10 rounded-3xl p-8">
-
-    <form
-      method="POST"
-      action="{{ url_for('admin.create_company') }}"
-      class="space-y-6"
-    >
-
+  <!-- Create Company -->
+  <div class="card p-6 sm:p-8">
+    <h1 class="font-semibold text-lg mb-5" style="color:var(--text)">Create Company</h1>
+    <form method="POST" action="{{ url_for('admin.create_company') }}" class="space-y-4">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-      <input
-        type="text"
-        name="name"
-        placeholder="Company name"
-        required
-        class="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10"
-      >
-
-      <input
-        type="text"
-        name="industry"
-        placeholder="Industry"
-        class="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10"
-      >
-
-      <input
-        type="text"
-        name="phone1"
-        placeholder="Phone"
-        class="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10"
-      >
-
-      <input
-        type="text"
-        name="website"
-        placeholder="Website"
-        class="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10"
-      >
-
-      <textarea
-        name="description"
-        placeholder="Description"
-        rows="5"
-        class="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10"
-      ></textarea>
-
-      <button
-        type="submit"
-        class="px-6 py-3 rounded-2xl bg-blue-500 hover:bg-blue-600"
-      >
-        Create Company
-      </button>
-
+      <input type="text"  name="name"        placeholder="Company name"  required class="input">
+      <input type="text"  name="industry"    placeholder="Industry"               class="input">
+      <input type="text"  name="phone1"      placeholder="Phone"                  class="input">
+      <input type="text"  name="website"     placeholder="Website"                class="input">
+      <textarea           name="description" placeholder="Description" rows="4"   class="input"></textarea>
+      <button type="submit" class="btn btn-primary">Create Company</button>
     </form>
-
   </div>
 
-</div>
+  <!-- Create Internship -->
+  <div class="card p-6 sm:p-8">
+    <h1 class="font-semibold text-lg mb-5" style="color:var(--text)">Create Internship</h1>
 
-<br>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="text-sm px-4 py-3 rounded-lg mb-4 {% if cat == 'success' %}badge-success{% else %}badge-danger{% endif %}" style="border:1px solid var(--border)">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-<div class="max-w-4xl mx-auto fade-up">
-
-  <!-- HEADER -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-white">
-      Create Internship
-    </h1>
-
-    <p class="text-gray-400 mt-2">
-      Create curated internship opportunities for companies.
-    </p>
-  </div>
-
-  <!-- FORM CARD -->
-  <div class="card bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
-
-    <form
-      method="POST"
-      action="{{ url_for('admin.create_internship') }}"
-      class="space-y-6"
-    >
-
+    <form method="POST" action="{{ url_for('admin.create_internship') }}" class="space-y-4">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-      <!-- GRID -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- COMPANY -->
+      <div class="grid md:grid-cols-2 gap-4">
         <div>
-          <label class="block mb-2 text-sm text-gray-300">
-            Company
-          </label>
-
-          <select
-            name="company_id"
-            required
-            class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-blue-400"
-          >
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Company</label>
+          <select name="company_id" required class="input">
+            <option value="">Select company</option>
             {% for company in companies %}
-              <option
-                value="{{ company.id }}"
-                class="bg-[#0f172a]"
-              >
-                {{ company.name }}
-              </option>
+              <option value="{{ company.id }}">{{ company.name }}</option>
             {% endfor %}
           </select>
         </div>
-
-        <!-- TITLE -->
         <div>
-          <label class="block mb-2 text-sm text-gray-300">
-            Internship Title
-          </label>
-
-          <input
-            type="text"
-            name="title"
-            required
-            placeholder="Frontend Developer Intern"
-            class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400"
-          >
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Title</label>
+          <input type="text" name="title" required class="input">
         </div>
-
-        <!-- LOCATION -->
         <div>
-          <label class="block mb-2 text-sm text-gray-300">
-            Location
-          </label>
-
-          <input
-            type="text"
-            name="location"
-            placeholder="Tashkent"
-            class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400"
-          >
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Type</label>
+          <select name="internship_type" class="input">
+            <option value="Internship">Internship</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Remote">Remote</option>
+          </select>
         </div>
-
-        <!-- DURATION -->
         <div>
-          <label class="block mb-2 text-sm text-gray-300">
-            Duration
-          </label>
-
-          <input
-            type="text"
-            name="duration"
-            placeholder="3 months"
-            class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400"
-          >
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Location</label>
+          <input type="text" name="location" class="input">
         </div>
-
-        <!-- DEADLINE -->
         <div>
-          <label class="block mb-2 text-sm text-gray-300">
-            Deadline
-          </label>
-
-          <input
-            type="date"
-            name="deadline"
-            class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-blue-400"
-          >
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Stipend</label>
+          <input type="number" name="stipend" class="input">
         </div>
-
-        <!-- STIPEND -->
         <div>
-          <label class="block mb-2 text-sm text-gray-300">
-            Stipend
-          </label>
-
-          <input
-            type="number"
-            name="stipend"
-            placeholder="1500000"
-            class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400"
-          >
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Duration</label>
+          <input type="text" name="duration" class="input">
         </div>
-
+        <div>
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Deadline</label>
+          <input type="date" name="deadline" class="input">
+        </div>
+        <div>
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Skills</label>
+          <input type="text" name="skills" placeholder="Python, Excel..." class="input">
+        </div>
       </div>
 
-      <!-- TYPE -->
       <div>
-        <label class="block mb-2 text-sm text-gray-300">
-          Internship Type
+        <label class="text-xs mb-1 block" style="color:var(--muted)">Description</label>
+        <textarea name="description" rows="5" required class="input"></textarea>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <label class="flex items-center gap-2 text-sm cursor-pointer" style="color:var(--muted)">
+          <input type="checkbox" name="approved" value="1" checked class="rounded"> Auto-approve
         </label>
-
-        <select
-          name="type"
-          class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-blue-400"
-        >
-          <option value="offline" class="bg-[#0f172a]">Offline</option>
-          <option value="online" class="bg-[#0f172a]">Online</option>
-          <option value="hybrid" class="bg-[#0f172a]">Hybrid</option>
-        </select>
       </div>
 
-      <!-- DESCRIPTION -->
-      <div>
-        <label class="block mb-2 text-sm text-gray-300">
-          Description
-        </label>
-
-        <textarea
-          name="description"
-          rows="7"
-          placeholder="Write internship details..."
-          class="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 resize-none"
-        ></textarea>
-      </div>
-
-      <!-- BUTTON -->
-      <div class="flex justify-end">
-
-        <button
-          type="submit"
-          class="px-6 py-3 rounded-2xl bg-blue-500 hover:bg-blue-600 transition text-white font-medium shadow-lg shadow-blue-500/20"
-        >
-          Create Internship
-        </button>
-
-      </div>
-
+      <button type="submit" class="btn btn-primary">Create Internship</button>
     </form>
-
   </div>
 
 </div>
-
-</section>
-
 {% endblock %}
