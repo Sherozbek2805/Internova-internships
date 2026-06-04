@@ -3,7 +3,6 @@ from flask import Blueprint, render_template, session, request, redirect, flash,
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from werkzeug.utils import secure_filename
-from app.db import get_db
 from app.decorators import login_required, role_required
 from app.db import get_cursor
 import json
@@ -12,19 +11,9 @@ student_bp = Blueprint("student", __name__)
 
 PASSWORD_PATTERN = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$"
 EMAIL_PATTERN = r"^[^\s@]+@[^\s@]+\.[^\s@]+$"
-ALLOWED_EXTENSIONS = {"pdf", "doc", "docx"}
+ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg", "doc", "docx"}
 UPLOAD_FOLDER = "static/uploads/cv"
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
-
-ALLOWED_EXTENSIONS = {
-    "pdf", "png", "jpg", "jpeg", "doc", "docx"
-}
-
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -357,14 +346,12 @@ def add_experience():
             request.form.get("role") or None
         ))
 
-        print(request.form)  # debug
-
         new_id = cur.fetchone()["id"]
 
-    return jsonify({
-        "success": True,
-        "id": new_id
-    })
+        return jsonify({
+            "success": True,
+            "id": new_id
+        })
 
 @student_bp.route("/profile/delete-experience/<int:id>", methods=["POST"])
 @login_required
@@ -395,21 +382,7 @@ def delete_experience(id):
 @login_required
 @role_required("student")
 def apply_page():
-
-    with get_cursor() as cur:
-
-        cur.execute("""
-            SELECT 
-                i.*,
-                c.name AS company
-            FROM internships i
-            LEFT JOIN companies c ON c.id = i.company_id
-            WHERE i.approved = TRUE
-            ORDER BY i.created_at DESC
-        """)
-        internships = cur.fetchall()
-
-    return render_template("apply.html", internships=internships)
+    return redirect(url_for("student.student_dashboard"))
 
 
 @student_bp.route("/apply/<int:internship_id>", methods=["POST"])

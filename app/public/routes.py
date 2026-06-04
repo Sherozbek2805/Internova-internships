@@ -73,21 +73,7 @@ def discover():
 
 @public_bp.route("/companies")
 def companies():
-    try:
-        with get_cursor() as cur:
-            cur.execute("""
-                SELECT * FROM companies
-            """)
-            rows = cur.fetchall()
-
-        return render_template(
-            "public/forcompanies.html",
-            companies=rows
-        )
-
-    except Exception as e:
-        print("COMPANIES ERROR:", e)
-        return "Internal Server Error", 500
+    return render_template("public/forcompanies.html")
 
 
 @public_bp.route("/contact")

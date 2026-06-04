@@ -2,7 +2,6 @@ from math import ceil
 from flask import Blueprint, render_template, request, redirect, session, jsonify, url_for, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.extensions import limiter
-from app.db import get_db
 from app.decorators import login_required, role_required, company_access_required
 import os
 from app.db import get_cursor
@@ -258,6 +257,37 @@ def create_internship():
             "status": "error",
             "message": str(e)
         }), 500
+
+# =========================
+# CANDIDATES STATS
+# =========================
+
+@company_bp.route("/candidates/stats")
+@company_access_required
+def candidates_stats():
+    company = get_company()
+    if not company:
+        return jsonify({"error": "Company not found"}), 404
+
+    with get_cursor() as cur:
+        cur.execute("""
+            SELECT
+                COUNT(*) AS total,
+                COUNT(*) FILTER (WHERE a.status = 'reviewing') AS reviewing,
+                COUNT(*) FILTER (WHERE a.status = 'shortlisted') AS shortlisted,
+                COUNT(*) FILTER (WHERE a.status = 'accepted') AS selected
+            FROM applications a
+            WHERE a.company_id = %s
+        """, (company["id"],))
+        stats = cur.fetchone()
+
+    return jsonify({
+        "total":       stats["total"] if stats else 0,
+        "reviewing":   stats["reviewing"] if stats else 0,
+        "shortlisted": stats["shortlisted"] if stats else 0,
+        "selected":    stats["selected"] if stats else 0,
+    })
+
 
 # =========================
 # CANDIDATES PAGE
