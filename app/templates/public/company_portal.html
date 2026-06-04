@@ -74,7 +74,7 @@
       const btn = e.target.querySelector('button[type="submit"]');
       const msg = document.getElementById('accessMsg');
       const code = e.target.access_code.value.trim();
-      const csrf = e.target.csrf_token.value;
+      const csrf = new FormData(e.target).get('csrf_token');
       btn.disabled = true; btn.textContent = '...';
       try {
         const res = await fetch('/companies/{{ company.id }}/access', {

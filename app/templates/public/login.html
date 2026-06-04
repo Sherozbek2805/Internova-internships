@@ -124,7 +124,7 @@
 
 {% block scripts %}
 <script>
-  /* Theme icon init */
+  /* Theme icon init — runs after base.html already set data-theme */
   (function() {
     const t = document.documentElement.getAttribute('data-theme') || 'dark';
     document.querySelectorAll('[data-theme-icon]').forEach(el => {
@@ -132,7 +132,7 @@
     });
   })();
 
-  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  /* csrfToken is already declared in public/base.html — do NOT redeclare */
 
   /* Role selector */
   const roleInput = document.getElementById('role');

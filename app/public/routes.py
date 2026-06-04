@@ -104,7 +104,7 @@ def terms():
 
 
 
-@public_bp.route("/api/internship/<int:id>/view", methods=["POST"])
+@public_bp.route("/api/internship/<int:id>/view", methods=["GET", "POST"])
 def track_view(id):
     """Increment view count for an internship. Uses internship_stats table."""
     try:
@@ -196,53 +196,10 @@ def company_portal(id):
         return "Internal Server Error", 500
 
     
-@public_bp.route("/waitlist", methods=["GET", "POST"])
-def waitlist():
-    if request.method == "GET":
-        return render_template("public/waitlist.html")
-
-    # ── Accept both JSON and form data ──────────────────────────────────────
-    data = request.get_json(silent=True) or request.form
-
-    name  = (data.get("name")  or "").strip()
-    email = (data.get("email") or "").strip().lower()
-    role  = (data.get("role")  or "student").strip()
-    school_or_company = (data.get("school_or_company") or "").strip()
-    grade  = (data.get("grade")  or "").strip()
-    field  = (data.get("field")  or "").strip()
-    goals  = (data.get("goals")  or "").strip()
-    phone    = (data.get("phone")    or "").strip()
-    telegram = (data.get("telegram") or "").strip()
-
-    # ── Validation ──────────────────────────────────────────────────────────
-    if not name or not email:
-        return jsonify({"success": False, "message": "Name and email are required."}), 400
-
-    if not re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email):
-        return jsonify({"success": False, "message": "Invalid email address."}), 400
-
-    try:
-        with get_cursor() as cur:
-            cur.execute("""
-                INSERT INTO waitlist
-                    (name, email, role, school_or_company, grade, field, goals, phone, telegram)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (email) DO NOTHING
-                RETURNING id
-            """, (name, email, role, school_or_company, grade, field, goals, phone, telegram))
-
-            row = cur.fetchone()
-
-        if row:
-            return jsonify({"success": True, "message": "You're on the list! We'll be in touch."}), 200
-        else:
-            # Email already in waitlist — not really an error, just confirm
-            return jsonify({"success": True, "message": "You're already on the list!"}), 200
-
-    except Exception as exc:
-        import logging
-        logging.getLogger(__name__).exception("Waitlist insert failed")
-        return jsonify({"success": False, "message": "Server error. Please try again."}), 500
+@public_bp.route("/waitlist", methods=["GET"])
+def waitlist_page():
+    """GET-only: serve the waitlist page. POST is handled by auth_bp.waitlist."""
+    return render_template("public/waitlist.html")
 
 
 @public_bp.route("/companies/<int:id>/access", methods=["POST"])

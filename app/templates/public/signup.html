@@ -134,7 +134,7 @@
     document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
   })();
 
-  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  /* csrfToken already declared in public/base.html — do NOT redeclare */
   const roleInput       = document.getElementById('role');
   const studentFields   = document.getElementById('studentFields');
   const companyFields   = document.getElementById('companyFields');

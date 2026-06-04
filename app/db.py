@@ -27,7 +27,7 @@ if not DATABASE_URL:
 # Connection pool — ThreadedConnectionPool is
 # safe under Gunicorn/gevent worker models.
 # ─────────────────────────────────────────────
-_pool: ThreadedConnectionPool | None = None
+_pool = None  # type: ThreadedConnectionPool | None  (Optional; avoids 3.9 syntax error)
 
 
 def _build_pool(retries: int = 5, delay: float = 2.0) -> ThreadedConnectionPool:
@@ -214,11 +214,18 @@ def init_db():
             created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
         """)
-        for col, typedef in [
-            ("source_type",      "TEXT CHECK (source_type IN ('company','admin')) DEFAULT 'company'"),
-            ("created_by_admin", "INTEGER REFERENCES users(id) ON DELETE SET NULL"),
-        ]:
-            cur.execute(f"ALTER TABLE internships ADD COLUMN IF NOT EXISTS {col} {typedef};")
+        # ADD COLUMN IF NOT EXISTS — keep typedef simple (no CHECK here, added separately)
+        cur.execute("ALTER TABLE internships ADD COLUMN IF NOT EXISTS source_type TEXT DEFAULT 'company';")
+        cur.execute("ALTER TABLE internships ADD COLUMN IF NOT EXISTS created_by_admin INTEGER REFERENCES users(id) ON DELETE SET NULL;")
+        # Add the CHECK constraint separately (idempotent via exception guard)
+        cur.execute("""
+        DO $$ BEGIN
+            ALTER TABLE internships
+                ADD CONSTRAINT internships_source_type_check
+                CHECK (source_type IN ('company', 'admin'));
+        EXCEPTION WHEN duplicate_object THEN NULL;
+        END $$;
+        """)
 
         cur.execute("""
         CREATE TABLE IF NOT EXISTS internship_skills (
