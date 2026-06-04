@@ -56,14 +56,49 @@
       <span class="uz">Kandidatlarni ko'rish uchun kirish kodini kiriting.</span>
       <span class="en">Enter your access code to view candidates.</span>
     </p>
-    <form method="POST" action="/companies/{{ company.id }}/access" class="flex gap-3">
+    <form id="accessForm" class="space-y-3">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="text" name="access_code" required class="input flex-1"
-        placeholder="{{ 'Kirish kodi' if request.accept_languages.best_match(['uz','en'])=='uz' else 'Access code' }}">
-      <button type="submit" class="btn btn-primary">
-        <span class="uz">Kirish</span><span class="en">Enter</span>
-      </button>
+      <div class="flex gap-3">
+        <input type="text" name="access_code" required class="input flex-1"
+          placeholder="Access code">
+        <button type="submit" class="btn btn-primary">
+          <span class="uz">Kirish</span><span class="en">Enter</span>
+        </button>
+      </div>
+      <p id="accessMsg" class="text-xs" style="color:var(--muted)"></p>
     </form>
+
+    <script>
+    document.getElementById('accessForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const msg = document.getElementById('accessMsg');
+      const code = e.target.access_code.value.trim();
+      const csrf = e.target.csrf_token.value;
+      btn.disabled = true; btn.textContent = '...';
+      try {
+        const res = await fetch('/companies/{{ company.id }}/access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrf },
+          body: JSON.stringify({ access_code: code })
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = data.redirect;
+        } else {
+          msg.textContent = data.message || 'Invalid code.';
+          msg.style.color = '#fca5a5';
+          btn.disabled = false;
+          btn.innerHTML = '<span class="uz">Kirish</span><span class="en">Enter</span>';
+        }
+      } catch {
+        msg.textContent = 'Network error. Please try again.';
+        msg.style.color = '#fca5a5';
+        btn.disabled = false;
+        btn.innerHTML = '<span class="uz">Kirish</span><span class="en">Enter</span>';
+      }
+    });
+    </script>
   </div>
 
 </div>

@@ -388,19 +388,29 @@ def update_application():
     except ValueError:
         return jsonify({"status": "error", "message": "Invalid score"}), 400
 
-    # 🔁 STATUS MAPPING (IMPORTANT 🔥)
-    status_map = {
+    # Normalise status — accept DB values, Uzbek labels, and English labels
+    VALID_DB_STATUSES = {"new", "reviewing", "shortlisted", "accepted", "rejected"}
+    DISPLAY_TO_DB = {
+        # Uzbek
         "Yangi": "new",
         "Ko'rib chiqilmoqda": "reviewing",
         "Qisqa ro'yxat": "shortlisted",
         "Saralangan": "accepted",
-        "Rad etilgan": "rejected"
+        "Rad etilgan": "rejected",
+        # English
+        "New": "new",
+        "Reviewing": "reviewing",
+        "Shortlisted": "shortlisted",
+        "Accepted": "accepted",
+        "Rejected": "rejected",
     }
 
-    if status not in status_map:
-        return jsonify({"status": "error", "message": "Invalid status"}), 400
-
-    db_status = status_map[status]
+    if status in VALID_DB_STATUSES:
+        db_status = status
+    elif status in DISPLAY_TO_DB:
+        db_status = DISPLAY_TO_DB[status]
+    else:
+        return jsonify({"status": "error", "message": f"Invalid status: {status!r}"}), 400
 
     try:
         with get_cursor() as cur:

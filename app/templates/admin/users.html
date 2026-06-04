@@ -14,6 +14,16 @@
     </p>
   </div>
 
+  <!-- Waitlist summary pill -->
+  {% if waitlist_users %}
+  <div class="flex items-center gap-2 text-sm" style="color:var(--muted)">
+    <span class="badge badge-neutral">
+      <span class="uz">Waitlist: {{ waitlist_users|length }} ta</span>
+      <span class="en">Waitlist: {{ waitlist_users|length }} entries</span>
+    </span>
+  </div>
+  {% endif %}
+
   <!-- Desktop table -->
   <div class="card overflow-x-auto hidden sm:block">
     <table class="table-std">

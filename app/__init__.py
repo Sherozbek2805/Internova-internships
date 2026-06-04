@@ -129,7 +129,10 @@ def _register_security_headers(app):
         csp = (
             "default-src 'self'; "
             "img-src 'self' data: https:; "
-            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
+            # Tailwind CDN + Chart.js CDN (jsdelivr) + unsafe-inline for inline scripts
+            "script-src 'self' 'unsafe-inline' "
+            "https://cdn.tailwindcss.com "
+            "https://cdn.jsdelivr.net; "
             "style-src 'self' 'unsafe-inline' https:; "
             "font-src 'self' https: data:; "
             "connect-src 'self' https:; "

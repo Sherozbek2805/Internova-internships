@@ -138,6 +138,20 @@
     return map[s] || 'badge-neutral';
   }
 
+  /* Bilingual status labels — keys are DB values */
+  const STATUS_LABELS = {
+    new:         { uz: 'Yangi',             en: 'New' },
+    reviewing:   { uz: "Ko'rib chiqilmoqda", en: 'Reviewing' },
+    shortlisted: { uz: "Qisqa ro'yxat",     en: 'Shortlisted' },
+    accepted:    { uz: 'Saralangan',         en: 'Accepted' },
+    rejected:    { uz: 'Rad etilgan',        en: 'Rejected' },
+  };
+
+  function statusLabel(key) {
+    const lang = document.documentElement.getAttribute('data-lang') || 'uz';
+    return STATUS_LABELS[key]?.[lang] || key;
+  }
+
   function renderCandidates(apps) {
     const c = document.getElementById('candidatesContainer');
     if (!apps.length) {
@@ -155,16 +169,17 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-2 mb-0.5">
               <p class="font-medium text-sm truncate" style="color:var(--text)">${a.student_name}</p>
-              <span class="badge ${statusBadge(a.status)} text-xs flex-shrink-0">${a.status}</span>
+              <span class="badge ${statusBadge(a.status)} text-xs flex-shrink-0">${statusLabel(a.status)}</span>
             </div>
             <p class="text-xs mb-0.5" style="color:var(--muted)">${a.student_email}</p>
             <p class="text-xs" style="color:var(--faint)">${a.internship_title}</p>
 
             <div class="grid grid-cols-3 gap-2 mt-3">
-              <input type="number" value="${a.score || 0}" class="score-input input text-sm" placeholder="Score">
+              <input type="number" value="${a.score || 0}" class="score-input input text-sm" placeholder="Score" min="0" max="100">
               <select class="status-select input text-sm" style="grid-column:span 2">
-                ${['Yangi',"Ko'rib chiqilmoqda","Qisqa ro'yxat","Saralangan"]
-                  .map(s => `<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
+                ${Object.keys(STATUS_LABELS).map(s =>
+                  `<option value="${s}" ${a.status===s?'selected':''}>${statusLabel(s)}</option>`
+                ).join('')}
               </select>
             </div>
             <textarea class="evaluation-note input mt-2 h-16 text-xs" placeholder="Evaluation note...">${a.evaluation_note || ''}</textarea>

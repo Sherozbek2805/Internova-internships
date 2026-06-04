@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, abort, render_template, redirect, session, jsonify, request, flash
 from app.db import get_db
 from app.decorators import login_required, role_required
@@ -103,34 +104,21 @@ def terms():
 
 
 
-@public_bp.route("/api/internship/<int:id>/view")
+@public_bp.route("/api/internship/<int:id>/view", methods=["POST"])
 def track_view(id):
+    """Increment view count for an internship. Uses internship_stats table."""
     try:
         with get_cursor() as cur:
-            # 🔍 CHECK EXISTENCE
             cur.execute("""
-                SELECT id FROM analytics WHERE internship_id = %s
+                INSERT INTO internship_stats (internship_id, views, applications)
+                VALUES (%s, 1, 0)
+                ON CONFLICT (internship_id)
+                DO UPDATE SET views = internship_stats.views + 1
             """, (id,))
-            row = cur.fetchone()
-
-            if row:
-                # 🔄 UPDATE
-                cur.execute("""
-                    UPDATE analytics
-                    SET views = views + 1
-                    WHERE internship_id = %s
-                """, (id,))
-            else:
-                # ➕ INSERT
-                cur.execute("""
-                    INSERT INTO analytics (internship_id, views, applications)
-                    VALUES (%s, 1, 0)
-                """, (id,))
-
         return jsonify({"success": True})
-
-    except Exception as e:
-        print("TRACK VIEW ERROR:", e)
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("track_view failed")
         return jsonify({"success": False}), 500
 
 @public_bp.route("/directory/companies")
@@ -208,53 +196,96 @@ def company_portal(id):
         return "Internal Server Error", 500
 
     
+@public_bp.route("/waitlist", methods=["GET", "POST"])
+def waitlist():
+    if request.method == "GET":
+        return render_template("public/waitlist.html")
+
+    # ── Accept both JSON and form data ──────────────────────────────────────
+    data = request.get_json(silent=True) or request.form
+
+    name  = (data.get("name")  or "").strip()
+    email = (data.get("email") or "").strip().lower()
+    role  = (data.get("role")  or "student").strip()
+    school_or_company = (data.get("school_or_company") or "").strip()
+    grade  = (data.get("grade")  or "").strip()
+    field  = (data.get("field")  or "").strip()
+    goals  = (data.get("goals")  or "").strip()
+    phone    = (data.get("phone")    or "").strip()
+    telegram = (data.get("telegram") or "").strip()
+
+    # ── Validation ──────────────────────────────────────────────────────────
+    if not name or not email:
+        return jsonify({"success": False, "message": "Name and email are required."}), 400
+
+    if not re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email):
+        return jsonify({"success": False, "message": "Invalid email address."}), 400
+
+    try:
+        with get_cursor() as cur:
+            cur.execute("""
+                INSERT INTO waitlist
+                    (name, email, role, school_or_company, grade, field, goals, phone, telegram)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (email) DO NOTHING
+                RETURNING id
+            """, (name, email, role, school_or_company, grade, field, goals, phone, telegram))
+
+            row = cur.fetchone()
+
+        if row:
+            return jsonify({"success": True, "message": "You're on the list! We'll be in touch."}), 200
+        else:
+            # Email already in waitlist — not really an error, just confirm
+            return jsonify({"success": True, "message": "You're already on the list!"}), 200
+
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).exception("Waitlist insert failed")
+        return jsonify({"success": False, "message": "Server error. Please try again."}), 500
+
+
 @public_bp.route("/companies/<int:id>/access", methods=["POST"])
 def company_access(id):
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.is_json
+
+    data = request.get_json(silent=True) or request.form
+    access_code = (data.get("access_code") or "").strip()
+
+    if not access_code:
+        if is_ajax:
+            return jsonify({"success": False, "message": "Access code required."}), 400
+        flash("Access code required.", "error")
+        return redirect(f"/companies/{id}")
+
     try:
-
-        access_code = (
-            request.form.get("access_code") or ""
-        ).strip()
-
-        if not access_code:
-
-            flash("Access code required.", "error")
-
-            return redirect(f"/companies/{id}")
-
         with get_cursor() as cur:
-
-            # CHECK CODE
             cur.execute("""
-                SELECT *
-                FROM external_company_access
-                WHERE
-                    company_id = %s
-                    AND access_code = %s
-                    AND is_active = TRUE
-            """, (
-                id,
-                access_code
-            ))
-
+                SELECT id FROM external_company_access
+                WHERE company_id = %s
+                  AND access_code = %s
+                  AND is_active = TRUE
+                  AND (expires_at IS NULL OR expires_at > NOW())
+            """, (id, access_code))
             access = cur.fetchone()
 
-            if not access:
+        if not access:
+            if is_ajax:
+                return jsonify({"success": False, "message": "Invalid or expired access code."}), 403
+            flash("Invalid access code.", "error")
+            return redirect(f"/companies/{id}")
 
-                flash("Invalid access code.", "error")
-
-                return redirect(f"/companies/{id}")
-
-        # ✅ EXTERNAL COMPANY SESSION
         session["external_company_access"] = True
         session["external_company_id"] = id
 
-        return redirect(
-            url_for("company.dashboard")
-        )
+        dashboard_url = url_for("company.dashboard")
+        if is_ajax:
+            return jsonify({"success": True, "redirect": dashboard_url})
+        return redirect(dashboard_url)
 
-    except Exception as e:
-
-        print("COMPANY ACCESS ERROR:", e)
-
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("company_access failed")
+        if is_ajax:
+            return jsonify({"success": False, "message": "Server error."}), 500
         return "Internal Server Error", 500
