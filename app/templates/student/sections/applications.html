@@ -10,7 +10,10 @@
     </p>
   </div>
 
-  <div class="card overflow-x-auto">
+  {% if applications %}
+
+  <!-- Desktop table -->
+  <div class="card overflow-x-auto hidden sm:block">
     <table class="table-std">
       <thead>
         <tr>
@@ -23,38 +26,67 @@
         </tr>
       </thead>
       <tbody>
-        {% if applications %}
-          {% for app in applications %}
-            <tr>
-              <td class="font-medium" style="color:var(--text)">{{ app.title }}</td>
-              <td style="color:var(--muted)">{{ app.company_name or '—' }}</td>
-              <td style="color:var(--muted)">{{ app.created_at.strftime('%d %b %Y') if app.created_at else '—' }}</td>
-              <td>
-                <span class="badge status-{{ app.status }}">{{ app.status }}</span>
-              </td>
-              <td style="color:var(--muted)">{{ app.score if app.score is not none else '—' }}</td>
-              <td>
-                <button
-                  class="btn btn-ghost text-xs view-feedback-btn"
-                  data-note="{{ app.evaluation_note or '' }}"
-                  data-score="{{ app.score or '' }}"
-                  data-status="{{ app.status }}">
-                  <span class="uz">Ko'rish</span><span class="en">View</span>
-                </button>
-              </td>
-            </tr>
-          {% endfor %}
-        {% else %}
-          <tr>
-            <td colspan="6" class="text-center py-8" style="color:var(--muted)">
-              <span class="uz">Hech qanday ariza topshirilmagan.</span>
-              <span class="en">No applications submitted yet.</span>
-            </td>
-          </tr>
-        {% endif %}
+        {% for app in applications %}
+        <tr>
+          <td class="font-medium" style="color:var(--text)">{{ app.title }}</td>
+          <td style="color:var(--muted)">{{ app.company_name or '—' }}</td>
+          <td style="color:var(--muted)">{{ app.created_at.strftime('%d %b %Y') if app.created_at else '—' }}</td>
+          <td><span class="badge status-{{ app.status }}">{{ app.status }}</span></td>
+          <td style="color:var(--muted)">{{ app.score if app.score is not none else '—' }}</td>
+          <td>
+            <button class="btn btn-ghost text-xs view-feedback-btn"
+              data-note="{{ app.evaluation_note or '' }}"
+              data-score="{{ app.score or '' }}"
+              data-status="{{ app.status }}">
+              <span class="uz">Ko'rish</span><span class="en">View</span>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <!-- Mobile cards -->
+  <div class="sm:hidden space-y-3">
+    {% for app in applications %}
+    <div class="card p-4">
+      <div class="flex items-start justify-between gap-3 mb-2">
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-sm truncate" style="color:var(--text)">{{ app.title }}</p>
+          <p class="text-xs mt-0.5" style="color:var(--muted)">{{ app.company_name or '—' }}</p>
+        </div>
+        <span class="badge status-{{ app.status }} text-xs flex-shrink-0">{{ app.status }}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex gap-3 text-xs" style="color:var(--muted)">
+          <span>{{ app.created_at.strftime('%d %b %Y') if app.created_at else '—' }}</span>
+          <span>
+            <span class="uz">Ball:</span><span class="en">Score:</span>
+            {{ app.score if app.score is not none else '—' }}
+          </span>
+        </div>
+        <button class="btn btn-ghost text-xs view-feedback-btn"
+          data-note="{{ app.evaluation_note or '' }}"
+          data-score="{{ app.score or '' }}"
+          data-status="{{ app.status }}">
+          <span class="uz">Ko'rish</span><span class="en">View</span>
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="card p-10 text-center" style="color:var(--muted)">
+    <p class="text-3xl mb-3">📋</p>
+    <p class="uz">Hech qanday ariza topshirilmagan.</p>
+    <p class="en">No applications submitted yet.</p>
+    <button onclick="showSection('explore')" class="btn btn-ghost mt-4 text-sm">
+      <span class="uz">Stajirovkalarni ko'rish →</span><span class="en">Browse internships →</span>
+    </button>
+  </div>
+  {% endif %}
 </section>
 
 <!-- Feedback Modal -->

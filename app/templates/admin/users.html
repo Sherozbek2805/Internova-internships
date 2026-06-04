@@ -1,23 +1,30 @@
 {% extends "admin/base.html" %}
-{% block content %}
+{% block title %}<span class="uz">Foydalanuvchilar</span><span class="en">Users</span>{% endblock %}
 
+{% block content %}
 <div class="space-y-6 fade-up">
 
   <div>
-    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">Foydalanuvchilar</h1>
-    <p class="text-sm mt-1" style="color:var(--muted)">Barcha foydalanuvchilar ro'yxati va admin boshqaruvi.</p>
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">
+      <span class="uz">Foydalanuvchilar</span><span class="en">Users</span>
+    </h1>
+    <p class="text-sm mt-1" style="color:var(--muted)">
+      <span class="uz">Barcha foydalanuvchilar ro'yxati va admin boshqaruvi.</span>
+      <span class="en">All registered users and admin controls.</span>
+    </p>
   </div>
 
-  <div class="card overflow-x-auto">
+  <!-- Desktop table -->
+  <div class="card overflow-x-auto hidden sm:block">
     <table class="table-std">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Ism</th>
+          <th><span class="uz">Ism</span><span class="en">Name</span></th>
           <th>Email</th>
-          <th>Rol</th>
-          <th>Holat</th>
-          <th>Amal</th>
+          <th><span class="uz">Rol</span><span class="en">Role</span></th>
+          <th><span class="uz">Holat</span><span class="en">Status</span></th>
+          <th><span class="uz">Amal</span><span class="en">Action</span></th>
         </tr>
       </thead>
       <tbody>
@@ -27,38 +34,73 @@
           <td class="font-medium" style="color:var(--text)">{{ user.name }}</td>
           <td style="color:var(--muted)">{{ user.email }}</td>
           <td>
-            <span class="badge {% if user.role == 'admin' %}badge-info{% else %}badge-neutral{% endif %}">
-              {{ user.role }}
-            </span>
+            <span class="badge {% if user.role == 'admin' %}badge-info{% else %}badge-neutral{% endif %}">{{ user.role }}</span>
           </td>
           <td>
             {% if user.banned %}
-              <span class="badge badge-danger">Bloklangan</span>
+              <span class="badge badge-danger"><span class="uz">Bloklangan</span><span class="en">Banned</span></span>
             {% else %}
-              <span class="badge badge-success">Faol</span>
+              <span class="badge badge-success"><span class="uz">Faol</span><span class="en">Active</span></span>
             {% endif %}
           </td>
           <td>
             {% if user.banned %}
               <form method="POST" action="{{ url_for('admin.unban_user', user_id=user.id) }}" data-ajax>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-ghost text-xs">Tiklash</button>
+                <button class="btn btn-ghost text-xs"><span class="uz">Tiklash</span><span class="en">Restore</span></button>
               </form>
             {% else %}
               <form method="POST" action="{{ url_for('admin.ban_user', user_id=user.id) }}" data-ajax>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-danger text-xs">Bloklash</button>
+                <button class="btn btn-danger text-xs"><span class="uz">Bloklash</span><span class="en">Ban</span></button>
               </form>
             {% endif %}
           </td>
         </tr>
         {% else %}
         <tr>
-          <td colspan="6" class="text-center py-8" style="color:var(--muted)">Foydalanuvchilar topilmadi.</td>
+          <td colspan="6" class="text-center py-8" style="color:var(--muted)">
+            <span class="uz">Foydalanuvchilar topilmadi.</span><span class="en">No users found.</span>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+  </div>
+
+  <!-- Mobile cards -->
+  <div class="sm:hidden space-y-3">
+    {% for user in users %}
+    <div class="card p-4">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <p class="font-medium text-sm" style="color:var(--text)">{{ user.name }}</p>
+          <p class="text-xs mt-0.5" style="color:var(--muted)">{{ user.email }}</p>
+          <p class="text-xs mt-0.5" style="color:var(--muted)">#{{ user.id }} · {{ user.role }}</p>
+        </div>
+        {% if user.banned %}
+          <span class="badge badge-danger text-xs flex-shrink-0"><span class="uz">Bloklangan</span><span class="en">Banned</span></span>
+        {% else %}
+          <span class="badge badge-success text-xs flex-shrink-0"><span class="uz">Faol</span><span class="en">Active</span></span>
+        {% endif %}
+      </div>
+      {% if user.banned %}
+        <form method="POST" action="{{ url_for('admin.unban_user', user_id=user.id) }}" data-ajax>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-ghost text-xs w-full"><span class="uz">Tiklash</span><span class="en">Restore</span></button>
+        </form>
+      {% else %}
+        <form method="POST" action="{{ url_for('admin.ban_user', user_id=user.id) }}" data-ajax>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-danger text-xs w-full"><span class="uz">Bloklash</span><span class="en">Ban</span></button>
+        </form>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="card p-8 text-center" style="color:var(--muted)">
+      <span class="uz">Foydalanuvchilar topilmadi.</span><span class="en">No users found.</span>
+    </div>
+    {% endfor %}
   </div>
 
 </div>

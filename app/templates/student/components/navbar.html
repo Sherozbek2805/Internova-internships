@@ -1,87 +1,101 @@
 <header class="site-header">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
 
     <!-- Logo -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 flex-shrink-0">
       <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
-      <div>
-        <p class="font-semibold text-sm" style="color:var(--text)">Internova</p>
-        <p class="text-xs" style="color:var(--muted)">
-          <span class="uz">Talaba paneli</span>
-          <span class="en">Student Panel</span>
+      <div class="hidden sm:block">
+        <p class="font-semibold text-sm leading-none" style="color:var(--text)">Internova</p>
+        <p class="text-xs mt-0.5" style="color:var(--muted)">
+          <span class="uz">Talaba</span><span class="en">Student</span>
         </p>
       </div>
     </div>
 
-    <!-- Desktop nav -->
-    <nav class="hidden lg:flex items-center gap-1">
-      <button data-section="overview"   onclick="showSection('overview')"   class="nav-link nav-btn">
+    <!-- Desktop nav (lg+) -->
+    <nav class="hidden lg:flex items-center gap-1 flex-1 justify-center">
+      <button data-section="overview"     onclick="showSection('overview')"     class="nav-link nav-btn">
         <span class="uz">Umumiy</span><span class="en">Overview</span>
       </button>
-      <button data-section="explore"    onclick="showSection('explore')"    class="nav-link nav-btn">
+      <button data-section="explore"      onclick="showSection('explore')"      class="nav-link nav-btn">
         <span class="uz">Izlash</span><span class="en">Explore</span>
       </button>
       <button data-section="applications" onclick="showSection('applications')" class="nav-link nav-btn">
         <span class="uz">Arizalar</span><span class="en">Applications</span>
       </button>
-      <button data-section="saved"      onclick="showSection('saved')"      class="nav-link nav-btn">
+      <button data-section="saved"        onclick="showSection('saved')"        class="nav-link nav-btn">
         <span class="uz">Saqlangan</span><span class="en">Saved</span>
       </button>
-      <button data-section="profile"    onclick="showSection('profile')"    class="nav-link nav-btn">
+      <button data-section="profile"      onclick="showSection('profile')"      class="nav-link nav-btn">
         <span class="uz">Profil</span><span class="en">Profile</span>
       </button>
     </nav>
 
     <!-- Right controls -->
-    <div class="flex items-center gap-2">
-      <!-- User chip (desktop) -->
+    <div class="flex items-center gap-1.5 flex-shrink-0">
+      <!-- User chip — desktop only -->
       <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg" style="background:var(--surface2);border:1px solid var(--border)">
         <div class="avatar w-7 h-7 text-xs font-bold" style="background:var(--surface3)">
           {{ user.name[0]|upper if user and user.name else 'S' }}
         </div>
-        <span class="text-sm font-medium" style="color:var(--text)">{{ user.name or 'Student' }}</span>
+        <span class="text-sm font-medium hidden lg:block" style="color:var(--text)">{{ user.name or 'Student' }}</span>
       </div>
 
-      <div class="ctrl-bar">
-        <button class="ctrl-btn" onclick="toggleLang()">
-          <span class="uz">EN</span><span class="en">UZ</span>
-        </button>
-        <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
-      </div>
+      <button class="ctrl-btn" onclick="toggleLang()" title="Switch language">
+        <span class="uz">EN</span><span class="en">UZ</span>
+      </button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon title="Toggle theme">🌙</button>
 
       <form action="/logout" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button class="btn btn-ghost" style="font-size:0.8rem;padding:0.4rem 0.9rem">
+        <button class="btn btn-ghost hidden sm:inline-flex" style="font-size:0.8rem;padding:0.4rem 0.8rem">
           <span class="uz">Chiqish</span><span class="en">Logout</span>
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Mobile nav -->
-  <div class="lg:hidden px-4 pb-3">
-    <div class="grid grid-cols-5 gap-1 text-xs">
-      <button data-section="overview"     onclick="showSection('overview')"     class="nav-link nav-btn text-center py-2">
-        <span class="uz">Umumiy</span><span class="en">Home</span>
+  <!-- Mobile bottom nav (< lg) — scrollable icon+label bar -->
+  <div class="lg:hidden overflow-x-auto" style="border-top:1px solid var(--border)">
+    <div class="flex min-w-max px-2 py-1">
+      <button data-section="overview"     onclick="showSection('overview')"     class="nav-btn flex flex-col items-center gap-0.5 px-4 py-2 rounded-lg text-center transition" style="min-width:64px">
+        <span style="font-size:1.1rem">🏠</span>
+        <span class="text-[10px]" style="color:var(--muted)"><span class="uz">Umumiy</span><span class="en">Home</span></span>
       </button>
-      <button data-section="explore"      onclick="showSection('explore')"      class="nav-link nav-btn text-center py-2">
-        <span class="uz">Izlash</span><span class="en">Explore</span>
+      <button data-section="explore"      onclick="showSection('explore')"      class="nav-btn flex flex-col items-center gap-0.5 px-4 py-2 rounded-lg text-center transition" style="min-width:64px">
+        <span style="font-size:1.1rem">🔍</span>
+        <span class="text-[10px]" style="color:var(--muted)"><span class="uz">Izlash</span><span class="en">Explore</span></span>
       </button>
-      <button data-section="applications" onclick="showSection('applications')" class="nav-link nav-btn text-center py-2">
-        <span class="uz">Ariza</span><span class="en">Apply</span>
+      <button data-section="applications" onclick="showSection('applications')" class="nav-btn flex flex-col items-center gap-0.5 px-4 py-2 rounded-lg text-center transition" style="min-width:64px">
+        <span style="font-size:1.1rem">📋</span>
+        <span class="text-[10px]" style="color:var(--muted)"><span class="uz">Ariza</span><span class="en">Apps</span></span>
       </button>
-      <button data-section="saved"        onclick="showSection('saved')"        class="nav-link nav-btn text-center py-2">
-        <span class="uz">Saqlangan</span><span class="en">Saved</span>
+      <button data-section="saved"        onclick="showSection('saved')"        class="nav-btn flex flex-col items-center gap-0.5 px-4 py-2 rounded-lg text-center transition" style="min-width:64px">
+        <span style="font-size:1.1rem">🔖</span>
+        <span class="text-[10px]" style="color:var(--muted)"><span class="uz">Saqlangan</span><span class="en">Saved</span></span>
       </button>
-      <button data-section="profile"      onclick="showSection('profile')"      class="nav-link nav-btn text-center py-2">
-        <span class="uz">Profil</span><span class="en">Profile</span>
+      <button data-section="profile"      onclick="showSection('profile')"      class="nav-btn flex flex-col items-center gap-0.5 px-4 py-2 rounded-lg text-center transition" style="min-width:64px">
+        <span style="font-size:1.1rem">👤</span>
+        <span class="text-[10px]" style="color:var(--muted)"><span class="uz">Profil</span><span class="en">Profile</span></span>
       </button>
+      <form action="/logout" method="POST" class="sm:hidden flex items-center">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="flex flex-col items-center gap-0.5 px-4 py-2 rounded-lg" style="min-width:64px">
+          <span style="font-size:1.1rem">🚪</span>
+          <span class="text-[10px]" style="color:var(--muted)"><span class="uz">Chiqish</span><span class="en">Logout</span></span>
+        </button>
+      </form>
     </div>
   </div>
 </header>
 
+<style>
+  /* Active state for mobile icon nav */
+  .nav-btn.active span[style*="font-size"] { filter: brightness(1.5); }
+  .nav-btn.active .text-\[10px\] { color: var(--text) !important; }
+</style>
+
 <script>
-  /* Apply init state for theme-icon buttons */
   document.addEventListener('DOMContentLoaded', () => {
     const t = document.documentElement.getAttribute('data-theme') || 'dark';
     document.querySelectorAll('[data-theme-icon]').forEach(el => {

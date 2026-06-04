@@ -1,64 +1,82 @@
 {% extends "admin/base.html" %}
-{% block content %}
+{% block title %}<span class="uz">Kompaniyalar</span><span class="en">Companies</span>{% endblock %}
 
+{% block content %}
 <div class="space-y-6 fade-up">
 
   <div>
-    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">Kompaniyalar</h1>
-    <p class="text-sm mt-1" style="color:var(--muted)">Platformadagi barcha kompaniyalar ro'yxati.</p>
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">
+      <span class="uz">Kompaniyalar</span><span class="en">Companies</span>
+    </h1>
+    <p class="text-sm mt-1" style="color:var(--muted)">
+      <span class="uz">Platformadagi barcha kompaniyalar ro'yxati.</span>
+      <span class="en">All companies registered on the platform.</span>
+    </p>
   </div>
 
-  <div class="space-y-4">
+  <div class="space-y-3 sm:space-y-4">
     {% for c in companies %}
-    <div class="card p-6">
-      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+    <div class="card p-4 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
 
         <!-- Left info -->
         <div class="flex-1 min-w-0">
-          <h2 class="font-semibold text-lg mb-2" style="color:var(--text)">{{ c.name }}</h2>
+          <h2 class="font-semibold" style="color:var(--text)">{{ c.name }}</h2>
 
-          <div class="flex flex-wrap gap-3 text-sm mb-3" style="color:var(--muted)">
-            <span>📧 {{ c.owner_email or '—' }}</span>
-            <span>📞 {{ c.phone1 or '—' }}</span>
-            <span>👤 {{ c.owner_name or '—' }}</span>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs mt-2 mb-3" style="color:var(--muted)">
+            {% if c.owner_email %}<span>📧 {{ c.owner_email }}</span>{% endif %}
+            {% if c.phone1 %}<span>📞 {{ c.phone1 }}</span>{% endif %}
+            {% if c.owner_name %}<span>👤 {{ c.owner_name }}</span>{% endif %}
             {% if c.website %}
               <a href="{{ c.website }}" target="_blank" style="color:var(--text);text-decoration:underline">🌐 {{ c.website }}</a>
             {% endif %}
           </div>
 
           {% if c.description %}
-            <p class="text-sm" style="color:var(--muted)">{{ c.description }}</p>
+            <p class="text-xs mb-3 leading-relaxed" style="color:var(--muted)">{{ c.description }}</p>
           {% endif %}
 
           <!-- Access code -->
-          <div class="mt-4 flex flex-wrap items-center gap-3">
+          <div class="flex flex-wrap items-center gap-2">
             <form method="POST" action="{{ url_for('admin.generate_company_code', company_id=c.id) }}" data-ajax>
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button class="btn btn-ghost text-xs">Generate Code</button>
+              <button class="btn btn-ghost text-xs">
+                <span class="uz">Kod yaratish</span><span class="en">Generate Code</span>
+              </button>
             </form>
 
             {% if c.access_code %}
-              <div class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-mono" style="background:var(--surface2);border:1px solid var(--border)">
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono" style="background:var(--surface2);border:1px solid var(--border)">
                 <code id="code-{{ c.id }}" style="color:#86efac">{{ c.access_code }}</code>
-                <button type="button" onclick="copyCode('{{ c.id }}')" class="btn btn-ghost text-xs" style="padding:0.2rem 0.5rem">Copy</button>
+                <button type="button" onclick="copyCode('{{ c.id }}')" class="btn btn-ghost" style="font-size:0.7rem;padding:0.15rem 0.5rem">
+                  <span class="uz">Nusxa</span><span class="en">Copy</span>
+                </button>
               </div>
             {% endif %}
           </div>
         </div>
 
         <!-- Right: status + action -->
-        <div class="flex flex-row lg:flex-col items-center lg:items-end gap-3 flex-shrink-0">
+        <div class="flex sm:flex-col items-center sm:items-end gap-2 flex-shrink-0">
           {% if c.verified %}
-            <span class="badge badge-success" data-status>Tasdiqlangan</span>
+            <span class="badge badge-success" data-status>
+              <span class="uz">Tasdiqlangan</span><span class="en">Verified</span>
+            </span>
             <form method="POST" action="{{ url_for('admin.unverify_company', company_id=c.id) }}" data-ajax>
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button class="btn btn-danger text-xs">To'xtatish</button>
+              <button class="btn btn-danger text-xs">
+                <span class="uz">To'xtatish</span><span class="en">Deactivate</span>
+              </button>
             </form>
           {% else %}
-            <span class="badge badge-warning" data-status>Kutilmoqda</span>
+            <span class="badge badge-warning" data-status>
+              <span class="uz">Kutilmoqda</span><span class="en">Pending</span>
+            </span>
             <form method="POST" action="{{ url_for('admin.verify_company', company_id=c.id) }}" data-ajax>
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button class="btn btn-ghost text-xs" style="color:#86efac;border-color:rgba(34,197,94,0.3)">Tasdiqlash</button>
+              <button class="btn btn-ghost text-xs" style="color:#86efac;border-color:rgba(34,197,94,0.3)">
+                <span class="uz">Tasdiqlash</span><span class="en">Verify</span>
+              </button>
             </form>
           {% endif %}
         </div>
@@ -66,7 +84,9 @@
       </div>
     </div>
     {% else %}
-    <div class="card p-10 text-center" style="color:var(--muted)">Kompaniyalar topilmadi.</div>
+    <div class="card p-10 text-center" style="color:var(--muted)">
+      <span class="uz">Kompaniyalar topilmadi.</span><span class="en">No companies found.</span>
+    </div>
     {% endfor %}
   </div>
 
@@ -74,9 +94,11 @@
 
 <script>
 function copyCode(id) {
-  const code = document.getElementById('code-' + id).innerText;
-  navigator.clipboard.writeText(code);
-  showToast('Code copied ✓');
+  const code = document.getElementById('code-' + id)?.innerText;
+  if (code) {
+    navigator.clipboard.writeText(code);
+    showToast(document.documentElement.getAttribute('data-lang') === 'en' ? 'Code copied ✓' : 'Kod nusxalandi ✓');
+  }
 }
 </script>
 {% endblock %}

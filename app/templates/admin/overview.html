@@ -1,18 +1,26 @@
 {% extends "admin/base.html" %}
-{% block title %}Overview{% endblock %}
+{% block title %}<span class="uz">Umumiy</span><span class="en">Overview</span>{% endblock %}
 
 {% block content %}
-<div class="space-y-8 fade-up">
+<div class="space-y-6 sm:space-y-8 fade-up">
 
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <div>
-      <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">Platforma holati</h1>
-      <p class="text-sm mt-1" style="color:var(--muted)">Barcha asosiy ko'rsatkichlar real vaqtda.</p>
+      <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">
+        <span class="uz">Platforma holati</span><span class="en">Platform Overview</span>
+      </h1>
+      <p class="text-sm mt-1" style="color:var(--muted)">
+        <span class="uz">Barcha asosiy ko'rsatkichlar real vaqtda.</span>
+        <span class="en">All key metrics in real time.</span>
+      </p>
     </div>
-    <span class="badge badge-success text-xs px-3 py-1.5">Tizim holati: Faol</span>
+    <span class="badge badge-success text-xs self-start sm:self-auto">
+      <span class="uz">Tizim: Faol</span><span class="en">System: Active</span>
+    </span>
   </div>
 
-  <!-- Chart data (hidden) -->
+  <!-- Hidden chart data -->
   <div id="chart-data"
     data-company-labels='{{ chart_company_labels | default([]) | tojson }}'
     data-company-data='{{ chart_company_data | default([]) | tojson }}'
@@ -21,87 +29,132 @@
     style="display:none"></div>
 
   <!-- Main stats -->
-  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">Foydalanuvchilar</p>
-      <p class="text-3xl font-semibold" style="color:var(--text)">{{ stats.total_users }}</p>
-      <p class="text-xs mt-2" style="color:var(--muted)">Talabalar: {{ stats.total_students }}</p>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div class="card p-4 sm:p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Foydalanuvchilar</span><span class="en">Users</span>
+      </p>
+      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_users }}</p>
+      <p class="text-xs mt-1" style="color:var(--muted)">
+        <span class="uz">Talabalar:</span><span class="en">Students:</span> {{ stats.total_students }}
+      </p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">Kompaniyalar</p>
-      <p class="text-3xl font-semibold" style="color:var(--text)">{{ stats.total_companies }}</p>
-      <p class="text-xs mt-2" style="color:var(--muted)">Tasdiqlangan: {{ stats.verified_companies }}</p>
+    <div class="card p-4 sm:p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Kompaniyalar</span><span class="en">Companies</span>
+      </p>
+      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_companies }}</p>
+      <p class="text-xs mt-1" style="color:var(--muted)">
+        <span class="uz">Tasdiqlangan:</span><span class="en">Verified:</span> {{ stats.verified_companies }}
+      </p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">Internshiplar</p>
-      <p class="text-3xl font-semibold" style="color:var(--text)">{{ stats.total_internships }}</p>
-      <p class="text-xs mt-2" style="color:var(--muted)">Tasdiqlangan: {{ stats.approved_internships }}</p>
+    <div class="card p-4 sm:p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Internshiplar</span><span class="en">Internships</span>
+      </p>
+      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_internships }}</p>
+      <p class="text-xs mt-1" style="color:var(--muted)">
+        <span class="uz">Tasdiqlangan:</span><span class="en">Approved:</span> {{ stats.approved_internships }}
+      </p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">Arizalar</p>
-      <p class="text-3xl font-semibold" style="color:var(--text)">{{ stats.total_applications }}</p>
-      <p class="text-xs mt-2" style="color:var(--muted)">Faol jarayon</p>
+    <div class="card p-4 sm:p-5">
+      <p class="text-xs mb-1" style="color:var(--muted)">
+        <span class="uz">Arizalar</span><span class="en">Applications</span>
+      </p>
+      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_applications }}</p>
+      <p class="text-xs mt-1" style="color:var(--muted)">
+        <span class="uz">Faol jarayon</span><span class="en">In progress</span>
+      </p>
     </div>
   </div>
 
   <!-- Alert cards -->
-  <div class="grid sm:grid-cols-3 gap-4">
-    <div class="card p-5" style="border-color:rgba(234,179,8,0.3)">
-      <p class="text-xs mb-1" style="color:#fde047">Tasdiqlash kutilmoqda</p>
-      <p class="text-2xl font-semibold" style="color:var(--text)">{{ stats.pending_companies }} kompaniya</p>
+  <div class="grid sm:grid-cols-3 gap-3 sm:gap-4">
+    <div class="card p-4 sm:p-5" style="border-color:rgba(234,179,8,0.3)">
+      <p class="text-xs mb-1" style="color:#fde047">
+        <span class="uz">Tasdiqlash kutilmoqda</span><span class="en">Pending verification</span>
+      </p>
+      <p class="text-xl sm:text-2xl font-semibold" style="color:var(--text)">
+        {{ stats.pending_companies }}
+        <span class="text-sm font-normal" style="color:var(--muted)">
+          <span class="uz">kompaniya</span><span class="en">companies</span>
+        </span>
+      </p>
     </div>
-    <div class="card p-5" style="border-color:rgba(239,68,68,0.3)">
-      <p class="text-xs mb-1" style="color:#fca5a5">Bloklangan foydalanuvchilar</p>
-      <p class="text-2xl font-semibold" style="color:var(--text)">{{ stats.banned_users }} ta</p>
+    <div class="card p-4 sm:p-5" style="border-color:rgba(239,68,68,0.3)">
+      <p class="text-xs mb-1" style="color:#fca5a5">
+        <span class="uz">Bloklangan foydalanuvchilar</span><span class="en">Banned users</span>
+      </p>
+      <p class="text-xl sm:text-2xl font-semibold" style="color:var(--text)">
+        {{ stats.banned_users }}
+        <span class="text-sm font-normal" style="color:var(--muted)">ta</span>
+      </p>
     </div>
-    <div class="card p-5" style="border-color:rgba(59,130,246,0.3)">
-      <p class="text-xs mb-1" style="color:#93c5fd">Tasdiqlanmagan internshiplar</p>
-      <p class="text-2xl font-semibold" style="color:var(--text)">{{ stats.pending_internships }} ta</p>
+    <div class="card p-4 sm:p-5" style="border-color:rgba(59,130,246,0.3)">
+      <p class="text-xs mb-1" style="color:#93c5fd">
+        <span class="uz">Tasdiqlanmagan internshiplar</span><span class="en">Unapproved internships</span>
+      </p>
+      <p class="text-xl sm:text-2xl font-semibold" style="color:var(--text)">
+        {{ stats.pending_internships }}
+        <span class="text-sm font-normal" style="color:var(--muted)">ta</span>
+      </p>
     </div>
   </div>
 
   <!-- Charts -->
-  <div class="grid lg:grid-cols-2 gap-6">
-    <div class="card p-6">
-      <h2 class="font-semibold mb-4" style="color:var(--text)">Kompaniyalar bo'yicha arizalar</h2>
-      <canvas id="companyChart" height="200"></canvas>
+  <div class="grid lg:grid-cols-2 gap-4 sm:gap-6">
+    <div class="card p-4 sm:p-6">
+      <h2 class="font-semibold mb-4" style="color:var(--text)">
+        <span class="uz">Kompaniyalar bo'yicha arizalar</span>
+        <span class="en">Applications by company</span>
+      </h2>
+      <div class="relative" style="height:220px">
+        <canvas id="companyChart"></canvas>
+      </div>
     </div>
-    <div class="card p-6">
-      <h2 class="font-semibold mb-4" style="color:var(--text)">Ariza holatlari</h2>
-      <canvas id="statusChart" height="200"></canvas>
+    <div class="card p-4 sm:p-6">
+      <h2 class="font-semibold mb-4" style="color:var(--text)">
+        <span class="uz">Ariza holatlari</span>
+        <span class="en">Application statuses</span>
+      </h2>
+      <div class="relative" style="height:220px">
+        <canvas id="statusChart"></canvas>
+      </div>
     </div>
   </div>
 
 </div>
+{% endblock %}
 
 {% block scripts %}
 <script>
   const cd = document.getElementById('chart-data');
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#f2f2f2';
-  const muted  = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
-
-  const chartDefaults = {
-    plugins: { legend: { labels: { color: muted } } },
-    scales: { x: { ticks: { color: muted }, grid: { color: 'rgba(128,128,128,0.1)' } }, y: { ticks: { color: muted }, grid: { color: 'rgba(128,128,128,0.1)' } } }
-  };
+  const muted = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
+  const gridColor = 'rgba(128,128,128,0.1)';
 
   new Chart(document.getElementById('companyChart'), {
     type: 'bar',
     data: {
       labels: JSON.parse(cd.dataset.companyLabels || '[]'),
-      datasets: [{ label: 'Arizalar', data: JSON.parse(cd.dataset.companyData || '[]'), backgroundColor: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.4)', borderWidth: 1 }]
+      datasets: [{ label: 'Applications', data: JSON.parse(cd.dataset.companyData || '[]'),
+        backgroundColor: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.4)', borderWidth: 1, borderRadius: 4 }]
     },
-    options: { ...chartDefaults, responsive: true }
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: muted, font: { size: 11 } } } },
+      scales: { x: { ticks: { color: muted, font: { size: 10 } }, grid: { color: gridColor } },
+                y: { ticks: { color: muted, font: { size: 10 } }, grid: { color: gridColor } } } }
   });
 
   new Chart(document.getElementById('statusChart'), {
     type: 'doughnut',
     data: {
       labels: JSON.parse(cd.dataset.statusLabels || '[]'),
-      datasets: [{ data: JSON.parse(cd.dataset.statusData || '[]'), backgroundColor: ['rgba(255,255,255,0.2)','rgba(255,255,255,0.12)','rgba(255,255,255,0.06)','rgba(255,255,255,0.04)'], borderColor: 'rgba(255,255,255,0.15)' }]
+      datasets: [{ data: JSON.parse(cd.dataset.statusData || '[]'),
+        backgroundColor: ['rgba(255,255,255,0.2)','rgba(255,255,255,0.12)','rgba(255,255,255,0.07)','rgba(255,255,255,0.04)'],
+        borderColor: 'rgba(255,255,255,0.12)', borderWidth: 1 }]
     },
-    options: { plugins: { legend: { labels: { color: muted } } }, responsive: true }
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: muted, font: { size: 11 } } } } }
   });
 </script>
-{% endblock %}
 {% endblock %}

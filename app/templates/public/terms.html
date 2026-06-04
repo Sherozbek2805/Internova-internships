@@ -17,51 +17,103 @@
       <span class="font-semibold text-sm" style="color:var(--text)">Internova</span>
     </a>
     <div class="flex items-center gap-2">
+      <button class="ctrl-btn" onclick="toggleLang()"><span class="uz">EN</span><span class="en">UZ</span></button>
       <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
-      <button onclick="window.history.back()" class="btn btn-ghost text-xs">← <span class="uz">Orqaga</span><span class="en">Back</span></button>
+      <button onclick="window.history.back()" class="btn btn-ghost text-xs">
+        ← <span class="uz">Orqaga</span><span class="en">Back</span>
+      </button>
     </div>
   </div>
 </header>
 
-<main class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+<main class="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
 
-  <h1 class="text-3xl sm:text-4xl font-bold mb-10" style="color:var(--text)">Terms of Service</h1>
+  <h1 class="text-3xl sm:text-4xl font-bold mb-3" style="color:var(--text)">
+    <span class="uz">Foydalanish Shartlari</span>
+    <span class="en">Terms of Service</span>
+  </h1>
+  <p class="text-sm mb-10" style="color:var(--muted)">
+    <span class="uz">Platformadan foydalanish qoidalari va shartlari.</span>
+    <span class="en">Rules and conditions for using the platform.</span>
+  </p>
 
-  <div class="space-y-8 text-sm leading-relaxed" style="color:var(--muted)">
+  <div class="space-y-4">
 
-    <div class="card p-6">
-      <h2 class="font-semibold mb-2" style="color:var(--text)">1. Acceptance of Terms</h2>
-      <p>By using Internova, you agree to these terms and conditions. If you do not agree, please stop using the platform.</p>
+    <div class="card p-5 sm:p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">1. Shartlarni qabul qilish</span>
+        <span class="en">1. Acceptance of Terms</span>
+      </h2>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">
+        <span class="uz">Internovadan foydalanib, siz ushbu shartlar va qoidalarga rozilik bildirasiz. Agar rozi bo'lmasangiz, platformadan foydalanishni to'xtating.</span>
+        <span class="en">By using Internova, you agree to these terms and conditions. If you do not agree, please stop using the platform.</span>
+      </p>
     </div>
 
-    <div class="card p-6">
-      <h2 class="font-semibold mb-2" style="color:var(--text)">2. User Accounts</h2>
-      <p>You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+    <div class="card p-5 sm:p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">2. Foydalanuvchi hisoblari</span>
+        <span class="en">2. User Accounts</span>
+      </h2>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">
+        <span class="uz">Siz hisobingiz ma'lumotlarining maxfiyligini saqlash va hisobingiz ostida amalga oshirilgan barcha harakatlar uchun javobgarsiz.</span>
+        <span class="en">You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</span>
+      </p>
     </div>
 
-    <div class="card p-6">
-      <h2 class="font-semibold mb-2" style="color:var(--text)">3. Acceptable Use</h2>
-      <p>You agree not to misuse the platform, submit false information, or use Internova for any unlawful purpose.</p>
+    <div class="card p-5 sm:p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">3. Maqbul foydalanish</span>
+        <span class="en">3. Acceptable Use</span>
+      </h2>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">
+        <span class="uz">Siz platformadan noto'g'ri foydalanmaslik, yolg'on ma'lumot yubormaslik yoki Internovani qonunga zid maqsadlarda ishlatmaslikka rozilik bildirasiz.</span>
+        <span class="en">You agree not to misuse the platform, submit false information, or use Internova for any unlawful purpose.</span>
+      </p>
     </div>
 
-    <div class="card p-6">
-      <h2 class="font-semibold mb-2" style="color:var(--text)">4. Intellectual Property</h2>
-      <p>All content and technology on Internova is owned by Internova. You may not copy or redistribute our materials without permission.</p>
+    <div class="card p-5 sm:p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">4. Intellektual mulk</span>
+        <span class="en">4. Intellectual Property</span>
+      </h2>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">
+        <span class="uz">Internovadagi barcha kontent va texnologiya Internovaga tegishli. Ruxsatsiz nusxa ko'chirish yoki tarqatish taqiqlanadi.</span>
+        <span class="en">All content and technology on Internova is owned by Internova. You may not copy or redistribute our materials without permission.</span>
+      </p>
     </div>
 
-    <div class="card p-6">
-      <h2 class="font-semibold mb-2" style="color:var(--text)">5. Limitation of Liability</h2>
-      <p>Internova is not liable for any damages resulting from your use of the platform or from internship placements.</p>
+    <div class="card p-5 sm:p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">5. Javobgarlik cheklovi</span>
+        <span class="en">5. Limitation of Liability</span>
+      </h2>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">
+        <span class="uz">Internova platformadan foydalanish yoki stajirovka joylashtirishlari natijasida yuzaga keladigan har qanday zararlar uchun javobgar emas.</span>
+        <span class="en">Internova is not liable for any damages resulting from your use of the platform or from internship placements.</span>
+      </p>
     </div>
 
-    <div class="card p-6">
-      <h2 class="font-semibold mb-2" style="color:var(--text)">6. Changes to Terms</h2>
-      <p>We reserve the right to update these terms. Continued use of the platform after changes constitutes acceptance.</p>
+    <div class="card p-5 sm:p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">6. Shartlarning o'zgarishi</span>
+        <span class="en">6. Changes to Terms</span>
+      </h2>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">
+        <span class="uz">Biz ushbu shartlarni yangilash huquqini saqlaymiz. O'zgarishlardan keyin platformadan foydalanishni davom ettirsangiz, yangi shartlarga rozilik bildirgan bo'lasiz.</span>
+        <span class="en">We reserve the right to update these terms. Continued use of the platform after changes constitutes acceptance.</span>
+      </p>
     </div>
 
-    <div class="card p-6">
-      <h2 class="font-semibold mb-2" style="color:var(--text)">7. Contact</h2>
-      <p>For questions about these terms, contact us at <a href="/contact" style="color:var(--text);text-decoration:underline">our contact page</a>.</p>
+    <div class="card p-5 sm:p-6">
+      <h2 class="font-semibold mb-2" style="color:var(--text)">
+        <span class="uz">7. Bog'lanish</span>
+        <span class="en">7. Contact</span>
+      </h2>
+      <p class="text-sm leading-relaxed" style="color:var(--muted)">
+        <span class="uz">Ushbu shartlar bo'yicha savollaringiz bo'lsa, <a href="/contact" style="color:var(--text);text-decoration:underline">bizga murojaat qiling</a>.</span>
+        <span class="en">For questions about these terms, <a href="/contact" style="color:var(--text);text-decoration:underline">contact us</a>.</span>
+      </p>
     </div>
 
   </div>
@@ -78,7 +130,10 @@
 <script>
   (function() {
     const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
     document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.setAttribute('lang', l);
     document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
   })();
   function toggleTheme() {
@@ -86,6 +141,12 @@
     document.documentElement.setAttribute('data-theme', n);
     localStorage.setItem('theme', n);
     document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = n === 'dark' ? '☀️' : '🌙');
+  }
+  function toggleLang() {
+    const n = document.documentElement.getAttribute('data-lang') === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', n);
+    document.documentElement.setAttribute('lang', n);
+    localStorage.setItem('lang', n);
   }
 </script>
 </body>

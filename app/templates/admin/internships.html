@@ -1,24 +1,31 @@
 {% extends "admin/base.html" %}
-{% block content %}
+{% block title %}<span class="uz">Internshiplar</span><span class="en">Internships</span>{% endblock %}
 
+{% block content %}
 <div class="space-y-6 fade-up">
 
   <div>
-    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">Internships</h1>
-    <p class="text-sm mt-1" style="color:var(--muted)">Barcha internshiplar va ularni boshqarish.</p>
+    <h1 class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">
+      <span class="uz">Internshiplar</span><span class="en">Internships</span>
+    </h1>
+    <p class="text-sm mt-1" style="color:var(--muted)">
+      <span class="uz">Barcha internshiplar va ularni boshqarish.</span>
+      <span class="en">All internship listings and controls.</span>
+    </p>
   </div>
 
-  <div class="card overflow-x-auto">
+  <!-- Desktop table -->
+  <div class="card overflow-x-auto hidden sm:block">
     <table class="table-std">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nomi</th>
-          <th>Kompaniya</th>
-          <th>Joylashuv</th>
-          <th>Arizalar</th>
-          <th>Holat</th>
-          <th>Amal</th>
+          <th><span class="uz">Nomi</span><span class="en">Title</span></th>
+          <th><span class="uz">Kompaniya</span><span class="en">Company</span></th>
+          <th><span class="uz">Joylashuv</span><span class="en">Location</span></th>
+          <th><span class="uz">Arizalar</span><span class="en">Applications</span></th>
+          <th><span class="uz">Holat</span><span class="en">Status</span></th>
+          <th><span class="uz">Amal</span><span class="en">Action</span></th>
         </tr>
       </thead>
       <tbody>
@@ -28,37 +35,80 @@
           <td class="font-medium" style="color:var(--text)">{{ i.title }}</td>
           <td style="color:var(--muted)">{{ i.company_name or '—' }}</td>
           <td style="color:var(--muted)">{{ i.location or '—' }}</td>
-          <td>
-            <span class="badge badge-neutral">{{ i.applications_count }}</span>
-          </td>
+          <td><span class="badge badge-neutral">{{ i.applications_count }}</span></td>
           <td>
             {% if i.approved %}
-              <span class="badge badge-success">Tasdiqlangan</span>
+              <span class="badge badge-success"><span class="uz">Tasdiqlangan</span><span class="en">Approved</span></span>
             {% else %}
-              <span class="badge badge-warning">Kutilmoqda</span>
+              <span class="badge badge-warning"><span class="uz">Kutilmoqda</span><span class="en">Pending</span></span>
             {% endif %}
           </td>
           <td>
             {% if i.approved %}
               <form method="POST" action="{{ url_for('admin.unapprove_internship', internship_id=i.id) }}" data-ajax>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-danger text-xs">Bekor qilish</button>
+                <button class="btn btn-danger text-xs">
+                  <span class="uz">Bekor qilish</span><span class="en">Revoke</span>
+                </button>
               </form>
             {% else %}
               <form method="POST" action="{{ url_for('admin.approve_internship', internship_id=i.id) }}" data-ajax>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-ghost text-xs" style="color:#86efac;border-color:rgba(34,197,94,0.3)">Tasdiqlash</button>
+                <button class="btn btn-ghost text-xs" style="color:#86efac;border-color:rgba(34,197,94,0.3)">
+                  <span class="uz">Tasdiqlash</span><span class="en">Approve</span>
+                </button>
               </form>
             {% endif %}
           </td>
         </tr>
         {% else %}
         <tr>
-          <td colspan="7" class="text-center py-8" style="color:var(--muted)">Internshiplar topilmadi.</td>
+          <td colspan="7" class="text-center py-8" style="color:var(--muted)">
+            <span class="uz">Internshiplar topilmadi.</span><span class="en">No internships found.</span>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+  </div>
+
+  <!-- Mobile cards -->
+  <div class="sm:hidden space-y-3">
+    {% for i in internships %}
+    <div class="card p-4">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <p class="font-medium text-sm" style="color:var(--text)">{{ i.title }}</p>
+          <p class="text-xs mt-0.5" style="color:var(--muted)">{{ i.company_name or '—' }} · {{ i.location or '—' }}</p>
+          <p class="text-xs mt-1" style="color:var(--muted)">
+            <span class="uz">Arizalar:</span><span class="en">Apps:</span> {{ i.applications_count }}
+          </p>
+        </div>
+        {% if i.approved %}
+          <span class="badge badge-success text-xs flex-shrink-0"><span class="uz">Tasdiqlangan</span><span class="en">Approved</span></span>
+        {% else %}
+          <span class="badge badge-warning text-xs flex-shrink-0"><span class="uz">Kutilmoqda</span><span class="en">Pending</span></span>
+        {% endif %}
+      </div>
+      {% if i.approved %}
+        <form method="POST" action="{{ url_for('admin.unapprove_internship', internship_id=i.id) }}" data-ajax>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-danger text-xs w-full"><span class="uz">Bekor qilish</span><span class="en">Revoke</span></button>
+        </form>
+      {% else %}
+        <form method="POST" action="{{ url_for('admin.approve_internship', internship_id=i.id) }}" data-ajax>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-ghost text-xs w-full" style="color:#86efac;border-color:rgba(34,197,94,0.3)">
+            <span class="uz">Tasdiqlash</span><span class="en">Approve</span>
+          </button>
+        </form>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="card p-8 text-center" style="color:var(--muted)">
+      <span class="uz">Internshiplar topilmadi.</span><span class="en">No internships found.</span>
+    </div>
+    {% endfor %}
   </div>
 
 </div>

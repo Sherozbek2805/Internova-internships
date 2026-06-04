@@ -1,26 +1,67 @@
 {% extends "admin/base.html" %}
-{% block title %}Create{% endblock %}
+{% block title %}<span class="uz">Yaratish</span><span class="en">Create</span>{% endblock %}
 
 {% block content %}
-<div class="space-y-8 fade-up max-w-3xl">
+<div class="space-y-6 sm:space-y-8 fade-up max-w-3xl">
 
   <!-- Create Company -->
-  <div class="card p-6 sm:p-8">
-    <h1 class="font-semibold text-lg mb-5" style="color:var(--text)">Create Company</h1>
-    <form method="POST" action="{{ url_for('admin.create_company') }}" class="space-y-4">
+  <div class="card p-5 sm:p-8">
+    <h1 class="font-semibold text-lg mb-1" style="color:var(--text)">
+      <span class="uz">Kompaniya yaratish</span><span class="en">Create Company</span>
+    </h1>
+    <p class="text-sm mb-5" style="color:var(--muted)">
+      <span class="uz">Yangi kompaniya profili qo'shish.</span>
+      <span class="en">Add a new company profile to the platform.</span>
+    </p>
+    <form method="POST" action="{{ url_for('admin.create_company') }}" class="space-y-3">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="text"  name="name"        placeholder="Company name"  required class="input">
-      <input type="text"  name="industry"    placeholder="Industry"               class="input">
-      <input type="text"  name="phone1"      placeholder="Phone"                  class="input">
-      <input type="text"  name="website"     placeholder="Website"                class="input">
-      <textarea           name="description" placeholder="Description" rows="4"   class="input"></textarea>
-      <button type="submit" class="btn btn-primary">Create Company</button>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Kompaniya nomi *</span><span class="en">Company name *</span>
+          </label>
+          <input type="text" name="name" required class="input">
+        </div>
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Soha</span><span class="en">Industry</span>
+          </label>
+          <input type="text" name="industry" class="input">
+        </div>
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Telefon</span><span class="en">Phone</span>
+          </label>
+          <input type="text" name="phone1" class="input">
+        </div>
+        <div>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Vebsayt</span><span class="en">Website</span>
+          </label>
+          <input type="text" name="website" class="input">
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+          <span class="uz">Tavsif</span><span class="en">Description</span>
+        </label>
+        <textarea name="description" rows="3" class="input"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span class="uz">Kompaniya yaratish</span><span class="en">Create Company</span>
+      </button>
     </form>
   </div>
 
   <!-- Create Internship -->
-  <div class="card p-6 sm:p-8">
-    <h1 class="font-semibold text-lg mb-5" style="color:var(--text)">Create Internship</h1>
+  <div class="card p-5 sm:p-8">
+    <h1 class="font-semibold text-lg mb-1" style="color:var(--text)">
+      <span class="uz">Internship yaratish</span><span class="en">Create Internship</span>
+    </h1>
+    <p class="text-sm mb-5" style="color:var(--muted)">
+      <span class="uz">Kompaniya nomidan yangi vakansiya joylash.</span>
+      <span class="en">Post a new internship listing on behalf of a company.</span>
+    </p>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -30,25 +71,33 @@
       {% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('admin.create_internship') }}" class="space-y-4">
+    <form method="POST" action="{{ url_for('admin.create_internship') }}" class="space-y-3">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-      <div class="grid md:grid-cols-2 gap-4">
+      <div class="grid sm:grid-cols-2 gap-3">
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Company</label>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Kompaniya *</span><span class="en">Company *</span>
+          </label>
           <select name="company_id" required class="input">
-            <option value="">Select company</option>
+            <option value="">
+              <span class="uz">Tanlang</span><span class="en">Select</span>
+            </option>
             {% for company in companies %}
               <option value="{{ company.id }}">{{ company.name }}</option>
             {% endfor %}
           </select>
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Title</label>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Sarlavha *</span><span class="en">Title *</span>
+          </label>
           <input type="text" name="title" required class="input">
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Type</label>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Tur</span><span class="en">Type</span>
+          </label>
           <select name="internship_type" class="input">
             <option value="Internship">Internship</option>
             <option value="Full-time">Full-time</option>
@@ -57,39 +106,52 @@
           </select>
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Location</label>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Joylashuv</span><span class="en">Location</span>
+          </label>
           <input type="text" name="location" class="input">
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Stipend</label>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Stipendiya</span><span class="en">Stipend</span>
+          </label>
           <input type="number" name="stipend" class="input">
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Duration</label>
-          <input type="text" name="duration" class="input">
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Muddat</span><span class="en">Duration</span>
+          </label>
+          <input type="text" name="duration" placeholder="3 months" class="input">
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Deadline</label>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Ariza tugash sanasi</span><span class="en">Deadline</span>
+          </label>
           <input type="date" name="deadline" class="input">
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted)">Skills</label>
+          <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+            <span class="uz">Ko'nikmalar</span><span class="en">Skills</span>
+          </label>
           <input type="text" name="skills" placeholder="Python, Excel..." class="input">
         </div>
       </div>
 
       <div>
-        <label class="text-xs mb-1 block" style="color:var(--muted)">Description</label>
-        <textarea name="description" rows="5" required class="input"></textarea>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <label class="flex items-center gap-2 text-sm cursor-pointer" style="color:var(--muted)">
-          <input type="checkbox" name="approved" value="1" checked class="rounded"> Auto-approve
+        <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
+          <span class="uz">Tavsif *</span><span class="en">Description *</span>
         </label>
+        <textarea name="description" rows="4" required class="input"></textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary">Create Internship</button>
+      <label class="flex items-center gap-2 text-sm cursor-pointer" style="color:var(--muted)">
+        <input type="checkbox" name="approved" value="1" checked>
+        <span class="uz">Avtomatik tasdiqlash</span><span class="en">Auto-approve</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary">
+        <span class="uz">Internship yaratish</span><span class="en">Create Internship</span>
+      </button>
     </form>
   </div>
 

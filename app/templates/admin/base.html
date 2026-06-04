@@ -9,53 +9,102 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class', corePlugins: { preflight: false } }</script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Mobile-friendly touch targets */
+    .nav-link { min-height: 36px; }
+    .btn { min-height: 36px; }
+    @media (max-width: 768px) {
+      .table-std td, .table-std th { padding: 0.6rem 0.5rem; font-size: 0.8rem; }
+    }
+  </style>
 </head>
 
 <body>
 <div id="toast-container"></div>
 
 <header class="site-header">
-  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 gap-4">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 gap-3">
 
-    <div class="flex items-center gap-3">
+    <!-- Logo -->
+    <a href="{{ url_for('admin.overview') }}" class="flex items-center gap-2 flex-shrink-0">
       <img src="/static/logo.png" alt="Internova" class="w-8 h-8 object-contain">
-      <div>
-        <p class="font-semibold text-sm" style="color:var(--text)">Internova</p>
-        <p class="text-xs" style="color:var(--muted)">Admin Panel</p>
+      <div class="hidden sm:block">
+        <p class="font-semibold text-sm leading-none" style="color:var(--text)">Internova</p>
+        <p class="text-xs mt-0.5" style="color:var(--muted)">Admin</p>
       </div>
-    </div>
+    </a>
 
-    <nav class="hidden md:flex gap-1 text-sm">
-      <a href="{{ url_for('admin.overview') }}"           class="nav-link {% if active=='overview' %}active{% endif %}">Umumiy</a>
-      <a href="{{ url_for('admin.users') }}"              class="nav-link {% if active=='users' %}active{% endif %}">Users</a>
-      <a href="{{ url_for('admin.companies') }}"          class="nav-link {% if active=='companies' %}active{% endif %}">Companies</a>
-      <a href="{{ url_for('admin.internships') }}"        class="nav-link {% if active=='internships' %}active{% endif %}">Internships</a>
-      <a href="{{ url_for('admin.applications') }}"       class="nav-link {% if active=='applications' %}active{% endif %}">Applications</a>
-      <a href="{{ url_for('admin.create_internship_page') }}" class="nav-link {% if active=='create_internship' %}active{% endif %}">+ Create</a>
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex gap-1 text-sm flex-1 justify-center">
+      <a href="{{ url_for('admin.overview') }}"               class="nav-link {% if active=='overview' %}active{% endif %}">
+        <span class="uz">Umumiy</span><span class="en">Overview</span>
+      </a>
+      <a href="{{ url_for('admin.users') }}"                  class="nav-link {% if active=='users' %}active{% endif %}">
+        <span class="uz">Foydalanuvchilar</span><span class="en">Users</span>
+      </a>
+      <a href="{{ url_for('admin.companies') }}"              class="nav-link {% if active=='companies' %}active{% endif %}">
+        <span class="uz">Kompaniyalar</span><span class="en">Companies</span>
+      </a>
+      <a href="{{ url_for('admin.internships') }}"            class="nav-link {% if active=='internships' %}active{% endif %}">
+        <span class="uz">Internshiplar</span><span class="en">Internships</span>
+      </a>
+      <a href="{{ url_for('admin.applications') }}"           class="nav-link {% if active=='applications' %}active{% endif %}">
+        <span class="uz">Arizalar</span><span class="en">Applications</span>
+      </a>
+      <a href="{{ url_for('admin.create_internship_page') }}" class="nav-link {% if active=='create_internship' %}active{% endif %}">
+        + <span class="uz">Yaratish</span><span class="en">Create</span>
+      </a>
     </nav>
 
-    <div class="flex items-center gap-2">
-      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon>🌙</button>
+    <!-- Controls -->
+    <div class="flex items-center gap-1.5 flex-shrink-0">
+      <button class="ctrl-btn" onclick="toggleLang()" title="Switch language">
+        <span class="uz">EN</span><span class="en">UZ</span>
+      </button>
+      <button class="ctrl-btn" onclick="toggleTheme()" data-theme-icon title="Toggle theme">🌙</button>
       <form action="/logout" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button class="btn btn-ghost" style="font-size:0.8rem;padding:0.4rem 0.9rem">Logout</button>
+        <button class="btn btn-ghost hidden sm:inline-flex" style="font-size:0.8rem;padding:0.4rem 0.8rem">
+          <span class="uz">Chiqish</span><span class="en">Logout</span>
+        </button>
       </form>
     </div>
 
   </div>
 
-  <!-- Mobile nav -->
-  <div class="md:hidden border-t flex gap-1 px-4 py-2 overflow-x-auto" style="border-color:var(--border)">
-    <a href="{{ url_for('admin.overview') }}"           class="nav-link whitespace-nowrap {% if active=='overview' %}active{% endif %}">Umumiy</a>
-    <a href="{{ url_for('admin.users') }}"              class="nav-link whitespace-nowrap {% if active=='users' %}active{% endif %}">Users</a>
-    <a href="{{ url_for('admin.companies') }}"          class="nav-link whitespace-nowrap {% if active=='companies' %}active{% endif %}">Companies</a>
-    <a href="{{ url_for('admin.internships') }}"        class="nav-link whitespace-nowrap {% if active=='internships' %}active{% endif %}">Internships</a>
-    <a href="{{ url_for('admin.applications') }}"       class="nav-link whitespace-nowrap {% if active=='applications' %}active{% endif %}">Applications</a>
-    <a href="{{ url_for('admin.create_internship_page') }}" class="nav-link whitespace-nowrap {% if active=='create_internship' %}active{% endif %}">+ Create</a>
+  <!-- Mobile nav — horizontally scrollable -->
+  <div class="md:hidden overflow-x-auto" style="border-top:1px solid var(--border)">
+    <div class="flex gap-1 px-3 py-2 min-w-max">
+      <a href="{{ url_for('admin.overview') }}"               class="nav-link whitespace-nowrap {% if active=='overview' %}active{% endif %}">
+        <span class="uz">Umumiy</span><span class="en">Overview</span>
+      </a>
+      <a href="{{ url_for('admin.users') }}"                  class="nav-link whitespace-nowrap {% if active=='users' %}active{% endif %}">
+        <span class="uz">Foydalanuvchilar</span><span class="en">Users</span>
+      </a>
+      <a href="{{ url_for('admin.companies') }}"              class="nav-link whitespace-nowrap {% if active=='companies' %}active{% endif %}">
+        <span class="uz">Kompaniyalar</span><span class="en">Companies</span>
+      </a>
+      <a href="{{ url_for('admin.internships') }}"            class="nav-link whitespace-nowrap {% if active=='internships' %}active{% endif %}">
+        <span class="uz">Internshiplar</span><span class="en">Internships</span>
+      </a>
+      <a href="{{ url_for('admin.applications') }}"           class="nav-link whitespace-nowrap {% if active=='applications' %}active{% endif %}">
+        <span class="uz">Arizalar</span><span class="en">Applications</span>
+      </a>
+      <a href="{{ url_for('admin.create_internship_page') }}" class="nav-link whitespace-nowrap {% if active=='create_internship' %}active{% endif %}">
+        + <span class="uz">Yaratish</span><span class="en">Create</span>
+      </a>
+      <!-- Logout on mobile -->
+      <form action="/logout" method="POST" class="sm:hidden">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="nav-link whitespace-nowrap">
+          <span class="uz">Chiqish</span><span class="en">Logout</span>
+        </button>
+      </form>
+    </div>
   </div>
 </header>
 
-<main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
   {% block content %}{% endblock %}
 </main>
 
@@ -63,7 +112,10 @@
   /* ---- INIT ---- */
   (function() {
     const t = localStorage.getItem('theme') || 'dark';
+    const l = localStorage.getItem('lang') || 'uz';
     document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.setAttribute('lang', l);
     document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = t === 'dark' ? '☀️' : '🌙');
   })();
 
@@ -72,6 +124,14 @@
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('theme', next);
     document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = next === 'dark' ? '☀️' : '🌙');
+  }
+
+  function toggleLang() {
+    const cur  = document.documentElement.getAttribute('data-lang') || 'uz';
+    const next = cur === 'uz' ? 'en' : 'uz';
+    document.documentElement.setAttribute('data-lang', next);
+    document.documentElement.setAttribute('lang', next);
+    localStorage.setItem('lang', next);
   }
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
@@ -103,25 +163,25 @@
       });
       const data = await res.json();
       if (data.success) updateUI(form, data);
-    } catch(err) { console.error(err); }
+    } catch(err) { console.error(err); toast('Error', 'error'); }
     finally { if (btn) { btn.disabled = false; btn.textContent = btn.dataset.orig; } }
   });
 
   function updateUI(form, data) {
     /* Company verify/unverify */
     if (form.action.includes('company')) {
-      const container = form.closest('div.flex.flex-col') || form.closest('[data-company]');
+      const container = form.closest('[data-company]') || form.closest('.card');
       if (container) {
         const status = container.querySelector('[data-status]');
         const btn    = form.querySelector('button');
         if (data.verified) {
-          if (status) { status.className = 'badge badge-success'; status.textContent = 'Tasdiqlangan'; }
+          if (status) { status.className = 'badge badge-success'; status.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Verified' : 'Tasdiqlangan'; }
           form.action = form.action.replace('verify-company', 'unverify-company');
-          if (btn) btn.textContent = 'To\'xtatish';
+          if (btn) btn.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Deactivate' : 'To\'xtatish';
         } else {
-          if (status) { status.className = 'badge badge-warning'; status.textContent = 'Kutilmoqda'; }
+          if (status) { status.className = 'badge badge-warning'; status.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Pending' : 'Kutilmoqda'; }
           form.action = form.action.replace('unverify-company', 'verify-company');
-          if (btn) btn.textContent = 'Tasdiqlash';
+          if (btn) btn.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Verify' : 'Tasdiqlash';
         }
       }
       if (data.access_code) showToast('Access Code: ' + data.access_code);
@@ -133,13 +193,13 @@
         const statusCell = row.querySelectorAll('td')[4];
         const btn = form.querySelector('button');
         if (data.banned) {
-          statusCell.innerHTML = `<span class="badge badge-danger">Bloklangan</span>`;
+          statusCell.innerHTML = `<span class="badge badge-danger"><span class="uz">Bloklangan</span><span class="en">Banned</span></span>`;
           form.action = form.action.replace('ban-user', 'unban-user');
-          if (btn) btn.textContent = 'Tiklash';
+          if (btn) btn.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Restore' : 'Tiklash';
         } else {
-          statusCell.innerHTML = `<span class="badge badge-success">Faol</span>`;
+          statusCell.innerHTML = `<span class="badge badge-success"><span class="uz">Faol</span><span class="en">Active</span></span>`;
           form.action = form.action.replace('unban-user', 'ban-user');
-          if (btn) btn.textContent = 'Bloklash';
+          if (btn) btn.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Ban' : 'Bloklash';
         }
       }
     }
@@ -150,17 +210,17 @@
         const statusCell = row.querySelectorAll('td')[5];
         const btn = form.querySelector('button');
         if (data.approved) {
-          statusCell.innerHTML = `<span class="badge badge-success">Tasdiqlangan</span>`;
+          statusCell.innerHTML = `<span class="badge badge-success"><span class="uz">Tasdiqlangan</span><span class="en">Approved</span></span>`;
           form.action = form.action.replace('approve-internship', 'unapprove-internship');
-          if (btn) btn.textContent = 'Bekor qilish';
+          if (btn) btn.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Revoke' : 'Bekor qilish';
         } else {
-          statusCell.innerHTML = `<span class="badge badge-warning">Kutilmoqda</span>`;
+          statusCell.innerHTML = `<span class="badge badge-warning"><span class="uz">Kutilmoqda</span><span class="en">Pending</span></span>`;
           form.action = form.action.replace('unapprove-internship', 'approve-internship');
-          if (btn) btn.textContent = 'Tasdiqlash';
+          if (btn) btn.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Approve' : 'Tasdiqlash';
         }
       }
     }
-    showToast('Muvaffaqiyatli ✓');
+    showToast(document.documentElement.getAttribute('data-lang') === 'en' ? 'Done ✓' : 'Muvaffaqiyatli ✓');
   }
 </script>
 
