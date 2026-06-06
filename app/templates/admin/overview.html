@@ -29,41 +29,41 @@
     style="display:none"></div>
 
   <!-- Main stats -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-    <div class="card p-4 sm:p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 card-grid">
+    <div class="card p-4 sm:p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Foydalanuvchilar</span><span class="en">Users</span>
       </p>
-      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_users }}</p>
-      <p class="text-xs mt-1" style="color:var(--muted)">
+      <p class="text-2xl sm:text-3xl font-bold animate-count" data-target="{{ stats.total_users }}" data-suffix="" style="color:var(--text)">{{ stats.total_users }}</p>
+      <p class="text-xs mt-2" style="color:var(--faint)">
         <span class="uz">Talabalar:</span><span class="en">Students:</span> {{ stats.total_students }}
       </p>
     </div>
-    <div class="card p-4 sm:p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
+    <div class="card p-4 sm:p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Kompaniyalar</span><span class="en">Companies</span>
       </p>
-      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_companies }}</p>
-      <p class="text-xs mt-1" style="color:var(--muted)">
+      <p class="text-2xl sm:text-3xl font-bold animate-count" data-target="{{ stats.total_companies }}" data-suffix="" style="color:#a5b4fc">{{ stats.total_companies }}</p>
+      <p class="text-xs mt-2" style="color:var(--faint)">
         <span class="uz">Tasdiqlangan:</span><span class="en">Verified:</span> {{ stats.verified_companies }}
       </p>
     </div>
-    <div class="card p-4 sm:p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
+    <div class="card p-4 sm:p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Internshiplar</span><span class="en">Internships</span>
       </p>
-      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_internships }}</p>
-      <p class="text-xs mt-1" style="color:var(--muted)">
+      <p class="text-2xl sm:text-3xl font-bold animate-count" data-target="{{ stats.total_internships }}" data-suffix="" style="color:#86efac">{{ stats.total_internships }}</p>
+      <p class="text-xs mt-2" style="color:var(--faint)">
         <span class="uz">Tasdiqlangan:</span><span class="en">Approved:</span> {{ stats.approved_internships }}
       </p>
     </div>
-    <div class="card p-4 sm:p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
+    <div class="card p-4 sm:p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Arizalar</span><span class="en">Applications</span>
       </p>
-      <p class="text-2xl sm:text-3xl font-semibold" style="color:var(--text)">{{ stats.total_applications }}</p>
-      <p class="text-xs mt-1" style="color:var(--muted)">
-        <span class="uz">Faol jarayon</span><span class="en">In progress</span>
+      <p class="text-2xl sm:text-3xl font-bold animate-count" data-target="{{ stats.total_applications }}" data-suffix="" style="color:#fde047">{{ stats.total_applications }}</p>
+      <p class="text-xs mt-2" style="color:var(--faint)">
+        <span class="uz">Jami platformada</span><span class="en">Total on platform</span>
       </p>
     </div>
   </div>
@@ -101,26 +101,67 @@
     </div>
   </div>
 
-  <!-- Charts -->
+  <!-- Hidden extra chart data -->
+  <div id="chart-data2"
+    data-internship-labels='{{ chart_internship_labels | default([]) | tojson }}'
+    data-internship-data='{{ chart_internship_data | default([]) | tojson }}'
+    data-industry-labels='{{ chart_industry_labels | default([]) | tojson }}'
+    data-industry-data='{{ chart_industry_data | default([]) | tojson }}'
+    data-monthly-labels='{{ chart_monthly_labels | default([]) | tojson }}'
+    data-monthly-students='{{ chart_monthly_students | default([]) | tojson }}'
+    data-monthly-companies='{{ chart_monthly_companies | default([]) | tojson }}'
+    style="display:none"></div>
+
+  <!-- Charts row 1 -->
   <div class="grid lg:grid-cols-2 gap-4 sm:gap-6">
     <div class="card p-4 sm:p-6">
-      <h2 class="font-semibold mb-4" style="color:var(--text)">
-        <span class="uz">Kompaniyalar bo'yicha arizalar</span>
-        <span class="en">Applications by company</span>
+      <h2 class="text-sm font-semibold mb-1" style="color:var(--text)">
+        <span class="uz">Kompaniyalar bo'yicha arizalar</span><span class="en">Applications by company</span>
       </h2>
-      <div class="relative" style="height:220px">
-        <canvas id="companyChart"></canvas>
-      </div>
+      <p class="text-xs mb-4" style="color:var(--faint)">Top 10</p>
+      <div style="height:220px"><canvas id="companyChart"></canvas></div>
     </div>
     <div class="card p-4 sm:p-6">
-      <h2 class="font-semibold mb-4" style="color:var(--text)">
-        <span class="uz">Ariza holatlari</span>
-        <span class="en">Application statuses</span>
+      <h2 class="text-sm font-semibold mb-1" style="color:var(--text)">
+        <span class="uz">Ariza holatlari</span><span class="en">Application statuses</span>
       </h2>
-      <div class="relative" style="height:220px">
-        <canvas id="statusChart"></canvas>
-      </div>
+      <p class="text-xs mb-4" style="color:var(--faint)">
+        <span class="uz">Holat bo'yicha taqsimot</span><span class="en">Distribution by status</span>
+      </p>
+      <div style="height:220px"><canvas id="statusChart"></canvas></div>
     </div>
+  </div>
+
+  <!-- Charts row 2 -->
+  <div class="grid lg:grid-cols-2 gap-4 sm:gap-6">
+    <div class="card p-4 sm:p-6">
+      <h2 class="text-sm font-semibold mb-1" style="color:var(--text)">
+        <span class="uz">Eng ko'p ariza olgan stajirovkalar</span><span class="en">Top internships by applications</span>
+      </h2>
+      <p class="text-xs mb-4" style="color:var(--faint)">Top 8</p>
+      <div style="height:220px"><canvas id="internshipChart"></canvas></div>
+    </div>
+    <div class="card p-4 sm:p-6">
+      <h2 class="text-sm font-semibold mb-1" style="color:var(--text)">
+        <span class="uz">Oylik ro'yxatdan o'tish</span><span class="en">Monthly registrations</span>
+      </h2>
+      <p class="text-xs mb-4" style="color:var(--faint)">
+        <span class="uz">So'nggi 6 oy</span><span class="en">Last 6 months</span>
+      </p>
+      <div style="height:220px"><canvas id="monthlyChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Charts row 3: Industry -->
+  <div class="card p-4 sm:p-6">
+    <h2 class="text-sm font-semibold mb-1" style="color:var(--text)">
+      <span class="uz">Kompaniyalar sohasi</span><span class="en">Company industry distribution</span>
+    </h2>
+    <p class="text-xs mb-4" style="color:var(--faint)">
+      <span class="uz">Ro'yxatdan o'tgan kompaniyalar sohasi bo'yicha</span>
+      <span class="en">Registered companies by industry</span>
+    </p>
+    <div style="height:200px"><canvas id="industryChart"></canvas></div>
   </div>
 
 </div>
@@ -128,33 +169,144 @@
 
 {% block scripts %}
 <script>
-  const cd = document.getElementById('chart-data');
-  const muted = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
-  const gridColor = 'rgba(128,128,128,0.1)';
+  const cd  = document.getElementById('chart-data');
+  const cd2 = document.getElementById('chart-data2');
 
+  function chartColors() {
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    return {
+      muted:     isDark ? '#7b82a8' : '#5c6080',
+      grid:      isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)',
+      palette:   ['#a5b4fc','#86efac','#fde047','#fca5a5','#6ee7b7','#c4b5fd','#93c5fd','#f9a8d4','#d9f99d','#fed7aa'],
+    };
+  }
+
+  function baseOpts(c) {
+    return {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 900, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { labels: { color: c.muted, font: { size: 11, family: 'Inter' }, padding: 12 } },
+        tooltip: {
+          backgroundColor: 'rgba(17,19,32,0.92)', titleColor: '#e8eaf6',
+          bodyColor: '#7b82a8', borderColor: 'rgba(255,255,255,0.08)',
+          borderWidth: 1, padding: 10, cornerRadius: 8
+        }
+      },
+      scales: {
+        x: { ticks: { color: c.muted, font: { size: 10 } }, grid: { color: c.grid } },
+        y: { ticks: { color: c.muted, font: { size: 10 } }, grid: { color: c.grid } }
+      }
+    };
+  }
+
+  const c = chartColors();
+
+  /* 1. Applications by company (bar) */
   new Chart(document.getElementById('companyChart'), {
     type: 'bar',
     data: {
       labels: JSON.parse(cd.dataset.companyLabels || '[]'),
-      datasets: [{ label: 'Applications', data: JSON.parse(cd.dataset.companyData || '[]'),
-        backgroundColor: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.4)', borderWidth: 1, borderRadius: 4 }]
+      datasets: [{
+        label: 'Applications',
+        data: JSON.parse(cd.dataset.companyData || '[]'),
+        backgroundColor: ctx => {
+          const g = ctx.chart.ctx.createLinearGradient(0,0,0,200);
+          g.addColorStop(0,'rgba(165,180,252,0.7)');
+          g.addColorStop(1,'rgba(165,180,252,0.1)');
+          return g;
+        },
+        borderColor: 'rgba(165,180,252,0.8)', borderWidth: 1, borderRadius: 6, borderSkipped: false
+      }]
     },
-    options: { responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: muted, font: { size: 11 } } } },
-      scales: { x: { ticks: { color: muted, font: { size: 10 } }, grid: { color: gridColor } },
-                y: { ticks: { color: muted, font: { size: 10 } }, grid: { color: gridColor } } } }
+    options: { ...baseOpts(c), plugins: { ...baseOpts(c).plugins, legend: { display: false } } }
   });
 
+  /* 2. Status doughnut */
   new Chart(document.getElementById('statusChart'), {
     type: 'doughnut',
     data: {
       labels: JSON.parse(cd.dataset.statusLabels || '[]'),
-      datasets: [{ data: JSON.parse(cd.dataset.statusData || '[]'),
-        backgroundColor: ['rgba(255,255,255,0.2)','rgba(255,255,255,0.12)','rgba(255,255,255,0.07)','rgba(255,255,255,0.04)'],
-        borderColor: 'rgba(255,255,255,0.12)', borderWidth: 1 }]
+      datasets: [{
+        data: JSON.parse(cd.dataset.statusData || '[]'),
+        backgroundColor: ['rgba(107,114,128,0.5)','rgba(234,179,8,0.5)','rgba(99,102,241,0.5)','rgba(34,197,94,0.5)','rgba(239,68,68,0.5)'],
+        borderColor: 'rgba(255,255,255,0.06)', borderWidth: 2, hoverOffset: 6
+      }]
     },
-    options: { responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: muted, font: { size: 11 } } } } }
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 900, easing: 'easeOutQuart' },
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: c.muted, font: { size: 11 }, padding: 10 } },
+        tooltip: baseOpts(c).plugins.tooltip
+      }
+    }
+  });
+
+  /* 3. Top internships (horizontal bar) */
+  new Chart(document.getElementById('internshipChart'), {
+    type: 'bar',
+    data: {
+      labels: JSON.parse(cd2.dataset.internshipLabels || '[]'),
+      datasets: [{
+        label: 'Applications',
+        data: JSON.parse(cd2.dataset.internshipData || '[]'),
+        backgroundColor: ctx => {
+          const g = ctx.chart.ctx.createLinearGradient(200,0,0,0);
+          g.addColorStop(0,'rgba(134,239,172,0.7)');
+          g.addColorStop(1,'rgba(134,239,172,0.1)');
+          return g;
+        },
+        borderColor: 'rgba(134,239,172,0.7)', borderWidth: 1, borderRadius: 4, borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      ...baseOpts(c),
+      plugins: { ...baseOpts(c).plugins, legend: { display: false } }
+    }
+  });
+
+  /* 4. Monthly registrations (line) */
+  new Chart(document.getElementById('monthlyChart'), {
+    type: 'line',
+    data: {
+      labels: JSON.parse(cd2.dataset.monthlyLabels || '[]'),
+      datasets: [
+        {
+          label: 'Students',
+          data: JSON.parse(cd2.dataset.monthlyStudents || '[]'),
+          borderColor: 'rgba(165,180,252,0.9)', backgroundColor: 'rgba(165,180,252,0.08)',
+          borderWidth: 2, pointRadius: 4, pointBackgroundColor: 'rgba(165,180,252,1)',
+          tension: 0.4, fill: true
+        },
+        {
+          label: 'Companies',
+          data: JSON.parse(cd2.dataset.monthlyCompanies || '[]'),
+          borderColor: 'rgba(134,239,172,0.9)', backgroundColor: 'rgba(134,239,172,0.06)',
+          borderWidth: 2, pointRadius: 4, pointBackgroundColor: 'rgba(134,239,172,1)',
+          tension: 0.4, fill: true
+        }
+      ]
+    },
+    options: baseOpts(c)
+  });
+
+  /* 5. Industry (bar) */
+  new Chart(document.getElementById('industryChart'), {
+    type: 'bar',
+    data: {
+      labels: JSON.parse(cd2.dataset.industryLabels || '[]'),
+      datasets: [{
+        label: 'Companies',
+        data: JSON.parse(cd2.dataset.industryData || '[]'),
+        backgroundColor: JSON.parse(cd2.dataset.industryData || '[]').map((_,i) => c.palette[i % c.palette.length] + '80'),
+        borderColor:     JSON.parse(cd2.dataset.industryData || '[]').map((_,i) => c.palette[i % c.palette.length]),
+        borderWidth: 1, borderRadius: 6, borderSkipped: false
+      }]
+    },
+    options: { ...baseOpts(c), plugins: { ...baseOpts(c).plugins, legend: { display: false } } }
   });
 </script>
 {% endblock %}

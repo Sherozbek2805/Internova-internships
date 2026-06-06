@@ -86,30 +86,30 @@
   {% endif %}
 
   <!-- Stats row -->
-  <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
-        <span class="uz">Barcha Arizalar</span><span class="en">Total Applications</span>
+  <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 card-grid">
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
+        <span class="uz">Jami Arizalar</span><span class="en">Total Applications</span>
       </p>
-      <p class="text-3xl font-bold" style="color:var(--text)">{{ stats.total_applications or 0 }}</p>
+      <p class="text-3xl font-bold animate-count" data-target="{{ stats.total_applications or 0 }}" data-suffix="" style="color:var(--text)">{{ stats.total_applications or 0 }}</p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Qisqa ro'yxat</span><span class="en">Shortlisted</span>
       </p>
-      <p class="text-3xl font-bold" style="color:var(--text)">{{ stats.shortlisted_count or 0 }}</p>
+      <p class="text-3xl font-bold animate-count" data-target="{{ stats.shortlisted_count or 0 }}" data-suffix="" style="color:#a5b4fc">{{ stats.shortlisted_count or 0 }}</p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Qabul qilingan</span><span class="en">Accepted</span>
       </p>
-      <p class="text-3xl font-bold" style="color:#86efac">{{ stats.accepted_count or 0 }}</p>
+      <p class="text-3xl font-bold animate-count" data-target="{{ stats.accepted_count or 0 }}" data-suffix="" style="color:#86efac">{{ stats.accepted_count or 0 }}</p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs mb-1" style="color:var(--muted)">
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Rad etilgan</span><span class="en">Rejected</span>
       </p>
-      <p class="text-3xl font-bold" style="color:#fca5a5">{{ stats.rejected_count or 0 }}</p>
+      <p class="text-3xl font-bold animate-count" data-target="{{ stats.rejected_count or 0 }}" data-suffix="" style="color:#fca5a5">{{ stats.rejected_count or 0 }}</p>
     </div>
   </div>
 

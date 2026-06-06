@@ -11,33 +11,42 @@
   </div>
 
   <!-- Stats -->
-  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    <div class="card p-5">
-      <p class="text-xs" style="color:var(--muted)">
-        <span class="uz">Jami Arizalar</span><span class="en">Total Applications</span>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 card-grid">
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
+        <span class="uz">Arizalar</span><span class="en">Applications</span>
       </p>
-      <p class="text-3xl font-semibold mt-2" style="color:var(--text)">{{ total_applications or 0 }}</p>
+      <p class="text-3xl font-bold animate-count" data-target="{{ total_applications or 0 }}" data-suffix="" style="color:var(--text)">{{ total_applications or 0 }}</p>
+      <p class="text-xs mt-2" style="color:var(--faint)">
+        <span class="uz">Jami topshirilgan</span><span class="en">Total submitted</span>
+      </p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs" style="color:var(--muted)">
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Ko'rib chiqilmoqda</span><span class="en">Under Review</span>
       </p>
-      <p class="text-3xl font-semibold mt-2" style="color:#fde047">{{ reviewing_count or 0 }}</p>
-    </div>
-    <div class="card p-5">
-      <p class="text-xs" style="color:var(--muted)">
-        <span class="uz">Saqlangan</span><span class="en">Saved</span>
+      <p class="text-3xl font-bold animate-count" data-target="{{ reviewing_count or 0 }}" data-suffix="" style="color:#fde047">{{ reviewing_count or 0 }}</p>
+      <p class="text-xs mt-2" style="color:var(--faint)">
+        <span class="uz">Aktiv jarayonda</span><span class="en">In progress</span>
       </p>
-      <p class="text-3xl font-semibold mt-2" style="color:var(--text)">{{ saved_count or 0 }}</p>
     </div>
-    <div class="card p-5">
-      <p class="text-xs" style="color:var(--muted)">
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
+        <span class="uz">Saqlangan</span><span class="en">Saved Jobs</span>
+      </p>
+      <p class="text-3xl font-bold animate-count" data-target="{{ saved_count or 0 }}" data-suffix="" style="color:#a5b4fc">{{ saved_count or 0 }}</p>
+      <p class="text-xs mt-2" style="color:var(--faint)">
+        <span class="uz">Keyinroq ko'rish uchun</span><span class="en">Saved for later</span>
+      </p>
+    </div>
+    <div class="card p-5 stat-card">
+      <p class="text-xs font-semibold tracking-wide uppercase mb-3" style="color:var(--faint)">
         <span class="uz">Profil bahosi</span><span class="en">Profile Score</span>
       </p>
-      <p class="text-3xl font-semibold mt-2" style="color:#86efac">
+      <p class="text-3xl font-bold" style="color:#86efac">
         <span id="overviewStrength">{{ profile_strength or 0 }}</span>%
       </p>
-      <div class="strength-track mt-2">
+      <div class="strength-track mt-3">
         <div class="strength-fill" id="overviewStrengthBar" style="width:{{ profile_strength or 0 }}%"></div>
       </div>
     </div>
