@@ -132,7 +132,17 @@
     document.documentElement.setAttribute('data-lang', next);
     document.documentElement.setAttribute('lang', next);
     localStorage.setItem('lang', next);
+    syncBilingualSelects(next);
   }
+
+  function syncBilingualSelects(lang) {
+    lang = lang || document.documentElement.getAttribute('data-lang') || 'uz';
+    document.querySelectorAll('.bilingual-select option[data-uz], .bilingual-select option[data-en]').forEach(opt => {
+      const text = opt.getAttribute('data-' + lang) || opt.getAttribute('data-en') || opt.textContent;
+      opt.textContent = text;
+    });
+  }
+  document.addEventListener('DOMContentLoaded', () => syncBilingualSelects());
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
   function getCSRF() { return csrfToken; }
@@ -184,7 +194,33 @@
           if (btn) btn.textContent = document.documentElement.getAttribute('data-lang') === 'en' ? 'Verify' : 'Tasdiqlash';
         }
       }
-      if (data.access_code) showToast('Access Code: ' + data.access_code);
+      if (data.access_code) {
+      /* Find or create the code display container inside the same card */
+      const card = form.closest('.card');
+      if (card) {
+        const companyId = form.action.match(/generate-company-code\/(\d+)/)?.[1];
+        let codeEl = companyId ? card.querySelector(`#code-${companyId}`) : null;
+        if (codeEl) {
+          codeEl.textContent = data.access_code;
+        } else {
+          /* Insert code box after the generate button */
+          const codeBox = document.createElement('div');
+          codeBox.className = 'flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono';
+          codeBox.style.cssText = 'background:var(--surface2);border:1px solid var(--border)';
+          if (companyId) {
+            codeBox.innerHTML = `<code id="code-${companyId}" style="color:#86efac">${data.access_code}</code>
+              <button type="button" onclick="copyCode('${companyId}')" class="btn btn-ghost" style="font-size:0.7rem;padding:0.15rem 0.5rem">
+                <span class="uz">Nusxa</span><span class="en">Copy</span>
+              </button>`;
+          } else {
+            codeBox.innerHTML = `<code style="color:#86efac">${data.access_code}</code>
+              <button type="button" onclick="navigator.clipboard.writeText('${data.access_code}');showToast('Copied ✓')" class="btn btn-ghost" style="font-size:0.7rem;padding:0.15rem 0.5rem">Copy</button>`;
+          }
+          form.insertAdjacentElement('afterend', codeBox);
+        }
+      }
+      showToast((document.documentElement.getAttribute('data-lang') === 'en' ? 'Code: ' : 'Kod: ') + data.access_code);
+    }
     }
     /* User ban/unban */
     if (form.action.includes('user')) {

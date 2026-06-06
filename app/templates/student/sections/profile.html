@@ -234,7 +234,7 @@
         <h2 class="font-semibold mb-4" style="color:var(--text)">
           <span class="uz">Parolni o'zgartirish</span><span class="en">Change Password</span>
         </h2>
-        <form action="/profile/change-password" method="POST" class="space-y-3">
+        <form id="passwordForm" class="space-y-3">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input type="password" name="current_password" placeholder="Current Password" class="input">
           <input type="password" name="new_password" id="newPassword" placeholder="New Password" class="input">
@@ -244,6 +244,7 @@
           <button type="submit" class="btn btn-ghost w-full text-sm" style="border-color:rgba(239,68,68,0.4);color:#fca5a5">
             <span class="uz">Parolni o'zgartirish</span><span class="en">Change Password</span>
           </button>
+          <p id="passwordMsg" class="text-sm"></p>
         </form>
       </div>
 

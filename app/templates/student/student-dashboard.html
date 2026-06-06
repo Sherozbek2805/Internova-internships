@@ -5,9 +5,9 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-    <div class="mb-6 space-y-2">
+    <div class="mb-6 space-y-2" id="flashMessages">
       {% for category, message in messages %}
-        <div class="text-sm px-4 py-3 rounded-lg {% if category == 'success' %}badge-success{% else %}badge-danger{% endif %}" style="border:1px solid var(--border)">
+        <div class="text-sm px-4 py-3 rounded-lg flash-msg {% if category == 'success' %}badge-success{% else %}badge-danger{% endif %}" style="border:1px solid var(--border);transition:opacity 0.4s">
           {{ message }}
         </div>
       {% endfor %}
@@ -43,6 +43,14 @@ function showSection(id) {
 
 document.addEventListener('DOMContentLoaded', () => {
   showSection(localStorage.getItem('studentActiveSection') || 'overview');
+
+  /* Auto-dismiss flash messages after 10s */
+  document.querySelectorAll('.flash-msg').forEach(el => {
+    setTimeout(() => {
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 400);
+    }, 10000);
+  });
 });
 
 /* ======================================================
@@ -408,6 +416,31 @@ document.getElementById('cvUpload')?.addEventListener('change', async e => {
 });
 
 /* ======================================================
+   PASSWORD CHANGE (AJAX)
+   ====================================================== */
+document.getElementById('passwordForm')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const msg = document.getElementById('passwordMsg');
+  const btn = e.target.querySelector('[type="submit"]');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/profile/change-password', {
+      method: 'POST',
+      headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': getCSRF() },
+      body: new FormData(e.target)
+    });
+    const data = await res.json();
+    if (data.success) {
+      showMessage(msg, '✓ ' + (data.message || 'Password changed'), false);
+      e.target.reset();
+    } else {
+      showMessage(msg, data.message || 'Failed', true);
+    }
+  } catch { showMessage(msg, 'Server error', true); }
+  finally { btn.disabled = false; }
+});
+
+/* ======================================================
    PASSWORD STRENGTH
    ====================================================== */
 document.getElementById('newPassword')?.addEventListener('input', function() {
@@ -451,10 +484,14 @@ function calculateProfileStrength() {
 
 function updateStrengthUI() {
   const s = calculateProfileStrength();
-  const txt = document.getElementById('profileStrength');
-  const bar = document.getElementById('strengthBar');
-  if (txt) txt.textContent = s;
-  if (bar) bar.style.width = s + '%';
+  ['profileStrength','overviewStrength'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = s;
+  });
+  ['strengthBar','overviewStrengthBar'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.width = s + '%';
+  });
 }
 
 document.addEventListener('input', updateStrengthUI);

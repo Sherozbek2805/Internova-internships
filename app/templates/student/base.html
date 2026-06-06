@@ -60,7 +60,21 @@
       document.documentElement.setAttribute('data-lang', next);
       document.documentElement.setAttribute('lang', next);
       localStorage.setItem('lang', next);
+      syncBilingualSelects(next);
     }
+
+    function syncBilingualSelects(lang) {
+      lang = lang || document.documentElement.getAttribute('data-lang') || 'uz';
+      document.querySelectorAll('.bilingual-select option[data-uz], .bilingual-select option[data-en]').forEach(opt => {
+        const text = opt.getAttribute('data-' + lang) || opt.getAttribute('data-en') || opt.textContent;
+        opt.textContent = text;
+      });
+      document.querySelectorAll('.bilingual-select optgroup[data-uz], .bilingual-select optgroup[data-en]').forEach(grp => {
+        const label = grp.getAttribute('data-' + lang) || grp.getAttribute('data-en') || grp.label;
+        grp.label = label;
+      });
+    }
+    document.addEventListener('DOMContentLoaded', () => syncBilingualSelects());
 
     function showMessage(el, text, isError = false) {
       if (!el) return;

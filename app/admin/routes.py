@@ -78,9 +78,49 @@ def overview():
                 GROUP BY status
             """)
             application_status_rows = cur.fetchall()
-
             chart_status_labels = [row["status"] for row in application_status_rows]
             chart_status_data = [row["total"] for row in application_status_rows]
+
+            # 📈 TOP INTERNSHIPS BY APPLICATIONS
+            cur.execute("""
+                SELECT i.title, COUNT(a.id) AS total
+                FROM internships i
+                LEFT JOIN applications a ON a.internship_id = i.id
+                GROUP BY i.id, i.title
+                ORDER BY total DESC
+                LIMIT 8
+            """)
+            top_internship_rows = cur.fetchall()
+            chart_internship_labels = [r["title"][:30] for r in top_internship_rows]
+            chart_internship_data = [r["total"] for r in top_internship_rows]
+
+            # 📊 INDUSTRY DISTRIBUTION
+            cur.execute("""
+                SELECT industry, COUNT(*) AS total
+                FROM companies
+                WHERE industry IS NOT NULL AND industry != ''
+                GROUP BY industry
+                ORDER BY total DESC
+                LIMIT 10
+            """)
+            industry_rows = cur.fetchall()
+            chart_industry_labels = [r["industry"] for r in industry_rows]
+            chart_industry_data = [r["total"] for r in industry_rows]
+
+            # 📅 MONTHLY REGISTRATIONS (last 6 months)
+            cur.execute("""
+                SELECT TO_CHAR(created_at, 'Mon YYYY') AS month,
+                       SUM(CASE WHEN role='student' THEN 1 ELSE 0 END) AS students,
+                       SUM(CASE WHEN role='company' THEN 1 ELSE 0 END) AS companies
+                FROM users
+                WHERE created_at >= NOW() - INTERVAL '6 months'
+                GROUP BY TO_CHAR(created_at, 'Mon YYYY'), DATE_TRUNC('month', created_at)
+                ORDER BY DATE_TRUNC('month', created_at)
+            """)
+            monthly_rows = cur.fetchall()
+            chart_monthly_labels = [r["month"] for r in monthly_rows]
+            chart_monthly_students = [r["students"] for r in monthly_rows]
+            chart_monthly_companies = [r["companies"] for r in monthly_rows]
 
         return render_template(
             "admin/overview.html",
@@ -90,6 +130,13 @@ def overview():
             chart_company_data=chart_company_data,
             chart_status_labels=chart_status_labels,
             chart_status_data=chart_status_data,
+            chart_internship_labels=chart_internship_labels,
+            chart_internship_data=chart_internship_data,
+            chart_industry_labels=chart_industry_labels,
+            chart_industry_data=chart_industry_data,
+            chart_monthly_labels=chart_monthly_labels,
+            chart_monthly_students=chart_monthly_students,
+            chart_monthly_companies=chart_monthly_companies,
         )
 
     except Exception as e:

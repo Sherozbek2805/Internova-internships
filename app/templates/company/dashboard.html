@@ -64,6 +64,27 @@
     </div>
   </div>
 
+  <!-- Description warning (#21) -->
+  {% set desc_words = (company.description or '').split()|length %}
+  {% if desc_words < 250 %}
+  <div class="px-4 py-3 rounded-xl flex items-start gap-3" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3)">
+    <span style="color:#fca5a5;font-size:1.2rem">⚠️</span>
+    <div>
+      <p class="text-sm font-medium" style="color:#fca5a5">
+        <span class="uz">Kompaniya tavsifi juda qisqa ({{ desc_words }} / 250 so'z)</span>
+        <span class="en">Company description too short ({{ desc_words }} / 250 words)</span>
+      </p>
+      <p class="text-xs mt-1" style="color:var(--muted)">
+        <span class="uz">Talabalar va nomzodlar kompaniyangiz haqida ko'proq bilishi uchun kamida 250 so'zlik tavsif yozing.</span>
+        <span class="en">Write at least 250 words so students and candidates can learn about your company.</span>
+      </p>
+      <a href="/company/settings" class="inline-block mt-2 text-xs btn btn-ghost" style="border-color:rgba(239,68,68,0.4);color:#fca5a5;padding:0.25rem 0.75rem">
+        <span class="uz">Tavsifni yangilash →</span><span class="en">Update description →</span>
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
   <!-- Stats row -->
   <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
     <div class="card p-5">

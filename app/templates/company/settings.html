@@ -1,7 +1,5 @@
 {% extends "company/base.html" %}
-{% block title %}
-  <span class="uz">Sozlamalar</span><span class="en">Settings</span> — Internova
-{% endblock %}
+{% block title %}Settings — Internova{% endblock %}
 
 {% block content %}
 <div class="space-y-8 fade-up">
@@ -62,10 +60,17 @@
             </div>
           </div>
           <div>
-            <label class="text-xs font-medium mb-1 block" style="color:var(--muted)">
-              <span class="uz">Tavsif</span><span class="en">Description</span>
-            </label>
-            <textarea name="description" rows="4" class="input">{{ company.description or '' }}</textarea>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-medium" style="color:var(--muted)">
+                <span class="uz">Tavsif (kamida 250 so'z)</span><span class="en">Description (min 250 words)</span>
+              </label>
+              <span id="descWordCount" class="text-xs font-medium"></span>
+            </div>
+            <textarea id="descriptionArea" name="description" rows="6" class="input" oninput="updateDescWordCount()">{{ company.description or '' }}</textarea>
+            <div id="descWarning" class="hidden mt-2 text-xs px-3 py-2 rounded-lg" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);color:#fca5a5">
+              ⚠️ <span class="uz">Kompaniya tavsifi kamida 250 so'z bo'lishi kerak. Bu nomzodlar va talabalar uchun muhim!</span>
+              <span class="en">Company description must be at least 250 words. This is important for candidates and students!</span>
+            </div>
           </div>
           <button type="submit" id="save-btn" class="btn btn-primary">
             <span class="uz">Saqlash</span><span class="en">Save Changes</span>
@@ -136,6 +141,19 @@ async function settingsApi(url, formData) {
   if (!res.ok) throw data;
   return data;
 }
+
+function updateDescWordCount() {
+  const ta = document.getElementById('descriptionArea');
+  const wc = document.getElementById('descWordCount');
+  const warn = document.getElementById('descWarning');
+  if (!ta || !wc) return;
+  const words = ta.value.trim().split(/\s+/).filter(w => w).length;
+  const enough = words >= 250;
+  wc.textContent = words + ' / 250';
+  wc.style.color = enough ? '#86efac' : '#fca5a5';
+  warn?.classList.toggle('hidden', enough);
+}
+document.addEventListener('DOMContentLoaded', updateDescWordCount);
 
 document.getElementById('settings-form').addEventListener('submit', async e => {
   e.preventDefault();

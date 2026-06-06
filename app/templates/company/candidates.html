@@ -1,7 +1,5 @@
 {% extends "company/base.html" %}
-{% block title %}
-  <span class="uz">Nomzodlar</span><span class="en">Candidates</span> — Internova
-{% endblock %}
+{% block title %}Candidates — Internova{% endblock %}
 
 {% block content %}
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -41,21 +39,22 @@
   <!-- Filters — 2 cols on mobile, 5 on desktop -->
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
     <input id="searchInput" placeholder="Search..." class="input col-span-2 sm:col-span-1">
-    <select id="internshipFilter" class="input">
-      <option value="all"><span class="uz">Barcha</span><span class="en">All internships</span></option>
+    <select id="internshipFilter" class="input bilingual-select">
+      <option value="all" data-uz="Barcha stajirovkalar" data-en="All internships">All internships</option>
     </select>
-    <select id="statusFilter" class="input">
-      <option value="all"><span class="uz">Barcha holatlar</span><span class="en">All statuses</span></option>
-      <option>Yangi</option>
-      <option>Ko'rib chiqilmoqda</option>
-      <option>Qisqa ro'yxat</option>
-      <option>Saralangan</option>
+    <select id="statusFilter" class="input bilingual-select">
+      <option value="all" data-uz="Barcha holatlar" data-en="All statuses">All statuses</option>
+      <option value="new" data-uz="Yangi" data-en="New">New</option>
+      <option value="reviewing" data-uz="Ko'rib chiqilmoqda" data-en="Reviewing">Reviewing</option>
+      <option value="shortlisted" data-uz="Qisqa ro'yxat" data-en="Shortlisted">Shortlisted</option>
+      <option value="accepted" data-uz="Qabul qilindi" data-en="Accepted">Accepted</option>
+      <option value="rejected" data-uz="Rad etildi" data-en="Rejected">Rejected</option>
     </select>
     <input type="number" id="scoreFilter" placeholder="Min Score" class="input">
-    <select id="sortFilter" class="input">
-      <option value="default"><span class="uz">Saralash</span><span class="en">Sort</span></option>
-      <option value="score-desc">Score ↓</option>
-      <option value="score-asc">Score ↑</option>
+    <select id="sortFilter" class="input bilingual-select">
+      <option value="default" data-uz="Saralash" data-en="Sort by">Sort by</option>
+      <option value="score-desc" data-uz="Ball (yuqori→past)" data-en="Score (high→low)">Score (high→low)</option>
+      <option value="score-asc" data-uz="Ball (past→yuqori)" data-en="Score (low→high)">Score (low→high)</option>
     </select>
   </div>
 

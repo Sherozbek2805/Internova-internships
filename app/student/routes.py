@@ -390,48 +390,49 @@ def apply_page():
 @role_required("student")
 def apply(internship_id):
     user_id = session["user_id"]
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
-    # ✅ GET MOTIVATION
     motivation = (request.form.get("motivation") or "").strip()
 
     with get_cursor() as cur:
 
-        # ✅ GET real student_id
         cur.execute("SELECT id FROM students WHERE user_id=%s", (user_id,))
         student = cur.fetchone()
 
         if not student:
+            if is_ajax:
+                return jsonify({"success": False, "message": "Student not found."}), 404
             flash("Student not found.", "error")
             return redirect(url_for("student.student_dashboard"))
 
         student_id = student["id"]
 
-        # 🔍 CHECK INTERNSHIP
         cur.execute("""
-            SELECT id
-            FROM internships
-            WHERE id = %s AND approved = TRUE
+            SELECT id FROM internships WHERE id = %s AND approved = TRUE
         """, (internship_id,))
         internship = cur.fetchone()
 
         if not internship:
+            if is_ajax:
+                return jsonify({"success": False, "message": "Internship not found."}), 404
             flash("Internship not found.", "error")
             return redirect(url_for("student.student_dashboard"))
 
-        # 🔍 CHECK EXISTING APPLICATION
         cur.execute("""
-            SELECT id
-            FROM applications
+            SELECT id FROM applications
             WHERE student_id = %s AND internship_id = %s
         """, (student_id, internship_id))
         existing = cur.fetchone()
 
         if existing:
+            if is_ajax:
+                return jsonify({"success": False, "message": "You already applied to this internship."}), 400
             flash("You already applied to this internship.", "error")
             return redirect(url_for("student.student_dashboard"))
 
-        # ❗ VALIDATION
         if len(motivation) < 20:
+            if is_ajax:
+                return jsonify({"success": False, "message": "Please write a more detailed answer (min 20 characters)."}), 400
             flash("Please write a meaningful answer.", "error")
             return redirect(url_for("student.student_dashboard"))
 
@@ -496,13 +497,15 @@ def save_internship(internship_id):
 
         # 🔍 CHECK EXISTING SAVE
         cur.execute("""
-            SELECT id
+            SELECT 1
             FROM saved_internships
             WHERE student_id = %s AND internship_id = %s
         """, (student_id, internship_id))
         existing = cur.fetchone()
 
         if existing:
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"success": False, "message": "Already saved."}), 400
             flash("This internship is already saved.", "error")
             return redirect(url_for("student.student_dashboard"))
 
@@ -544,13 +547,15 @@ def unsave_internship(internship_id):
 
         # 🔍 CHECK EXISTENCE
         cur.execute("""
-            SELECT id
+            SELECT 1
             FROM saved_internships
             WHERE student_id = %s AND internship_id = %s
         """, (student_id, internship_id))
         existing = cur.fetchone()
 
         if not existing:
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return jsonify({"success": False, "message": "Not saved."}), 400
             flash("Saved internship not found.", "error")
             return redirect(url_for("student.student_dashboard"))
 
@@ -639,66 +644,50 @@ def update_profile():
 @role_required("student")
 def change_password():
     user_id = session["user_id"]
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+    def err(msg, code=400):
+        if is_ajax:
+            return jsonify({"success": False, "message": msg}), code
+        flash(msg, "error")
+        return redirect(url_for("student.student_dashboard"))
 
     current_password = (request.form.get("current_password") or "").strip()
     new_password = (request.form.get("new_password") or "").strip()
     confirm_password = (request.form.get("confirm_password") or "").strip()
 
     with get_cursor() as cur:
-
-        # 👤 FETCH USER (FIXED)
-        cur.execute("""
-            SELECT id, password
-            FROM users
-            WHERE id = %s
-        """, (user_id,))
+        cur.execute("SELECT id, password FROM users WHERE id = %s", (user_id,))
         user = cur.fetchone()
 
         if not user:
-            flash("Student account was not found.", "error")
-            return redirect("/logout")
+            session.clear()
+            return err("Account not found.", 404)
 
-        # 🔐 GOOGLE ACCOUNT CHECK
         if not user["password"]:
-            flash("This account uses Google login. Password change is not available here.", "error")
-            return redirect(url_for("student.student_dashboard"))
+            return err("This account uses Google login. Password change is not available.")
 
-        # 🔐 VALIDATION
         if not current_password or not new_password or not confirm_password:
-            flash("All password fields are required.", "error")
-            return redirect(url_for("student.student_dashboard"))
+            return err("All password fields are required.")
 
         if not check_password_hash(user["password"], current_password):
-            flash("Current password is incorrect.", "error")
-            return redirect(url_for("student.student_dashboard"))
+            return err("Current password is incorrect.")
 
         if not is_valid_password(new_password):
-            flash("New password must contain uppercase, lowercase, number, symbol and be at least 8 characters.", "error")
-            return redirect(url_for("student.student_dashboard"))
+            return err("New password must contain uppercase, lowercase, number, symbol and be at least 8 characters.")
 
         if new_password != confirm_password:
-            flash("New passwords do not match.", "error")
-            return redirect(url_for("student.student_dashboard"))
+            return err("New passwords do not match.")
 
         if current_password == new_password:
-            flash("New password must be different from the current password.", "error")
-            return redirect(url_for("student.student_dashboard"))
+            return err("New password must be different from the current password.")
 
-        # 🔐 HASH NEW PASSWORD
         hashed_password = generate_password_hash(new_password)
+        cur.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
+        current_app.logger.info("User %s changed password", user_id)
 
-        # 🔄 UPDATE PASSWORD
-        cur.execute("""
-            UPDATE users
-            SET password = %s
-            WHERE id = %s
-        """, (hashed_password, user_id))
-
-        current_app.logger.info(
-            "User %s changed password",
-            user_id
-        )
-
+    if is_ajax:
+        return jsonify({"success": True, "message": "Password changed successfully."})
     flash("Password changed successfully.", "success")
     return redirect(url_for("student.student_dashboard"))
 

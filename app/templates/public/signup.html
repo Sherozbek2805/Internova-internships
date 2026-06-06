@@ -85,15 +85,65 @@
         <input id="phone1"      placeholder="+998 90 123 45 67 (Phone 1)" class="input">
         <input id="phone2"      placeholder="+998 91 765 43 21 (Phone 2, optional)" class="input">
         <input id="address"     placeholder="Address" class="input">
-        <select id="industry" class="input" style="color:var(--text)">
-          <option value="" style="background:var(--surface)">
-            <span class="uz">Sohani tanlang</span><span class="en">Select industry</span>
-          </option>
-          <option value="IT and engineering">IT &amp; Engineering</option>
-          <option value="Media and Marketing">Media &amp; Marketing</option>
-          <option value="Finance and Business">Finance &amp; Business</option>
-          <option value="Health and Pharmacy">Health &amp; Pharmacy</option>
-          <option value="Others">Others</option>
+        <select id="industry" class="input bilingual-select" style="color:var(--text)">
+          <option value="" data-uz="Sohani tanlang" data-en="Select industry"></option>
+          <optgroup data-uz="Texnologiya va muhandislik" data-en="Technology & Engineering" label="Technology &amp; Engineering">
+            <option value="IT and Engineering" data-uz="IT va Muhandislik" data-en="IT &amp; Engineering">IT &amp; Engineering</option>
+            <option value="Software Development" data-uz="Dasturiy ta'minot" data-en="Software Development">Software Development</option>
+            <option value="Data Science and AI" data-uz="Ma'lumotlar fani va AI" data-en="Data Science &amp; AI">Data Science &amp; AI</option>
+            <option value="Cybersecurity" data-uz="Kiberxavfsizlik" data-en="Cybersecurity">Cybersecurity</option>
+            <option value="Electrical Engineering" data-uz="Elektrotexnika" data-en="Electrical Engineering">Electrical Engineering</option>
+            <option value="Mechanical Engineering" data-uz="Mexanika muhandisligi" data-en="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Civil Engineering" data-uz="Qurilish muhandisligi" data-en="Civil Engineering">Civil Engineering</option>
+          </optgroup>
+          <optgroup data-uz="Biznes va moliya" data-en="Business & Finance" label="Business &amp; Finance">
+            <option value="Finance and Business" data-uz="Moliya va Biznes" data-en="Finance &amp; Business">Finance &amp; Business</option>
+            <option value="Banking" data-uz="Bankchilik" data-en="Banking">Banking</option>
+            <option value="Accounting" data-uz="Buxgalteriya" data-en="Accounting">Accounting</option>
+            <option value="Economics" data-uz="Iqtisodiyot" data-en="Economics">Economics</option>
+            <option value="Consulting" data-uz="Konsalting" data-en="Consulting">Consulting</option>
+            <option value="Insurance" data-uz="Sug'urta" data-en="Insurance">Insurance</option>
+          </optgroup>
+          <optgroup data-uz="Media va marketing" data-en="Media & Marketing" label="Media &amp; Marketing">
+            <option value="Media and Marketing" data-uz="Media va Marketing" data-en="Media &amp; Marketing">Media &amp; Marketing</option>
+            <option value="Advertising" data-uz="Reklama" data-en="Advertising">Advertising</option>
+            <option value="Public Relations" data-uz="Jamoatchilik bilan aloqa" data-en="Public Relations">Public Relations</option>
+            <option value="Journalism" data-uz="Jurnalistika" data-en="Journalism">Journalism</option>
+            <option value="Design and Creative" data-uz="Dizayn va ijodkorlik" data-en="Design &amp; Creative">Design &amp; Creative</option>
+            <option value="Film and Video Production" data-uz="Kino va video ishlab chiqarish" data-en="Film &amp; Video Production">Film &amp; Video Production</option>
+          </optgroup>
+          <optgroup data-uz="Sog'liqni saqlash" data-en="Healthcare" label="Healthcare">
+            <option value="Health and Pharmacy" data-uz="Sog'liqni saqlash va Farmatsevtika" data-en="Health &amp; Pharmacy">Health &amp; Pharmacy</option>
+            <option value="Medicine" data-uz="Tibbiyot" data-en="Medicine">Medicine</option>
+            <option value="Dentistry" data-uz="Stomatologiya" data-en="Dentistry">Dentistry</option>
+            <option value="Nursing" data-uz="Hamshiralik" data-en="Nursing">Nursing</option>
+            <option value="Nutrition" data-uz="Oziqlanish" data-en="Nutrition">Nutrition</option>
+          </optgroup>
+          <optgroup data-uz="Ta'lim va fan" data-en="Education & Science" label="Education &amp; Science">
+            <option value="Education" data-uz="Ta'lim" data-en="Education">Education</option>
+            <option value="Research and Science" data-uz="Ilmiy tadqiqot" data-en="Research &amp; Science">Research &amp; Science</option>
+            <option value="Law and Legal" data-uz="Huquq" data-en="Law &amp; Legal">Law &amp; Legal</option>
+          </optgroup>
+          <optgroup data-uz="Sanoat va qurilish" data-en="Industry & Construction" label="Industry &amp; Construction">
+            <option value="Construction" data-uz="Qurilish" data-en="Construction">Construction</option>
+            <option value="Manufacturing" data-uz="Ishlab chiqarish" data-en="Manufacturing">Manufacturing</option>
+            <option value="Mining and Energy" data-uz="Kon va energetika" data-en="Mining &amp; Energy">Mining &amp; Energy</option>
+            <option value="Agriculture" data-uz="Qishloq xo'jaligi" data-en="Agriculture">Agriculture</option>
+            <option value="Logistics and Transportation" data-uz="Logistika va transport" data-en="Logistics &amp; Transportation">Logistics &amp; Transportation</option>
+          </optgroup>
+          <optgroup data-uz="Xizmatlar sohasi" data-en="Services" label="Services">
+            <option value="Hospitality and Tourism" data-uz="Mehmonxona va turizm" data-en="Hospitality &amp; Tourism">Hospitality &amp; Tourism</option>
+            <option value="Retail and Sales" data-uz="Chakana savdo" data-en="Retail &amp; Sales">Retail &amp; Sales</option>
+            <option value="Food Service" data-uz="Oziq-ovqat xizmatlari" data-en="Food Service">Food Service</option>
+            <option value="Security" data-uz="Qo'riqlash" data-en="Security">Security</option>
+            <option value="Cleaning and Maintenance" data-uz="Tozalash va texnik xizmat" data-en="Cleaning &amp; Maintenance">Cleaning &amp; Maintenance</option>
+          </optgroup>
+          <optgroup data-uz="Boshqa" data-en="Other" label="Other">
+            <option value="Government and Public Sector" data-uz="Davlat va jamoat sektori" data-en="Government &amp; Public Sector">Government &amp; Public Sector</option>
+            <option value="Non-profit and NGO" data-uz="Notijorat va NNT" data-en="Non-profit &amp; NGO">Non-profit &amp; NGO</option>
+            <option value="Sports and Fitness" data-uz="Sport va fitness" data-en="Sports &amp; Fitness">Sports &amp; Fitness</option>
+            <option value="Others" data-uz="Boshqa" data-en="Other">Other</option>
+          </optgroup>
         </select>
       </div>
 
