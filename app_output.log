@@ -1,0 +1,672 @@
+2026-06-04 23:03:07,659 INFO app.db DB pool created on attempt 1
+2026-06-04 23:03:21,450 INFO app.db Database schema initialised successfully.
+ * Serving Flask app 'app'
+ * Debug mode: on
+2026-06-04 23:03:21,482 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-06-04 23:03:21,482 INFO werkzeug [33mPress CTRL+C to quit[0m
+2026-06-04 23:03:21,484 INFO werkzeug  * Restarting with stat
+2026-06-04 23:03:23,550 INFO app.db DB pool created on attempt 1
+2026-06-04 23:03:37,012 INFO app.db Database schema initialised successfully.
+2026-06-04 23:03:37,028 WARNING werkzeug  * Debugger is active!
+2026-06-04 23:03:37,031 INFO werkzeug  * Debugger PIN: 736-808-670
+2026-06-04 23:03:37,051 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:03:37] "GET / HTTP/1.1" 200 -
+2026-06-04 23:03:37,305 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:03:37] "GET / HTTP/1.1" 200 -
+2026-06-04 23:03:50,529 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:03:50] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:03:51,788 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:03:51] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:03:52,822 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:03:52] "[32mGET /apply HTTP/1.1[0m" 302 -
+2026-06-04 23:03:56,119 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:03:56] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:03:56,384 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:03:56] "[32mGET /company/candidates/stats HTTP/1.1[0m" 302 -
+2026-06-04 23:04:17,290 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:17] "GET / HTTP/1.1" 200 -
+2026-06-04 23:04:17,544 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:17] "GET /about HTTP/1.1" 200 -
+2026-06-04 23:04:17,820 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:17] "GET /faq HTTP/1.1" 200 -
+2026-06-04 23:04:18,084 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:18] "GET /contact HTTP/1.1" 200 -
+2026-06-04 23:04:19,107 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:19] "GET /discover HTTP/1.1" 200 -
+2026-06-04 23:04:20,115 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:20] "GET /companies HTTP/1.1" 200 -
+2026-06-04 23:04:20,368 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:20] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:04:20,636 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:20] "GET /signup HTTP/1.1" 200 -
+2026-06-04 23:04:20,908 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:20] "[32mGET /student-dashboard HTTP/1.1[0m" 302 -
+2026-06-04 23:04:21,920 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:21] "GET /directory/companies HTTP/1.1" 200 -
+2026-06-04 23:04:22,207 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:22] "GET /waitlist HTTP/1.1" 200 -
+2026-06-04 23:04:22,467 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:22] "GET /privacy HTTP/1.1" 200 -
+2026-06-04 23:04:22,729 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:22] "GET /terms HTTP/1.1" 200 -
+2026-06-04 23:04:32,130 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:32] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:04:32,382 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:32] "[31m[1mGET /profile/update-skills HTTP/1.1[0m" 405 -
+2026-06-04 23:04:32,644 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:32] "[31m[1mGET /profile/upload-cv HTTP/1.1[0m" 405 -
+2026-06-04 23:04:45,165 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:04:45] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:05:51,058 INFO werkzeug  * Detected change in 'C:\\Users\\User\\Desktop\\internova2\\app\\public\\routes.py', reloading
+2026-06-04 23:05:51,225 INFO werkzeug  * Restarting with stat
+2026-06-04 23:05:53,635 INFO app.db DB pool created on attempt 1
+2026-06-04 23:06:07,139 INFO app.db Database schema initialised successfully.
+2026-06-04 23:06:07,180 WARNING werkzeug  * Debugger is active!
+2026-06-04 23:06:07,184 INFO werkzeug  * Debugger PIN: 736-808-670
+2026-06-04 23:07:58,026 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:07:58] "GET / HTTP/1.1" 200 -
+2026-06-04 23:07:58,299 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:07:58] "GET /about HTTP/1.1" 200 -
+2026-06-04 23:07:58,565 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:07:58] "GET /faq HTTP/1.1" 200 -
+2026-06-04 23:07:58,839 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:07:58] "GET /contact HTTP/1.1" 200 -
+2026-06-04 23:07:59,876 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:07:59] "GET /discover HTTP/1.1" 200 -
+2026-06-04 23:08:00,143 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:00] "GET /companies HTTP/1.1" 200 -
+2026-06-04 23:08:00,410 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:00] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:08:00,682 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:00] "GET /signup HTTP/1.1" 200 -
+2026-06-04 23:08:00,948 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:00] "GET /waitlist HTTP/1.1" 200 -
+2026-06-04 23:08:01,217 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:01] "GET /privacy HTTP/1.1" 200 -
+2026-06-04 23:08:01,477 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:01] "GET /terms HTTP/1.1" 200 -
+2026-06-04 23:08:02,491 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:02] "GET /directory/companies HTTP/1.1" 200 -
+2026-06-04 23:08:05,864 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:05] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:08:06,878 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:06] "[32mGET /apply HTTP/1.1[0m" 302 -
+2026-06-04 23:08:07,146 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:08:07] "[31m[1mGET /apply/1 HTTP/1.1[0m" 405 -
+2026-06-04 23:13:34,872 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:34] "GET / HTTP/1.1" 200 -
+2026-06-04 23:13:35,004 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:35] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:13:35,006 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:35] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:13:40,039 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:40] "GET / HTTP/1.1" 200 -
+2026-06-04 23:13:40,076 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:40] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:13:40,077 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:40] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:13:41,205 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-06-04 23:13:43,284 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:43] "GET /signup HTTP/1.1" 200 -
+2026-06-04 23:13:43,327 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:43] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:13:43,335 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:43] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:13:55,833 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:55] "GET / HTTP/1.1" 200 -
+2026-06-04 23:13:58,619 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:58] "GET /signup HTTP/1.1" 200 -
+2026-06-04 23:13:58,656 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:58] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:13:58,663 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:13:58] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:14:12,593 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:14:12] "POST /check-email HTTP/1.1" 200 -
+2026-06-04 23:14:44,545 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:14:44] "POST /signup HTTP/1.1" 200 -
+2026-06-04 23:14:49,709 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:14:49] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:14:49,777 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:14:49] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:14:49,791 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:14:49] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:15:11,333 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:15:11] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:15:14,976 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:15:14] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:15:15,014 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:15:15] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:15:15,023 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:15:15] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:15:55,144 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:15:55] "[35m[1mPOST /save/4 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 27, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 45, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\student\routes.py", line 498, in save_internship
+    cur.execute("""
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column "id" does not exist
+LINE 2:             SELECT id
+                           ^
+
+2026-06-04 23:16:30,224 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:30] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:16:30,230 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:30] "GET / HTTP/1.1" 200 -
+2026-06-04 23:16:30,288 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:30] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:16:30,303 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:30] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:16:30,607 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:30] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:16:31,911 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:31] "GET /signup HTTP/1.1" 200 -
+2026-06-04 23:16:31,945 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:31] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:16:31,955 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:31] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:16:40,195 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:16:40] "POST /check-email HTTP/1.1" 200 -
+2026-06-04 23:17:14,681 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:14] "POST /signup HTTP/1.1" 200 -
+2026-06-04 23:17:17,236 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:17] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:17:17,305 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:17] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:17:17,323 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:17] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:17:36,793 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:36] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:17:39,634 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:39] "GET /company/dashboard HTTP/1.1" 200 -
+2026-06-04 23:17:39,665 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:39] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:17:39,675 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:39] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:17:43,302 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:43] "GET /company/post HTTP/1.1" 200 -
+2026-06-04 23:17:43,334 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:43] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:17:43,340 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:17:43] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:18:31,053 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:31] "[31m[1mPOST /company/internships/create HTTP/1.1[0m" 403 -
+2026-06-04 23:18:45,164 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:45] "GET /company/candidates HTTP/1.1" 200 -
+2026-06-04 23:18:45,218 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:45] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:18:45,231 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:45] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:18:47,846 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:47] "GET /company/candidates/stats HTTP/1.1" 200 -
+2026-06-04 23:18:48,847 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:48] "GET /company/candidates?min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:18:51,709 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:51] "GET /company/settings HTTP/1.1" 200 -
+2026-06-04 23:18:51,784 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:51] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:18:51,837 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:51] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:18:56,464 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:56] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:18:56,472 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:56] "GET / HTTP/1.1" 200 -
+2026-06-04 23:18:56,514 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:56] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:18:56,519 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:56] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:18:57,924 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:57] "GET /signup HTTP/1.1" 200 -
+2026-06-04 23:18:57,959 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:57] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:18:57,967 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:18:57] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:19:00,672 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:00] "[32mGET /login/google HTTP/1.1[0m" 302 -
+2026-06-04 23:19:03,969 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:03] "[32mGET /google/callback?state=IEsTSzbmAsUSDwoFfeC7CoXV9sBdR1&iss=https://accounts.google.com&code=4/0AdkVLPxxypTCYYHf64VcRoUy7aDW1_c8g_Eg7X_k3kWFkW-mZOTTJUEFB11XDP-W3OgQag&scope=email+profile+https://www.googleapis.com/auth/userinfo.profile+openid+https://www.googleapis.com/auth/userinfo.email&authuser=0&prompt=none HTTP/1.1[0m" 302 -
+2026-06-04 23:19:06,032 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:06] "GET /admin/ HTTP/1.1" 200 -
+2026-06-04 23:19:06,082 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:06] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:19:06,092 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:06] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:19:14,444 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:14] "GET /admin/users HTTP/1.1" 200 -
+2026-06-04 23:19:14,481 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:14] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:19:14,486 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:14] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:19:19,936 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:19] "GET /admin/companies HTTP/1.1" 200 -
+2026-06-04 23:19:19,968 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:19] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:19:19,977 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:19] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:19:22,750 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:22] "POST /admin/verify-company/14 HTTP/1.1" 200 -
+2026-06-04 23:19:36,998 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:36] "GET /admin/internships HTTP/1.1" 200 -
+2026-06-04 23:19:37,027 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:37] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:19:37,034 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:37] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:19:39,893 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:39] "GET /admin/companies HTTP/1.1" 200 -
+2026-06-04 23:19:39,931 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:39] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:19:39,937 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:39] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:19:49,427 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:49] "GET /admin/internships HTTP/1.1" 200 -
+2026-06-04 23:19:49,462 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:49] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:19:49,469 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:49] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:19:53,228 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:53] "GET /admin/applications HTTP/1.1" 200 -
+2026-06-04 23:19:53,264 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:53] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:19:53,269 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:19:53] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:03,121 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:03] "GET /admin/create-internship HTTP/1.1" 200 -
+2026-06-04 23:20:03,158 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:03] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:03,165 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:03] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:08,812 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:08] "GET /admin/companies HTTP/1.1" 200 -
+2026-06-04 23:20:08,843 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:08] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:08,851 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:08] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:14,003 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:14] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:20:14,011 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:14] "GET / HTTP/1.1" 200 -
+2026-06-04 23:20:14,049 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:14] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:14,057 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:14] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:22,057 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:22] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:20:22,106 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:22] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:22,113 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:22] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:34,358 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:34] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:20:37,234 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:37] "GET /company/dashboard HTTP/1.1" 200 -
+2026-06-04 23:20:37,268 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:37] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:37,276 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:37] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:40,256 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:40] "GET /company/post HTTP/1.1" 200 -
+2026-06-04 23:20:40,289 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:40] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:40,296 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:40] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:52,909 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:52] "GET /company/dashboard HTTP/1.1" 200 -
+2026-06-04 23:20:52,941 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:52] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:52,952 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:52] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:20:54,351 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:54] "GET /company/post HTTP/1.1" 200 -
+2026-06-04 23:20:54,384 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:54] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:20:54,391 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:20:54] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:21:42,350 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:21:42] "POST /company/internships/create HTTP/1.1" 200 -
+2026-06-04 23:21:52,847 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:21:52] "GET /company/candidates HTTP/1.1" 200 -
+2026-06-04 23:21:52,914 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:21:52] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:21:52,927 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:21:52] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:21:55,178 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:21:55] "GET /company/candidates/stats HTTP/1.1" 200 -
+2026-06-04 23:21:56,204 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:21:56] "GET /company/candidates?min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:22:09,713 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:22:09] "GET /company/settings HTTP/1.1" 200 -
+2026-06-04 23:22:09,742 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:22:09] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:22:09,753 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:22:09] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:23:00,080 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:00] "POST /company/settings/update HTTP/1.1" 200 -
+2026-06-04 23:23:22,367 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:22] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:23:22,375 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:22] "GET / HTTP/1.1" 200 -
+2026-06-04 23:23:22,428 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:22] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:23:22,435 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:22] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:23:22,736 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:22] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:23:24,930 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:24] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:23:24,969 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:24] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:23:24,980 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:24] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:23:38,421 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:38] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:23:41,972 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:41] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:23:42,008 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:42] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:23:42,014 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:42] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:23:58,418 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:58] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:23:58,428 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:58] "GET / HTTP/1.1" 200 -
+2026-06-04 23:23:58,455 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:58] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:23:58,462 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:23:58] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:24:01,458 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:01] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:24:01,494 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:01] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:24:01,500 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:01] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:24:02,649 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:02] "[32mGET /login/google HTTP/1.1[0m" 302 -
+2026-06-04 23:24:05,171 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:05] "[32mGET /google/callback?state=HDwm14saZPeU65o3Q4I1s1ScoryO8e&iss=https://accounts.google.com&code=4/0AeoWuM-VkrMiD-dlL0H9OxaflNX7Ym8pfK3C_mD2kHLFBE5Qg4DRAeyJogOC3HU5yE2uEw&scope=email+profile+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email+openid&authuser=0&prompt=none HTTP/1.1[0m" 302 -
+2026-06-04 23:24:07,190 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:07] "GET /admin/ HTTP/1.1" 200 -
+2026-06-04 23:24:07,229 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:07] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:24:07,241 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:07] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:24:11,120 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:11] "GET /admin/users HTTP/1.1" 200 -
+2026-06-04 23:24:11,153 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:11] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:24:11,162 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:11] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:24:16,527 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:16] "GET /admin/internships HTTP/1.1" 200 -
+2026-06-04 23:24:16,560 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:16] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:24:16,569 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:16] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:24:19,300 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:19] "POST /admin/approve-internship/8 HTTP/1.1" 200 -
+2026-06-04 23:24:22,447 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:22] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:24:22,455 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:22] "GET / HTTP/1.1" 200 -
+2026-06-04 23:24:22,493 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:22] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:24:22,499 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:22] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:24:30,598 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:30] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:24:30,638 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:30] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:24:30,647 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:30] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:24:47,800 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:47] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:24:51,373 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:51] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:24:51,407 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:51] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:24:51,415 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:24:51] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:25:06,737 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:25:06] "[35m[1mPOST /save/8 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 27, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 45, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\student\routes.py", line 498, in save_internship
+    cur.execute("""
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column "id" does not exist
+LINE 2:             SELECT id
+                           ^
+
+2026-06-04 23:25:15,088 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:25:15] "[35m[1mPOST /save/8 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 27, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 45, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\student\routes.py", line 498, in save_internship
+    cur.execute("""
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column "id" does not exist
+LINE 2:             SELECT id
+                           ^
+
+2026-06-04 23:25:49,163 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:25:49] "POST /apply/8 HTTP/1.1" 200 -
+2026-06-04 23:26:01,194 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:01] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:26:01,201 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:01] "GET / HTTP/1.1" 200 -
+2026-06-04 23:26:01,257 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:01] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:01,266 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:01] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:06,282 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:06] "GET /signup HTTP/1.1" 200 -
+2026-06-04 23:26:06,319 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:06] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:06,330 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:06] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:08,660 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:08] "[32mGET /login/google HTTP/1.1[0m" 302 -
+2026-06-04 23:26:11,211 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:11] "[32mGET /google/callback?state=5TjcXNznyBTI4MZqLAqxtf2sCRbtwL&iss=https://accounts.google.com&code=4/0AdkVLPyqFEYZrKUmaZHwsSKxtM_5jbdzGCvL6-9Hrn8eRnzxNuPOzh702c_MwL3c15jXtg&scope=email+profile+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+openid&authuser=0&prompt=none HTTP/1.1[0m" 302 -
+2026-06-04 23:26:13,241 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:13] "GET /admin/ HTTP/1.1" 200 -
+2026-06-04 23:26:13,283 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:13] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:13,295 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:13] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:18,038 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:18] "GET /admin/users HTTP/1.1" 200 -
+2026-06-04 23:26:18,071 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:18] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:18,078 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:18] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:20,953 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:20] "GET /admin/companies HTTP/1.1" 200 -
+2026-06-04 23:26:20,986 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:20] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:20,994 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:20] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:26,947 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:26] "POST /admin/generate-company-code/14 HTTP/1.1" 200 -
+2026-06-04 23:26:32,508 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:32] "GET /admin/companies HTTP/1.1" 200 -
+2026-06-04 23:26:32,543 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:32] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:32,548 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:32] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:38,147 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:38] "GET /admin/internships HTTP/1.1" 200 -
+2026-06-04 23:26:38,179 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:38] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:38,186 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:38] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:42,686 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:42] "GET /admin/applications HTTP/1.1" 200 -
+2026-06-04 23:26:42,716 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:42] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:42,727 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:42] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:26:50,425 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:50] "GET /admin/create-internship HTTP/1.1" 200 -
+2026-06-04 23:26:50,461 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:50] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:26:50,470 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:26:50] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:27:22,415 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:22] "[32mPOST /admin/create-internship HTTP/1.1[0m" 302 -
+2026-06-04 23:27:23,937 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:23] "GET /admin/create-internship HTTP/1.1" 200 -
+2026-06-04 23:27:24,009 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:24] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:27:24,023 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:24] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:27:28,997 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:28] "GET /admin/applications HTTP/1.1" 200 -
+2026-06-04 23:27:29,029 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:29] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:27:29,039 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:29] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:27:37,610 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:37] "GET /admin/companies HTTP/1.1" 200 -
+2026-06-04 23:27:37,646 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:37] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:27:37,653 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:37] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:27:57,633 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:57] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:27:57,642 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:57] "GET / HTTP/1.1" 200 -
+2026-06-04 23:27:57,695 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:57] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:27:57,696 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:27:57] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:28:00,097 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:00] "GET /companies HTTP/1.1" 200 -
+2026-06-04 23:28:00,131 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:00] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:28:00,139 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:00] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:28:04,655 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:04] "GET /directory/companies HTTP/1.1" 200 -
+2026-06-04 23:28:04,687 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:04] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:28:13,114 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:13] "GET /directory/companies HTTP/1.1" 200 -
+2026-06-04 23:28:13,145 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:13] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:28:17,889 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:17] "GET /companies/14 HTTP/1.1" 200 -
+2026-06-04 23:28:17,918 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:17] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:28:24,558 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:24] "POST /companies/14/access HTTP/1.1" 200 -
+2026-06-04 23:28:26,850 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:26] "GET /company/dashboard HTTP/1.1" 200 -
+2026-06-04 23:28:26,879 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:26] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:28:26,891 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:26] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:28:31,025 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:31] "GET /company/post HTTP/1.1" 200 -
+2026-06-04 23:28:31,058 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:31] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:28:31,063 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:31] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:28:34,076 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:34] "GET /company/candidates HTTP/1.1" 200 -
+2026-06-04 23:28:34,110 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:34] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:28:34,117 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:34] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:28:36,397 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:36] "GET /company/candidates/stats HTTP/1.1" 200 -
+2026-06-04 23:28:37,432 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:28:37] "GET /company/candidates?min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:29:52,866 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:29:52] "POST /company/applications/update HTTP/1.1" 200 -
+2026-06-04 23:29:54,390 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:29:54] "GET /company/candidates/stats HTTP/1.1" 200 -
+2026-06-04 23:29:57,884 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:29:57] "GET /company/settings HTTP/1.1" 200 -
+2026-06-04 23:29:57,935 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:29:57] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:29:57,948 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:29:57] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:30:14,184 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:14] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:30:14,191 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:14] "GET / HTTP/1.1" 200 -
+2026-06-04 23:30:14,228 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:14] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:30:14,238 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:14] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:30:16,978 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:16] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:30:17,015 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:17] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:30:17,022 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:17] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:30:27,953 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:27] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:30:31,546 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:31] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:30:31,581 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:31] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:30:31,588 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:30:31] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:31:26,205 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:31:26] "POST /profile/update HTTP/1.1" 200 -
+2026-06-04 23:31:34,734 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:31:34] "POST /profile/update-academic HTTP/1.1" 200 -
+2026-06-04 23:31:41,755 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:31:41] "POST /profile/update-skills HTTP/1.1" 200 -
+2026-06-04 23:32:30,891 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:32:30] "POST /profile/add-experience HTTP/1.1" 200 -
+2026-06-04 23:33:00,736 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:33:00] "POST /profile/upload-cv HTTP/1.1" 200 -
+2026-06-04 23:33:02,495 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:33:02] "POST /profile/upload-cv HTTP/1.1" 200 -
+2026-06-04 23:33:08,544 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:33:08] "GET /student-dashboard HTTP/1.1" 200 -
+2026-06-04 23:33:36,693 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:33:36] "[35m[1mPOST /save/9 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 27, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 45, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\student\routes.py", line 498, in save_internship
+    cur.execute("""
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column "id" does not exist
+LINE 2:             SELECT id
+                           ^
+
+2026-06-04 23:34:00,684 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:00] "[32mPOST /logout HTTP/1.1[0m" 302 -
+2026-06-04 23:34:00,692 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:00] "GET / HTTP/1.1" 200 -
+2026-06-04 23:34:00,760 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:00] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:34:00,774 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:00] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:34:08,451 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:08] "GET /login HTTP/1.1" 200 -
+2026-06-04 23:34:08,485 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:08] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:34:08,497 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:08] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:34:24,088 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:24] "POST /login HTTP/1.1" 200 -
+2026-06-04 23:34:26,913 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:26] "GET /company/dashboard HTTP/1.1" 200 -
+2026-06-04 23:34:26,946 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:26] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:34:26,952 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:26] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:34:30,206 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:30] "GET /company/post HTTP/1.1" 200 -
+2026-06-04 23:34:30,240 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:30] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:34:30,246 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:30] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:34:33,522 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:33] "GET /company/candidates HTTP/1.1" 200 -
+2026-06-04 23:34:33,558 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:33] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:34:33,563 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:33] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:34:35,987 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:35] "GET /company/candidates/stats HTTP/1.1" 200 -
+2026-06-04 23:34:36,964 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:36] "GET /company/candidates?min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:34:50,185 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:50] "GET /company/candidates?internship=Let's+Talk&min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:34:52,396 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:34:52] "GET /company/candidates?internship=New+months&min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:35:02,957 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:02] "[35m[1mGET /company/candidates?internship=Let's+Talk&status=Ko'rib+chiqilmoqda&min_score=-1 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 62, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\company\routes.py", line 366, in candidates
+    cur.execute(f"""
+    ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.InvalidTextRepresentation: invalid input value for enum application_status: "Ko'rib chiqilmoqda"
+LINE 12: ...e ILIKE '%Let''s Talk%' AND applications.status = 'Ko''rib c...
+                                                              ^
+
+2026-06-04 23:35:05,602 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:05] "[35m[1mGET /company/candidates?status=Ko'rib+chiqilmoqda&min_score=-1 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 62, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\company\routes.py", line 366, in candidates
+    cur.execute(f"""
+    ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.InvalidTextRepresentation: invalid input value for enum application_status: "Ko'rib chiqilmoqda"
+LINE 12:      AND applications.status = 'Ko''rib chiqilmoqda' AND app...
+                                        ^
+
+2026-06-04 23:35:17,299 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:17] "[35m[1mGET /company/candidates?internship=New+months&status=Ko'rib+chiqilmoqda&min_score=-1 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 62, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\company\routes.py", line 366, in candidates
+    cur.execute(f"""
+    ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.InvalidTextRepresentation: invalid input value for enum application_status: "Ko'rib chiqilmoqda"
+LINE 12: ...le ILIKE '%New months%' AND applications.status = 'Ko''rib c...
+                                                              ^
+
+2026-06-04 23:35:22,259 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:22] "[35m[1mGET /company/candidates?internship=Let's+Talk&status=Ko'rib+chiqilmoqda&min_score=-1 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 62, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\company\routes.py", line 366, in candidates
+    cur.execute(f"""
+    ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.InvalidTextRepresentation: invalid input value for enum application_status: "Ko'rib chiqilmoqda"
+LINE 12: ...e ILIKE '%Let''s Talk%' AND applications.status = 'Ko''rib c...
+                                                              ^
+
+2026-06-04 23:35:24,045 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:24] "GET /company/candidates HTTP/1.1" 200 -
+2026-06-04 23:35:24,110 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:24] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:35:24,122 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:24] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:35:26,500 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:26] "GET /company/candidates/stats HTTP/1.1" 200 -
+2026-06-04 23:35:27,512 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:27] "GET /company/candidates?min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:35:31,558 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:31] "GET /company/candidates?internship=Let's+Talk&min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:35:39,994 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:39] "GET /company/candidates?internship=New+months&min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:35:44,733 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:44] "GET /company/candidates?internship=Let's+Talk&min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:35:49,050 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:35:49] "[35m[1mGET /company/candidates?internship=Let's+Talk&status=Yangi&min_score=-1 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 62, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\company\routes.py", line 366, in candidates
+    cur.execute(f"""
+    ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.InvalidTextRepresentation: invalid input value for enum application_status: "Yangi"
+LINE 12: ...e ILIKE '%Let''s Talk%' AND applications.status = 'Yangi' AN...
+                                                              ^
+
+2026-06-04 23:36:01,736 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:01] "[35m[1mGET /company/candidates?internship=Let's+Talk&status=Ko'rib+chiqilmoqda&min_score=-1 HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\werkzeug\middleware\proxy_fix.py", line 183, in __call__
+    return self.app(environ, start_response)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\internova2\app\decorators.py", line 62, in wrapped_view
+    return view(*args, **kwargs)
+  File "C:\Users\User\Desktop\internova2\app\company\routes.py", line 366, in candidates
+    cur.execute(f"""
+    ^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\psycopg2\extras.py", line 236, in execute
+    return super().execute(query, vars)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.InvalidTextRepresentation: invalid input value for enum application_status: "Ko'rib chiqilmoqda"
+LINE 12: ...e ILIKE '%Let''s Talk%' AND applications.status = 'Ko''rib c...
+                                                              ^
+
+2026-06-04 23:36:05,397 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:05] "GET /company/candidates?internship=Let's+Talk&min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:36:12,017 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:12] "GET /company/candidates?internship=Let's+Talk&min_score=1 HTTP/1.1" 200 -
+2026-06-04 23:36:16,212 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:16] "GET /company/candidates?internship=Let's+Talk&min_score=2&sort=score-desc HTTP/1.1" 200 -
+2026-06-04 23:36:18,887 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:18] "GET /company/candidates?internship=New+months&min_score=2&sort=score-desc HTTP/1.1" 200 -
+2026-06-04 23:36:22,675 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:22] "GET /company/candidates?min_score=2&sort=score-desc HTTP/1.1" 200 -
+2026-06-04 23:36:27,327 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:27] "GET /company/settings HTTP/1.1" 200 -
+2026-06-04 23:36:27,384 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:27] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:36:27,403 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:27] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:36:33,603 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:33] "GET /company/candidates HTTP/1.1" 200 -
+2026-06-04 23:36:33,637 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:33] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:36:33,649 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:33] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:36:35,928 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:35] "GET /company/candidates/stats HTTP/1.1" 200 -
+2026-06-04 23:36:36,958 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:36] "GET /company/candidates?min_score=-1 HTTP/1.1" 200 -
+2026-06-04 23:36:43,940 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:43] "GET /company/applications/11 HTTP/1.1" 200 -
+2026-06-04 23:36:46,058 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:46] "GET /company/applications/11 HTTP/1.1" 200 -
+2026-06-04 23:36:59,412 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:59] "GET /company/dashboard HTTP/1.1" 200 -
+2026-06-04 23:36:59,446 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:59] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:36:59,451 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:36:59] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-06-04 23:37:05,662 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:37:05] "GET /company/post HTTP/1.1" 200 -
+2026-06-04 23:37:05,696 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:37:05] "[36mGET /static/internova.css HTTP/1.1[0m" 304 -
+2026-06-04 23:37:05,702 INFO werkzeug 127.0.0.1 - - [04/Jun/2026 23:37:05] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
